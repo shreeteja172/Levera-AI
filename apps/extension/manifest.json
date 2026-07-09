@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Levera",
+  "version": "0.1.0",
+  "action": {
+    "default_popup": "src/popup/popup.html"
+  },
+  "permissions": ["storage", "activeTab", "tabs"],
+  "host_permissions": ["https://leetcode.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["src/content/leetcode-scraper.ts"]
+    }
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  }
+}
