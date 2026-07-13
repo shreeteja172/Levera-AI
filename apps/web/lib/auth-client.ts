@@ -1,6 +1,11 @@
 import { createAuthClient } from "better-auth/react";
+import { emailOTPClient } from "better-auth/client/plugins";
 
-export const authClient = createAuthClient();
+export const authClient = createAuthClient({
+  plugins: [
+    emailOTPClient(),
+  ],
+});
 
 export const {
   signIn,
@@ -45,6 +50,19 @@ export async function signUpWithEmail(
     email,
     password,
     callbackURL,
+  });
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  return result.data;
+}
+
+export async function sendOtp(email: string) {
+  const result = await authClient.emailOtp.sendVerificationOtp({
+    email,
+    type: "sign-in",
   });
 
   if (result.error) {

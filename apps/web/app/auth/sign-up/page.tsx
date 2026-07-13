@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { signUpWithEmail, signInWithGoogle } from "@/lib/auth-client";
+import { signUpWithEmail, signInWithGoogle, sendOtp } from "@/lib/auth-client";
 import AuthIllustration from "../AuthIllustration";
 import styles from "../auth.module.css";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,8 +26,10 @@ export default function SignUpPage() {
 
     try {
       setLoading(true);
-      await signUpWithEmail(name, email, password, "/home");
-      toast.success("Account created successfully!");
+      await signUpWithEmail(name, email, password);
+      await sendOtp(email);
+      toast.success("Account created! Verification code sent to your email.");
+      router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to sign up");
     } finally {

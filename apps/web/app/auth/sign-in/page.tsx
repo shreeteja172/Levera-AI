@@ -2,22 +2,32 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { signInWithEmail, signInWithGoogle } from "@/lib/auth-client";
+import { signInWithEmail, signInWithGoogle, sendOtp } from "@/lib/auth-client";
 import AuthIllustration from "../AuthIllustration";
 import styles from "../auth.module.css";
 
 export default function SignInPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginMethod, setLoginMethod] = useState<"password" | "otp">("password");
   const [loading, setLoading] = useState(false);
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
     try {
       setLoading(true);
-      await signInWithEmail(email, password, "/home");
-      toast.success("Signed in successfully!");
+      if (loginMethod === "password") {
+        await signInWithEmail(email, password, "/home");
+        toast.success("Signed in successfully!");
+        router.push("/home");
+      } else {
+        await sendOtp(email);
+        toast.success("OTP sent to your email!");
+        router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to sign in");
     } finally {
@@ -60,6 +70,27 @@ export default function SignInPage() {
             </p>
 
             <div className={styles.authCard}>
+              <div className={styles.tabGroup}>
+                <button
+                  type="button"
+                  className={`${styles.tabButton} ${
+                    loginMethod === "password" ? styles.tabButtonActive : ""
+                  }`}
+                  onClick={() => setLoginMethod("password")}
+                >
+                  Password
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.tabButton} ${
+                    loginMethod === "otp" ? styles.tabButtonActive : ""
+                  }`}
+                  onClick={() => setLoginMethod("otp")}
+                >
+                  Email OTP
+                </button>
+              </div>
+
               <form onSubmit={handleSignIn} className={styles.formFields}>
                 <div className={styles.inputGroup}>
                   <label htmlFor="email" className={styles.inputLabel}>
@@ -76,32 +107,40 @@ export default function SignInPage() {
                   />
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <div className={styles.inputLabelRow}>
-                    <label htmlFor="password" className={styles.inputLabel}>
-                      Password
-                    </label>
-                    <a href="#forgot" className={styles.forgotPasswordLink}>
-                      Forgot password?
-                    </a>
+                {loginMethod === "password" && (
+                  <div className={styles.inputGroup}>
+                    <div className={styles.inputLabelRow}>
+                      <label htmlFor="password" className={styles.inputLabel}>
+                        Password
+                      </label>
+                      <a href="#forgot" className={styles.forgotPasswordLink}>
+                        Forgot password?
+                      </a>
+                    </div>
+                    <input
+                      id="password"
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      className={styles.textInput}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                   </div>
-                  <input
-                    id="password"
-                    type="password"
-                    required
-                    placeholder="••••••••"
-                    className={styles.textInput}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
+                )}
 
                 <button
                   type="submit"
                   disabled={loading}
                   className={styles.primaryButton}
                 >
-                  {loading ? "Signing in..." : "Continue Learning"}
+                  {loading
+                    ? loginMethod === "password"
+                      ? "Signing in..."
+                      : "Sending code..."
+                    : loginMethod === "password"
+                      ? "Continue Learning"
+                      : "Send Verification Code"}
                 </button>
               </form>
 
