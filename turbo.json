@@ -10,7 +10,13 @@
         "DATABASE_URL",
         "AI_GATEWAY_API_KEY",
         "ZHIPU_API_KEY",
-        "NODE_ENV"
+        "NODE_ENV",
+        "BETTER_AUTH_URL",
+        "BETTER_AUTH_CLIENT_ID",
+        "BETTER_AUTH_CLIENT_SECRET",
+        "BETTER_AUTH_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET"
       ]
     },
     "lint": {
@@ -22,9 +28,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": [
-        "DATABASE_URL"
-      ]
+      "env": ["DATABASE_URL"]
     }
   }
 }
