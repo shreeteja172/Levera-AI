@@ -18,7 +18,8 @@
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
         "BREVO_API_KEY",
-        "BREVO_SENDER_EMAIL"
+        "BREVO_SENDER_EMAIL",
+        "OPENROUTER_API_KEY"
       ]
     },
     "lint": {
