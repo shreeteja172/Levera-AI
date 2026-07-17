@@ -22,32 +22,39 @@ export default function TestimonialsFAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-24 px-8 md:px-16 bg-[#EAE7DF] font-sans">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-[#111111] tracking-tight mb-4">
+    <section className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 font-sans relative overflow-hidden">
+
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-zinc-900/50 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-6xl font-saira text-white tracking-tight mb-6">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-[#64748B]">
+          <p className="text-lg md:text-xl text-zinc-400 font-light">
             Everything you need to know about Levera.
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
               <div 
                 key={index} 
-                className="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)]"
+                className={`bg-zinc-900/40 backdrop-blur-sm border ${isOpen ? 'border-zinc-700' : 'border-zinc-800/50'} rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:border-zinc-700 group`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none"
+                  className="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none"
                 >
-                  <span className="font-bold text-[#111111] text-lg">{faq.question}</span>
-                  <span className="text-[#FF5A1F] text-2xl font-light transform transition-transform duration-300" style={{ transform: isOpen ? 'rotate(45deg)' : 'none' }}>
-                    +
+                  <span className={`font-semibold text-lg md:text-xl transition-colors ${isOpen ? 'text-white' : 'text-zinc-300 group-hover:text-zinc-100'}`}>
+                    {faq.question}
+                  </span>
+                  <span className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-[#FF5A1F] border-[#FF5A1F] text-white rotate-45' : 'border-zinc-700 text-zinc-400 group-hover:border-zinc-500 group-hover:text-zinc-300'}`}>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
                   </span>
                 </button>
                 <AnimatePresence>
@@ -56,9 +63,9 @@ export default function TestimonialsFAQSection() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                      <div className="px-6 pb-6 text-[#64748B] leading-relaxed">
+                      <div className="px-8 pb-8 text-zinc-400 text-lg leading-relaxed font-light">
                         {faq.answer}
                       </div>
                     </motion.div>

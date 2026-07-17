@@ -6,16 +6,19 @@ import TestimonialsFAQSection from "@/components/landing/TestimonialsFAQSection"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#EAE7DF] text-[#111111] font-sans selection:bg-[#FF5A1F]/20 selection:text-[#FF5A1F]">
+    <main className="min-h-screen bg-zinc-950 text-zinc-200 font-sans selection:bg-[#FF5A1F]/30 selection:text-white">
       <HeroSection />
       <FeaturesSection />
       <HowItWorksSection />
       <WhyChooseUsSection />
       <TestimonialsFAQSection />
       
-      {/* Footer */}
-      <footer className="py-8 text-center text-[#64748B] text-sm bg-[#EAE7DF] border-t border-black/5">
-        <p>Levera &mdash; Learn. Understand. Optimize. Master DSA.</p>
+
+      <footer className="py-12 text-center text-zinc-500 text-sm bg-zinc-950 border-t border-zinc-900/50">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-medium tracking-wide">Levera &mdash; Master DSA.</p>
+          <p className="opacity-70">&copy; {new Date().getFullYear()} Levera. All rights reserved.</p>
+        </div>
       </footer>
     </main>
   );
