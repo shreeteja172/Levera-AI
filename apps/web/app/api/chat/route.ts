@@ -1,41 +1,54 @@
-import OpenAI from "openai";
+import { Groq } from "groq-sdk";
 import { NextResponse } from "next/server";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
 
-    const completion = await client.chat.completions.create({
-      model: "openai/gpt-oss-20b:free",
-      messages: [{ role: "user", content: message }],
-      max_tokens: 300,
+    if (!message?.trim()) {
+      return NextResponse.json(
+        { error: "Message is required." },
+        { status: 400 },
+      );
+    }
+
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful, accurate AI assistant. Answer clearly and avoid making up facts. If you're unsure, say so.",
+        },
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+      temperature: 0.7,
+      max_completion_tokens: 2048,
+      top_p: 1,
+      stream: false,
+      reasoning_effort: "medium",
     });
 
     return NextResponse.json({
       reply: completion.choices[0]?.message?.content ?? "",
+      finish_reason: completion.choices[0]?.finish_reason,
+      usage: completion.usage,
     });
   } catch (err: any) {
-    console.error(err);
-
-    if (err.status === 429) {
-      return NextResponse.json(
-        {
-          error: "The free model is currently busy. Please try again in a few seconds.",
-        },
-        { status: 429 }
-      );
-    }
+    console.error("Groq Error:", err);
 
     return NextResponse.json(
       {
-        error: err.message,
+        error: err.message || "Something went wrong.",
       },
-      { status: 500 }
+      { status: err.status || 500 },
     );
   }
 }
