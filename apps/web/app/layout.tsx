@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Saira_Stencil_One } from "next/font/google";
+import { Saira_Stencil_One, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
@@ -7,6 +7,11 @@ const sairaStencil = Saira_Stencil_One({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-saira-stencil",
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
 });
 
 export const metadata: Metadata = {
@@ -22,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={sairaStencil.variable}>
+      <body className={`${sairaStencil.variable} ${plusJakarta.variable}`}>
         {children}
         <Toaster
           position="top-right"
