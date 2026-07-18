@@ -5,7 +5,7 @@
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "strict": true,
-    "types": ["chrome"],
+    "types": ["chrome", "vite/client"],
     "lib": ["DOM", "ESNext"]
   },
   "include": ["src"]
