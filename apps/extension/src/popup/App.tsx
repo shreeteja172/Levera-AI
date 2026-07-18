@@ -1,4 +1,6 @@
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ProblemData {
   title: string;
@@ -140,19 +142,12 @@ export default function App() {
             marginTop: 20,
             border: "1px solid #ddd",
             borderRadius: 8,
-            padding: 12,
+            padding: 16,
           }}
         >
           <h3>🤖 AI Analysis</h3>
 
-          <pre
-            style={{
-              whiteSpace: "pre-wrap",
-              fontFamily: "inherit",
-            }}
-          >
-            {answer}
-          </pre>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{answer}</ReactMarkdown>
         </div>
       )}
     </div>
