@@ -13,7 +13,6 @@ interface ProblemData {
 interface AIResponse {
   answer: string;
 }
-const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function App() {
   const [problem, setProblem] = useState<ProblemData | null>(null);
@@ -22,59 +21,49 @@ export default function App() {
   const [error, setError] = useState("");
 
   async function analyze() {
-    setLoading(true);
-    setError("");
-    setAnswer("");
-
     try {
-      // Get active tab
+      setLoading(true);
+
       const [tab] = await chrome.tabs.query({
         active: true,
         currentWindow: true,
       });
 
-      if (!tab?.id) {
-        throw new Error("No active tab found.");
+      if (!tab?.id) throw new Error("No active tab");
+
+      let problem;
+
+      try {
+        problem = await chrome.tabs.sendMessage(tab.id, {
+          type: "GET_PROBLEM",
+        });
+      } catch {
+        throw new Error(
+          "Content script not loaded. Refresh the LeetCode page and try again.",
+        );
       }
 
-      const scrapedProblem = (await chrome.tabs.sendMessage(tab.id, {
-        type: "GET_PROBLEM",
-      })) as ProblemData;
+      setProblem(problem);
 
-      if (!scrapedProblem?.title) {
-        throw new Error("Not on a valid LeetCode problem page.");
-      }
-
-      setProblem(scrapedProblem);
-
-      const res = await fetch(`${apiUrl}/api/ai/analyze`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/ai/analyze`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(problem),
         },
-        body: JSON.stringify(scrapedProblem),
-      });
+      );
 
-      if (!res.ok) {
-        throw new Error("AI request failed.");
-      }
-
-      const data = (await res.json()) as AIResponse;
-
+      const data = await res.json();
       setAnswer(data.answer);
     } catch (err) {
-      console.error(err);
-
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong.");
-      }
+      alert(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
   }
-
   return (
     <div
       style={{
