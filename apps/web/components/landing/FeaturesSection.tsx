@@ -8,7 +8,7 @@ const features = [
     title: "Multiple Solutions",
     description:
       "Get brute force, better, and optimal solutions in one response with full explanations and complexity analysis.",
-    icon: "🚀",
+    icon: "1",
     color: "text-[#FF5A1F]",
     bg: "bg-[#FF5A1F]/10",
     border: "border-[#FF5A1F]/20",
@@ -17,7 +17,7 @@ const features = [
     title: "Step-by-Step Explanations",
     description:
       "Understand how to think about the problem, recognize patterns, and why each data structure is chosen.",
-    icon: "🧠",
+    icon: "2",
     color: "text-[#0ea5e9]",
     bg: "bg-[#0ea5e9]/10",
     border: "border-[#0ea5e9]/20",
@@ -26,7 +26,7 @@ const features = [
     title: "Dry Run Visualization",
     description:
       "Watch every iteration with variable updates, pointer movement, stack operations, and DP table construction.",
-    icon: "👁️",
+    icon: "3",
     color: "text-[#10B981]",
     bg: "bg-[#10B981]/10",
     border: "border-[#10B981]/20",
@@ -35,7 +35,7 @@ const features = [
     title: "Pattern Detection",
     description:
       "Automatically identifies DSA patterns like sliding window, two pointers, DP, and more.",
-    icon: "🧩",
+    icon: "4",
     color: "text-[#8B5CF6]",
     bg: "bg-[#8B5CF6]/10",
     border: "border-[#8B5CF6]/20",
@@ -44,7 +44,7 @@ const features = [
     title: "Interview Mode",
     description:
       "Practice with an AI interviewer that asks follow-ups, requests optimization, and evaluates your answers.",
-    icon: "👔",
+    icon: "5",
     color: "text-[#F59E0B]",
     bg: "bg-[#F59E0B]/10",
     border: "border-[#F59E0B]/20",
@@ -53,7 +53,7 @@ const features = [
     title: "Hint Mode",
     description:
       "Progressively reveal hints from subtle nudges to pseudo code to full solutions.",
-    icon: "💡",
+    icon: "6",
     color: "text-[#EC4899]",
     bg: "bg-[#EC4899]/10",
     border: "border-[#EC4899]/20",
@@ -98,7 +98,7 @@ export default function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="text-4xl md:text-6xl font-saira text-white tracking-tight mb-6"
+            className="text-4xl md:text-6xl font-instrument text-white tracking-tight mb-6"
           >
             Everything You Need to Master DSA
           </motion.h2>

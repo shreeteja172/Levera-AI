@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Saira_Stencil_One } from "next/font/google";
+import { Instrument_Serif } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
-const sairaStencil = Saira_Stencil_One({
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-saira-stencil",
+  variable: "--font-instrument",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${GeistSans.variable} ${GeistMono.variable} ${sairaStencil.variable} font-sans`}>
+      <body className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable} font-instrument`}>
         {children}
         <Toaster
           position="top-right"

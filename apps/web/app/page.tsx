@@ -6,7 +6,7 @@ import TestimonialsFAQSection from "@/components/landing/TestimonialsFAQSection"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-200 font-sans selection:bg-[#FF5A1F]/30 selection:text-white">
+    <main className="min-h-screen bg-zinc-950 text-zinc-200 font-instrument selection:bg-[#FF5A1F]/30 selection:text-white">
       <HeroSection />
       <FeaturesSection />
       <HowItWorksSection />

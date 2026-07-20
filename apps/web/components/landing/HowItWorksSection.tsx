@@ -33,7 +33,7 @@ export default function HowItWorksSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-6xl font-saira text-white tracking-tight mb-6"
+            className="text-4xl md:text-6xl font-instrument text-white tracking-tight mb-6"
           >
             How It Works
           </motion.h2>

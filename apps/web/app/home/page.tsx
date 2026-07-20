@@ -46,9 +46,9 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
       <div className="mx-auto max-w-5xl p-8">
-        <h1 className="mb-2 text-5xl font-bold">OpenRouter Playground</h1>
+        <h1 className="mb-2 text-5xl font-bold">Levera AI</h1>
 
-        <p className="mb-8 text-zinc-400">Test your OpenRouter models.</p>
+        <p className="mb-8 text-zinc-400">Test your DSA skills with AI-powered assistance.</p>
 
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
           <textarea

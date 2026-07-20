@@ -28,7 +28,7 @@ export default function TestimonialsFAQSection() {
 
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-saira text-white tracking-tight mb-6">
+          <h2 className="text-4xl md:text-6xl font-instrument text-white tracking-tight mb-6">
             Frequently Asked Questions
           </h2>
           <p className="text-lg md:text-xl text-zinc-400 font-light">

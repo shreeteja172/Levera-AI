@@ -1,4 +1,4 @@
-console.log("🚀 Levera Scraper Loaded");
+console.log("Levera Scraper Loaded");
 
 export interface ProblemData {
   title: string;
@@ -72,7 +72,7 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
   if (message.type === "GET_PROBLEM") {
     const problem = scrapeProblem();
 
-    console.log("📄 Problem scraped:", problem);
+    console.log("Problem scraped:", problem);
 
     sendResponse(problem);
   }

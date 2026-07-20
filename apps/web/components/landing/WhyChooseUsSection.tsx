@@ -31,7 +31,7 @@ export default function WhyChooseUsSection() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="flex-1 w-full"
           >
-            <h2 className="text-4xl md:text-6xl font-saira tracking-tight mb-8 text-white">
+            <h2 className="text-4xl md:text-6xl font-instrument tracking-tight mb-8 text-white">
               Why Choose <span className="bg-gradient-to-r from-[#FF5A1F] to-orange-400 bg-clip-text text-transparent">Levera?</span>
             </h2>
             <p className="text-zinc-400 text-lg md:text-xl leading-relaxed mb-10 font-light">
@@ -55,7 +55,8 @@ export default function WhyChooseUsSection() {
 
             <Link
               href="/auth/sign-up"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-zinc-950 hover:bg-zinc-100 rounded-xl font-bold transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:-translate-y-1"
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-black hover:bg-zinc-100 rounded-xl transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:-translate-y-1"
+              style={{ color: "#09090b" }}
             >
               Start Free Trial
             </Link>

@@ -1,5 +1,7 @@
 @import "tailwindcss";
+@source "../app";
 @source "../components";
+@source "../../packages/ui/src";
 @plugin "@tailwindcss/typography";
 
 :root {
@@ -12,8 +14,8 @@
 }
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-saira: var(--font-saira-stencil), ui-sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-instrument: var(--font-instrument), ui-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
 }
 

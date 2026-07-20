@@ -14,21 +14,13 @@ export default function HeroSection() {
 
 
       <div className="z-10 flex flex-col items-start max-w-3xl mt-12 md:mt-0 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="flex items-center gap-3 mb-8 bg-zinc-900/50 backdrop-blur-md border border-zinc-800/50 rounded-full px-5 py-2 shadow-lg"
-        >
-          <span className="text-[#FF5A1F] text-sm animate-pulse">✨</span>
-          <span className="text-sm font-semibold text-zinc-300 uppercase tracking-widest">AI-Powered DSA Mentor</span>
-        </motion.div>
+        
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="text-5xl md:text-7xl font-saira text-white leading-[1.1] tracking-tight mb-8"
+          className="text-5xl md:text-7xl font-instrument text-white leading-[1.1] tracking-tight mb-8"
         >
           From <span className="bg-gradient-to-r from-[#FF5A1F] to-orange-400 bg-clip-text text-transparent">Brute Force</span> to <span className="bg-gradient-to-r from-[#0ea5e9] to-cyan-300 bg-clip-text text-transparent">Optimal</span>, Instantly.
         </motion.h1>
@@ -50,7 +42,8 @@ export default function HeroSection() {
         >
           <Link
             href="/auth/sign-up"
-            className="group flex items-center justify-center px-8 py-4 bg-zinc-100 hover:bg-white text-zinc-950 rounded-xl font-bold transition-all duration-300 ease-out shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:-translate-y-1"
+            className="group flex items-center justify-center px-8 py-4 bg-zinc-100 hover:bg-white text-black rounded-xl transition-all duration-300 ease-out shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:-translate-y-1"
+            style={{ color: "#09090b" }}
           >
             Start Learning Free
             <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,7 +52,8 @@ export default function HeroSection() {
           </Link>
           <Link
             href="#features"
-            className="flex items-center justify-center px-8 py-4 bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl font-semibold transition-all duration-300 ease-out backdrop-blur-sm"
+            className="flex items-center justify-center px-8 py-4 bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl transition-all duration-300 ease-out backdrop-blur-sm"
+            style={{ color: "#d4d4d8" }}
           >
             Explore Features
           </Link>
