@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import axios from "axios";
 
 interface ProblemData {
   title: string;
@@ -47,21 +48,22 @@ export default function App() {
 
       setProblem(problem);
 
-      const res = await fetch(
+      const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/ai/analyze`,
+        problem,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(problem),
         },
       );
 
-      const data = await res.json();
-      setAnswer(data.answer);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Something went wrong");
+      setAnswer(res.data.answer);
+    } catch (err: any) {
+      const errorMsg =
+        err.response?.data?.error ||
+        (err instanceof Error ? err.message : "Something went wrong");
+      alert(errorMsg);
     } finally {
       setLoading(false);
     }

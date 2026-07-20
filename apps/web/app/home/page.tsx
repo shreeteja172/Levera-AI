@@ -4,6 +4,7 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
+import axios from "axios";
 
 import "highlight.js/styles/github-dark.css";
 
@@ -19,29 +20,19 @@ export default function Home() {
     setReply("");
 
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message,
-        }),
+      const res = await axios.post("/api/chat", {
+        message,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setReply(data.error || "Something went wrong.");
-      } else {
-        setReply(data.reply);
-      }
-    } catch {
-      setReply("Failed to contact the server.");
+      setReply(res.data.reply);
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.error || "Failed to contact the server.";
+      setReply(errorMsg);
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">

@@ -6,7 +6,6 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { authClient, sendOtp } from "@/lib/auth-client";
 import AuthIllustration from "../AuthIllustration";
-import styles from "../auth.module.css";
 
 function OTPVerificationForm() {
   const searchParams = useSearchParams();
@@ -138,26 +137,26 @@ function OTPVerificationForm() {
   };
 
   return (
-    <div className={styles.leftContent}>
-      <h1 className={styles.heroHeading}>
-        Verify <span className={styles.orangeAccent}>Your Email</span>.
+    <div className="flex flex-col gap-5 my-auto py-4 desktop-short:gap-4">
+      <h1 className="text-[2.15rem] leading-[1.15] font-extrabold text-[#111111] tracking-[-0.03em] max-[480px]:text-[1.75rem] desktop-short:text-[1.85rem]">
+        Verify <span className="text-[#FF5A1F] relative inline-block">Your Email</span>.
       </h1>
-      <p className={styles.supportingText}>
+      <p className="text-[0.95rem] leading-[1.5] text-[#64748B] max-w-[95%] mb-2">
         We sent a 6-digit verification code to <strong style={{ color: "#111" }}>{email || "your email"}</strong>.
         Please enter it below to access your account.
       </p>
 
-      <div className={styles.authCard}>
+      <div className="bg-white border border-[rgba(0,0,0,0.06)] rounded-[16px] p-6 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.03),0_4px_12px_-4px_rgba(0,0,0,0.02)] flex flex-col gap-4 max-[480px]:p-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             verifyCode(code.join(""));
           }}
-          className={styles.formFields}
+          className="flex flex-col gap-[14px]"
         >
-          <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>6-Digit Verification Code</label>
-            <div className={styles.otpInputContainer}>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[0.75rem] font-bold text-[#64748b] uppercase tracking-[0.05em]">6-Digit Verification Code</label>
+            <div className="flex justify-between gap-2 mt-3 mb-5 mx-0">
               {code.map((digit, idx) => (
                 <input
                   key={idx}
@@ -166,7 +165,7 @@ function OTPVerificationForm() {
                   maxLength={1}
                   pattern="\d*"
                   inputMode="numeric"
-                  className={styles.otpInput}
+                  className="w-[46px] h-[54px] rounded-[12px] border border-[rgba(0,0,0,0.12)] bg-[#FAF9F6] text-[#1E293B] text-[1.5rem] font-bold text-center font-['JetBrains_Mono',monospace] transition-all duration-200 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)] focus:outline-none focus:border-[#FF5A1F] focus:shadow-[0_0_0_3px_rgba(255,90,31,0.12)] focus:bg-white"
                   value={digit}
                   onChange={(e) => handleInputChange(e.target.value, idx)}
                   onKeyDown={(e) => handleKeyDown(e, idx)}
@@ -180,13 +179,13 @@ function OTPVerificationForm() {
           <button
             type="submit"
             disabled={loading || code.some((d) => !d)}
-            className={styles.primaryButton}
+            className="w-full rounded-[10px] border-none bg-[#111111] text-white p-3.5 text-[0.95rem] font-semibold font-inherit cursor-pointer transition-all duration-200 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)] flex justify-center items-center gap-2 hover:bg-[#222222] hover:-translate-y-px hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] active:translate-y-0 disabled:bg-[#94A3B8] disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
             {loading ? "Verifying..." : "Verify Code"}
           </button>
         </form>
 
-        <p className={styles.toggleText}>
+        <p className="text-[0.85rem] text-[#64748B] text-center mt-1">
           Didn&apos;t receive the code?{" "}
           {countdown > 0 ? (
             <span style={{ fontWeight: 600, color: "#64748B" }}>
@@ -211,8 +210,8 @@ function OTPVerificationForm() {
           )}
         </p>
 
-        <p className={styles.toggleText}>
-          <Link href="/auth/sign-in" className={styles.toggleLink} style={{ marginLeft: 0 }}>
+        <p className="text-[0.85rem] text-[#64748B] text-center mt-1">
+          <Link href="/auth/sign-in" className="text-[#FF5A1F] font-bold transition-[text-decoration] duration-200 hover:underline" style={{ marginLeft: 0 }}>
             Back to Sign In
           </Link>
         </p>
@@ -223,10 +222,10 @@ function OTPVerificationForm() {
 
 export default function OTPVerificationPage() {
   return (
-    <main className={styles.pageWrapper}>
-      <div className={styles.authContainer}>
-        <section className={styles.leftSection}>
-          <div className={styles.logoContainer}>
+    <main className="flex justify-center items-center bg-[#EAE7DF] p-6 min-h-screen box-border font-['Plus_Jakarta_Sans',-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif] max-[480px]:p-3">
+      <div className="max-w-[1200px] w-full h-[min(800px,calc(100vh-48px))] min-h-[600px] bg-white rounded-[24px] border border-[rgba(0,0,0,0.12)] shadow-[0_24px_70px_-12px_rgba(0,0,0,0.18),0_8px_24px_-8px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.8)] flex overflow-hidden relative transition-all duration-300 ease max-[1024px]:h-auto max-[1024px]:min-h-[700px] max-[1024px]:flex-col max-[1024px]:max-w-[550px] desktop-short:h-[calc(100vh-48px)] desktop-short:min-h-[550px]">
+        <section className="w-[45%] bg-[#F5F3EE] p-[clamp(24px,4vh,48px)] flex flex-col justify-between relative overflow-y-auto box-border [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.1)_transparent] [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-[rgba(0,0,0,0.1)] [&::-webkit-scrollbar-thumb]:rounded-[2px] max-[1024px]:w-full max-[1024px]:p-8 max-[480px]:px-4 max-[480px]:py-6">
+          <div className="flex items-center gap-[10px] font-extrabold text-[1.35rem] text-[#1A1A1A] tracking-[-0.02em]">
             <svg
               width="24"
               height="24"
@@ -236,7 +235,7 @@ export default function OTPVerificationPage() {
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className={styles.logoSymbol}
+              className="flex items-center justify-center text-[#FF5A1F]"
             >
               <polyline points="16 18 22 12 16 6" />
               <polyline points="8 6 2 12 8 18" />
@@ -247,28 +246,13 @@ export default function OTPVerificationPage() {
 
           <Suspense
             fallback={
-              <div className={styles.leftContent} style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "200px" }}>
-                <p className={styles.supportingText}>Loading verification details...</p>
+              <div className="flex flex-col gap-5 my-auto py-4 desktop-short:gap-4" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "200px" }}>
+                <p className="text-[0.95rem] leading-[1.5] text-[#64748B] max-w-[95%] mb-2">Loading verification details...</p>
               </div>
             }
           >
             <OTPVerificationForm />
           </Suspense>
-
-          <div className={styles.badgesContainer}>
-            <div className={styles.badge}>
-              <span className={styles.badgeSymbol}>🌲</span>
-              <span>DSA</span>
-            </div>
-            <div className={styles.badge}>
-              <span className={styles.badgeSymbol}>🏆</span>
-              <span>Competitive Programming</span>
-            </div>
-            <div className={styles.badge}>
-              <span className={styles.badgeSymbol}>👔</span>
-              <span>Interview Prep</span>
-            </div>
-          </div>
         </section>
 
         <AuthIllustration />
