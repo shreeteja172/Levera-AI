@@ -3,6 +3,7 @@ import { Instrument_Serif } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Toaster } from "react-hot-toast";
+import Providers from "./providers";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable} font-instrument`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <Toaster
           position="top-right"
           toastOptions={{
