@@ -246,6 +246,13 @@ export default function App() {
                         fontSize: "11px",
                         fontFamily: "'Fira Code', monospace"
                       }}
+                      codeTagProps={{
+                        style: {
+                          backgroundColor: "transparent",
+                          padding: 0,
+                          borderRadius: 0,
+                        }
+                      }}
                       {...props}
                     >
                       {String(children).replace(/\n$/, "")}

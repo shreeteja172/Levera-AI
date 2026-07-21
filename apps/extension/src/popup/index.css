@@ -288,7 +288,7 @@ body {
   color: var(--primary-accent);
 }
 
-.markdown-content code {
+.markdown-content :not(pre) > code:not([class*="language-"]) {
   font-family: 'Fira Code', monospace;
   font-size: 11px;
   background-color: rgba(255, 255, 255, 0.05);
