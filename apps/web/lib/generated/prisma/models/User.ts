@@ -218,6 +218,7 @@ export type UserWhereInput = {
   accounts?: Prisma.AccountListRelationFilter
   solveHistory?: Prisma.SolveHistoryListRelationFilter
   savedProblems?: Prisma.SavedProblemListRelationFilter
+  deviceCodes?: Prisma.DeviceCodeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -234,6 +235,7 @@ export type UserOrderByWithRelationInput = {
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   solveHistory?: Prisma.SolveHistoryOrderByRelationAggregateInput
   savedProblems?: Prisma.SavedProblemOrderByRelationAggregateInput
+  deviceCodes?: Prisma.DeviceCodeOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -253,6 +255,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   accounts?: Prisma.AccountListRelationFilter
   solveHistory?: Prisma.SolveHistoryListRelationFilter
   savedProblems?: Prisma.SavedProblemListRelationFilter
+  deviceCodes?: Prisma.DeviceCodeListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -299,6 +302,7 @@ export type UserCreateInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -315,6 +319,7 @@ export type UserUncheckedCreateInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -331,6 +336,7 @@ export type UserUpdateInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -347,6 +353,7 @@ export type UserUncheckedUpdateInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -426,6 +433,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -470,6 +482,22 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
 }
 
+export type UserCreateNestedOneWithoutDeviceCodesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceCodesInput, Prisma.UserUncheckedCreateWithoutDeviceCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutDeviceCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceCodesInput, Prisma.UserUncheckedCreateWithoutDeviceCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceCodesInput
+  upsert?: Prisma.UserUpsertWithoutDeviceCodesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeviceCodesInput, Prisma.UserUpdateWithoutDeviceCodesInput>, Prisma.UserUncheckedUpdateWithoutDeviceCodesInput>
+}
+
 export type UserCreateNestedOneWithoutSolveHistoryInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSolveHistoryInput, Prisma.UserUncheckedCreateWithoutSolveHistoryInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSolveHistoryInput
@@ -511,6 +539,7 @@ export type UserCreateWithoutSessionsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -526,6 +555,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -557,6 +587,7 @@ export type UserUpdateWithoutSessionsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -572,6 +603,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -587,6 +619,7 @@ export type UserCreateWithoutAccountsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -602,6 +635,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -633,6 +667,7 @@ export type UserUpdateWithoutAccountsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -646,6 +681,87 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
+  savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDeviceCodesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  image?: string | null
+  emailVerified?: boolean
+  password?: string | null
+  isPro?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
+  savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDeviceCodesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  image?: string | null
+  emailVerified?: boolean
+  password?: string | null
+  isPro?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
+  savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDeviceCodesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceCodesInput, Prisma.UserUncheckedCreateWithoutDeviceCodesInput>
+}
+
+export type UserUpsertWithoutDeviceCodesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDeviceCodesInput, Prisma.UserUncheckedUpdateWithoutDeviceCodesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceCodesInput, Prisma.UserUncheckedCreateWithoutDeviceCodesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDeviceCodesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDeviceCodesInput, Prisma.UserUncheckedUpdateWithoutDeviceCodesInput>
+}
+
+export type UserUpdateWithoutDeviceCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
+  savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDeviceCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -663,6 +779,7 @@ export type UserCreateWithoutSolveHistoryInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSolveHistoryInput = {
@@ -678,6 +795,7 @@ export type UserUncheckedCreateWithoutSolveHistoryInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSolveHistoryInput = {
@@ -709,6 +827,7 @@ export type UserUpdateWithoutSolveHistoryInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSolveHistoryInput = {
@@ -724,6 +843,7 @@ export type UserUncheckedUpdateWithoutSolveHistoryInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavedProblemsInput = {
@@ -739,6 +859,7 @@ export type UserCreateWithoutSavedProblemsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedProblemsInput = {
@@ -754,6 +875,7 @@ export type UserUncheckedCreateWithoutSavedProblemsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedProblemsInput = {
@@ -785,6 +907,7 @@ export type UserUpdateWithoutSavedProblemsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedProblemsInput = {
@@ -800,6 +923,7 @@ export type UserUncheckedUpdateWithoutSavedProblemsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -812,6 +936,7 @@ export type UserCountOutputType = {
   accounts: number
   solveHistory: number
   savedProblems: number
+  deviceCodes: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -819,6 +944,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   solveHistory?: boolean | UserCountOutputTypeCountSolveHistoryArgs
   savedProblems?: boolean | UserCountOutputTypeCountSavedProblemsArgs
+  deviceCodes?: boolean | UserCountOutputTypeCountDeviceCodesArgs
 }
 
 /**
@@ -859,6 +985,13 @@ export type UserCountOutputTypeCountSavedProblemsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.SavedProblemWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDeviceCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeviceCodeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -874,6 +1007,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   solveHistory?: boolean | Prisma.User$solveHistoryArgs<ExtArgs>
   savedProblems?: boolean | Prisma.User$savedProblemsArgs<ExtArgs>
+  deviceCodes?: boolean | Prisma.User$deviceCodesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -919,6 +1053,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   solveHistory?: boolean | Prisma.User$solveHistoryArgs<ExtArgs>
   savedProblems?: boolean | Prisma.User$savedProblemsArgs<ExtArgs>
+  deviceCodes?: boolean | Prisma.User$deviceCodesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -931,6 +1066,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     solveHistory: Prisma.$SolveHistoryPayload<ExtArgs>[]
     savedProblems: Prisma.$SavedProblemPayload<ExtArgs>[]
+    deviceCodes: Prisma.$DeviceCodePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1340,6 +1476,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   solveHistory<T extends Prisma.User$solveHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$solveHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SolveHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedProblems<T extends Prisma.User$savedProblemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedProblemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedProblemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deviceCodes<T extends Prisma.User$deviceCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1864,6 +2001,30 @@ export type User$savedProblemsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SavedProblemScalarFieldEnum | Prisma.SavedProblemScalarFieldEnum[]
+}
+
+/**
+ * User.deviceCodes
+ */
+export type User$deviceCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeviceCode
+   */
+  select?: Prisma.DeviceCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeviceCode
+   */
+  omit?: Prisma.DeviceCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeviceCodeInclude<ExtArgs> | null
+  where?: Prisma.DeviceCodeWhereInput
+  orderBy?: Prisma.DeviceCodeOrderByWithRelationInput | Prisma.DeviceCodeOrderByWithRelationInput[]
+  cursor?: Prisma.DeviceCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeviceCodeScalarFieldEnum | Prisma.DeviceCodeScalarFieldEnum[]
 }
 
 /**
