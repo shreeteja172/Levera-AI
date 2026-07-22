@@ -219,6 +219,7 @@ export type UserWhereInput = {
   solveHistory?: Prisma.SolveHistoryListRelationFilter
   savedProblems?: Prisma.SavedProblemListRelationFilter
   deviceCodes?: Prisma.DeviceCodeListRelationFilter
+  chats?: Prisma.ChatSessionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -236,6 +237,7 @@ export type UserOrderByWithRelationInput = {
   solveHistory?: Prisma.SolveHistoryOrderByRelationAggregateInput
   savedProblems?: Prisma.SavedProblemOrderByRelationAggregateInput
   deviceCodes?: Prisma.DeviceCodeOrderByRelationAggregateInput
+  chats?: Prisma.ChatSessionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -256,6 +258,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   solveHistory?: Prisma.SolveHistoryListRelationFilter
   savedProblems?: Prisma.SavedProblemListRelationFilter
   deviceCodes?: Prisma.DeviceCodeListRelationFilter
+  chats?: Prisma.ChatSessionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -303,6 +306,7 @@ export type UserCreateInput = {
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -320,6 +324,7 @@ export type UserUncheckedCreateInput = {
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -337,6 +342,7 @@ export type UserUpdateInput = {
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -354,6 +360,7 @@ export type UserUncheckedUpdateInput = {
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -526,6 +533,20 @@ export type UserUpdateOneRequiredWithoutSavedProblemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedProblemsInput, Prisma.UserUpdateWithoutSavedProblemsInput>, Prisma.UserUncheckedUpdateWithoutSavedProblemsInput>
 }
 
+export type UserCreateNestedOneWithoutChatsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutChatsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
+  upsert?: Prisma.UserUpsertWithoutChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatsInput, Prisma.UserUpdateWithoutChatsInput>, Prisma.UserUncheckedUpdateWithoutChatsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
@@ -540,6 +561,7 @@ export type UserCreateWithoutSessionsInput = {
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -556,6 +578,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -588,6 +611,7 @@ export type UserUpdateWithoutSessionsInput = {
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -604,6 +628,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -620,6 +645,7 @@ export type UserCreateWithoutAccountsInput = {
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -636,6 +662,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -668,6 +695,7 @@ export type UserUpdateWithoutAccountsInput = {
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -684,6 +712,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDeviceCodesInput = {
@@ -700,6 +729,7 @@ export type UserCreateWithoutDeviceCodesInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDeviceCodesInput = {
@@ -716,6 +746,7 @@ export type UserUncheckedCreateWithoutDeviceCodesInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDeviceCodesInput = {
@@ -748,6 +779,7 @@ export type UserUpdateWithoutDeviceCodesInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeviceCodesInput = {
@@ -764,6 +796,7 @@ export type UserUncheckedUpdateWithoutDeviceCodesInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSolveHistoryInput = {
@@ -780,6 +813,7 @@ export type UserCreateWithoutSolveHistoryInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSolveHistoryInput = {
@@ -796,6 +830,7 @@ export type UserUncheckedCreateWithoutSolveHistoryInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSolveHistoryInput = {
@@ -828,6 +863,7 @@ export type UserUpdateWithoutSolveHistoryInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSolveHistoryInput = {
@@ -844,6 +880,7 @@ export type UserUncheckedUpdateWithoutSolveHistoryInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavedProblemsInput = {
@@ -860,6 +897,7 @@ export type UserCreateWithoutSavedProblemsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedProblemsInput = {
@@ -876,6 +914,7 @@ export type UserUncheckedCreateWithoutSavedProblemsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
   deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedProblemsInput = {
@@ -908,6 +947,7 @@ export type UserUpdateWithoutSavedProblemsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedProblemsInput = {
@@ -924,6 +964,91 @@ export type UserUncheckedUpdateWithoutSavedProblemsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
   deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatSessionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutChatsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  image?: string | null
+  emailVerified?: boolean
+  password?: string | null
+  isPro?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  solveHistory?: Prisma.SolveHistoryCreateNestedManyWithoutUserInput
+  savedProblems?: Prisma.SavedProblemCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutChatsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  image?: string | null
+  emailVerified?: boolean
+  password?: string | null
+  isPro?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  solveHistory?: Prisma.SolveHistoryUncheckedCreateNestedManyWithoutUserInput
+  savedProblems?: Prisma.SavedProblemUncheckedCreateNestedManyWithoutUserInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutChatsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+}
+
+export type UserUpsertWithoutChatsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutChatsInput, Prisma.UserUncheckedUpdateWithoutChatsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutChatsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutChatsInput, Prisma.UserUncheckedUpdateWithoutChatsInput>
+}
+
+export type UserUpdateWithoutChatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  solveHistory?: Prisma.SolveHistoryUpdateManyWithoutUserNestedInput
+  savedProblems?: Prisma.SavedProblemUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutChatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  solveHistory?: Prisma.SolveHistoryUncheckedUpdateManyWithoutUserNestedInput
+  savedProblems?: Prisma.SavedProblemUncheckedUpdateManyWithoutUserNestedInput
+  deviceCodes?: Prisma.DeviceCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -937,6 +1062,7 @@ export type UserCountOutputType = {
   solveHistory: number
   savedProblems: number
   deviceCodes: number
+  chats: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -945,6 +1071,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   solveHistory?: boolean | UserCountOutputTypeCountSolveHistoryArgs
   savedProblems?: boolean | UserCountOutputTypeCountSavedProblemsArgs
   deviceCodes?: boolean | UserCountOutputTypeCountDeviceCodesArgs
+  chats?: boolean | UserCountOutputTypeCountChatsArgs
 }
 
 /**
@@ -992,6 +1119,13 @@ export type UserCountOutputTypeCountDeviceCodesArgs<ExtArgs extends runtime.Type
   where?: Prisma.DeviceCodeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountChatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChatSessionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1008,6 +1142,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   solveHistory?: boolean | Prisma.User$solveHistoryArgs<ExtArgs>
   savedProblems?: boolean | Prisma.User$savedProblemsArgs<ExtArgs>
   deviceCodes?: boolean | Prisma.User$deviceCodesArgs<ExtArgs>
+  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1054,6 +1189,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   solveHistory?: boolean | Prisma.User$solveHistoryArgs<ExtArgs>
   savedProblems?: boolean | Prisma.User$savedProblemsArgs<ExtArgs>
   deviceCodes?: boolean | Prisma.User$deviceCodesArgs<ExtArgs>
+  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1067,6 +1203,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     solveHistory: Prisma.$SolveHistoryPayload<ExtArgs>[]
     savedProblems: Prisma.$SavedProblemPayload<ExtArgs>[]
     deviceCodes: Prisma.$DeviceCodePayload<ExtArgs>[]
+    chats: Prisma.$ChatSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1477,6 +1614,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   solveHistory<T extends Prisma.User$solveHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$solveHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SolveHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedProblems<T extends Prisma.User$savedProblemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedProblemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedProblemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deviceCodes<T extends Prisma.User$deviceCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chats<T extends Prisma.User$chatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2025,6 +2163,30 @@ export type User$deviceCodesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.DeviceCodeScalarFieldEnum | Prisma.DeviceCodeScalarFieldEnum[]
+}
+
+/**
+ * User.chats
+ */
+export type User$chatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChatSession
+   */
+  select?: Prisma.ChatSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ChatSession
+   */
+  omit?: Prisma.ChatSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChatSessionInclude<ExtArgs> | null
+  where?: Prisma.ChatSessionWhereInput
+  orderBy?: Prisma.ChatSessionOrderByWithRelationInput | Prisma.ChatSessionOrderByWithRelationInput[]
+  cursor?: Prisma.ChatSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChatSessionScalarFieldEnum | Prisma.ChatSessionScalarFieldEnum[]
 }
 
 /**

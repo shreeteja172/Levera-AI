@@ -137,7 +137,7 @@ export default function ProblemsClient() {
 
           <nav className="flex items-center gap-6">
             <Link
-              href="/home"
+              href="/dashboard"
               className="text-sm font-semibold text-zinc-400 hover:text-white transition-colors"
             >
               Levera AI
@@ -835,7 +835,7 @@ export default function ProblemsClient() {
                   Close Detail
                 </button>
                 <Link
-                  href={`/home?problem=${selectedProblem.slug}`}
+                  href={`/dashboard?problem=${selectedProblem.slug}`}
                   onClick={() => setSelectedProblem(null)}
                   className="bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-colors"
                 >

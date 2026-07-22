@@ -8,10 +8,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isProtectedPage = pathname.startsWith("/home") || pathname.startsWith("/problems");
+  if (pathname === "/home" || pathname.startsWith("/home/")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  const isProtectedPage = pathname.startsWith("/dashboard") || pathname.startsWith("/problems");
 
   const isAuthOrLandingPage =
-    pathname === "/" ||
     pathname.startsWith("/auth/sign-in") ||
     pathname.startsWith("/auth/sign-up") ||
     pathname.startsWith("/auth/verify-otp");
@@ -25,7 +28,7 @@ export async function proxy(request: NextRequest) {
       if (pathname.startsWith("/auth/extension")) {
         return NextResponse.next();
       }
-      return NextResponse.redirect(new URL("/home", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     if (!session && isProtectedPage) {
@@ -38,6 +41,7 @@ export async function proxy(request: NextRequest) {
 
   return NextResponse.next();
 }
+
 
 export const config = {
   matcher: [

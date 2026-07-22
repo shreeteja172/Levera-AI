@@ -103,14 +103,14 @@ function OTPVerificationForm() {
       const result = await authClient.signIn.emailOtp({
         email,
         otp: otpValue,
-        callbackURL: "/home",
+        callbackURL: "/dashboard",
       });
 
       if (result.error) {
         toast.error(result.error.message || "Verification failed");
       } else {
         toast.success("Signed in successfully!");
-        router.push("/home");
+        router.push("/dashboard");
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Verification failed");

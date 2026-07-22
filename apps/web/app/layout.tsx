@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Instrument_Serif } from "next/font/google";
+import { Exo_2 } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Toaster } from "react-hot-toast";
 import Providers from "./providers";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
-const instrumentSerif = Instrument_Serif({
+const exo2 = Exo_2({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-instrument",
+  variable: "--font-exo2",
 });
 
 export const metadata: Metadata = {
@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable} font-instrument`}>
+    <html lang="en" className={cn("font-sans", exo2.variable)}>
+      <body className={`${GeistSans.variable} ${GeistMono.variable} ${exo2.variable} font-sans`}>
         <Providers>
           {children}
         </Providers>
@@ -37,7 +37,7 @@ export default function RootLayout({
               background: "#141414",
               color: "#ededed",
               border: "1px solid #2a2a2a",
-              fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+              fontFamily: "var(--font-exo2), system-ui, sans-serif",
               fontSize: "0.875rem",
               borderRadius: "8px",
               padding: "12px 16px",

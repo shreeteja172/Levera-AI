@@ -58,7 +58,9 @@ export const ModelName = {
   DeviceCode: 'DeviceCode',
   Problem: 'Problem',
   SolveHistory: 'SolveHistory',
-  SavedProblem: 'SavedProblem'
+  SavedProblem: 'SavedProblem',
+  ChatSession: 'ChatSession',
+  ChatMessage: 'ChatMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -185,6 +187,28 @@ export const SavedProblemScalarFieldEnum = {
 } as const
 
 export type SavedProblemScalarFieldEnum = (typeof SavedProblemScalarFieldEnum)[keyof typeof SavedProblemScalarFieldEnum]
+
+
+export const ChatSessionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatSessionScalarFieldEnum = (typeof ChatSessionScalarFieldEnum)[keyof typeof ChatSessionScalarFieldEnum]
+
+
+export const ChatMessageScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  content: 'content',
+  sessionId: 'sessionId',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
 export const SortOrder = {

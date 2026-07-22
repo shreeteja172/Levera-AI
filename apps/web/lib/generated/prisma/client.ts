@@ -81,3 +81,13 @@ export type SolveHistory = Prisma.SolveHistoryModel
  * 
  */
 export type SavedProblem = Prisma.SavedProblemModel
+/**
+ * Model ChatSession
+ * 
+ */
+export type ChatSession = Prisma.ChatSessionModel
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = Prisma.ChatMessageModel

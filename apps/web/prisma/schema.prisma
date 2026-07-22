@@ -31,6 +31,7 @@ model User {
   savedProblems SavedProblem[]
 
   deviceCodes DeviceCode[]
+  chats       ChatSession[]
   
   @@map("user")
 }
@@ -135,4 +136,27 @@ model SavedProblem {
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, problemId])
+}
+
+model ChatSession {
+  id        String        @id @default(cuid())
+  title     String
+  userId    String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+
+  @@map("chat_session")
+}
+
+model ChatMessage {
+  id        String      @id @default(cuid())
+  role      String
+  content   String
+  sessionId String
+  createdAt DateTime    @default(now())
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("chat_message")
 }

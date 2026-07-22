@@ -148,7 +148,7 @@ export default function SignUpPage() {
 
               <button
                 type="button"
-                onClick={() => signInWithGoogle("/home")}
+                onClick={() => signInWithGoogle("/dashboard")}
                 className="w-full rounded-[10px] border border-[rgba(0,0,0,0.12)] bg-white text-[#1E293B] p-3 text-[0.92rem] font-semibold font-inherit cursor-pointer transition-all duration-200 ease-in-out flex justify-center items-center gap-2.5 hover:bg-[#FAF9F6] hover:border-[rgba(0,0,0,0.2)]"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

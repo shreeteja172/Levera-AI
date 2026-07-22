@@ -1,0 +1,240 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession, signOut } from "@/lib/auth-client";
+import axios from "axios";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  Plus,
+  MessageSquare,
+  History,
+  BookOpen,
+  LogOut,
+  User,
+  PanelLeft,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface ChatSession {
+  id: string;
+  title: string;
+  messages: any[];
+  createdAt: number;
+}
+
+export function AppSidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { data: sessionData } = useSession();
+  const user = sessionData?.user;
+  const { toggleSidebar } = useSidebar();
+
+  const [recentChats, setRecentChats] = useState<ChatSession[]>([]);
+
+  useEffect(() => {
+    const loadChats = async () => {
+      try {
+        const res = await axios.get("/api/chats");
+        setRecentChats(res.data.slice(0, 7));
+      } catch (e) {
+        console.error("Failed to load chats from database:", e);
+      }
+    };
+
+    loadChats();
+
+    window.addEventListener("levera_chats_updated", loadChats);
+    return () => {
+      window.removeEventListener("levera_chats_updated", loadChats);
+    };
+  }, []);
+
+  const handleNewChat = () => {
+    router.push("/dashboard");
+    window.dispatchEvent(new CustomEvent("levera_new_chat"));
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/auth/sign-in");
+  };
+
+  return (
+    <Sidebar className="border-r border-zinc-900 bg-zinc-950 text-zinc-200">
+      <SidebarHeader className="p-4 flex flex-row items-center justify-between border-b border-zinc-900/60 bg-zinc-950">
+        <Link href="/dashboard" className="flex items-center gap-2 font-extrabold text-lg text-white">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            className="text-orange-500"
+          >
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+            <circle cx="12" cy="12" r="2" fill="currentColor" />
+          </svg>
+          <span className="tracking-tight">Levera</span>
+        </Link>
+        <button
+          onClick={toggleSidebar}
+          className="text-zinc-500 hover:text-zinc-300 md:hidden p-1 rounded hover:bg-zinc-900"
+        >
+          <PanelLeft size={18} />
+        </button>
+      </SidebarHeader>
+
+      <SidebarContent className="px-2 py-4 bg-zinc-950 space-y-6">
+        <div className="px-2">
+          <button
+            onClick={handleNewChat}
+            className="w-full flex items-center justify-center gap-2 bg-orange-600/10 hover:bg-orange-600/20 text-orange-500 border border-orange-500/20 font-semibold py-2 px-4 rounded-xl transition-all duration-200"
+          >
+            <Plus size={16} />
+            <span>New Chat</span>
+          </button>
+        </div>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-zinc-500 text-[10px] font-bold tracking-wider uppercase px-3">
+            Navigation
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="mt-1 space-y-1">
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={<Link href="/dashboard" />}
+                  isActive={pathname === "/dashboard"}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                    pathname === "/dashboard"
+                      ? "bg-zinc-900 text-white font-medium"
+                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                  )}
+                >
+                  <MessageSquare size={16} />
+                  <span>Levera AI</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={<Link href="/problems" />}
+                  isActive={pathname === "/problems"}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                    pathname === "/problems"
+                      ? "bg-zinc-900 text-white font-medium"
+                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                  )}
+                >
+                  <BookOpen size={16} />
+                  <span>Problems</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={<Link href="/dashboard/recent-chats" />}
+                  isActive={pathname === "/dashboard/recent-chats"}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                    pathname === "/dashboard/recent-chats"
+                      ? "bg-zinc-900 text-white font-medium"
+                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                  )}
+                >
+                  <History size={16} />
+                  <span>Recent Chats</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {recentChats.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-zinc-500 text-[10px] font-bold tracking-wider uppercase px-3">
+              Recents
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="mt-1 space-y-0.5">
+                {recentChats.map((chat) => (
+                  <SidebarMenuItem key={chat.id}>
+                    <SidebarMenuButton
+                      render={<Link href={`/dashboard?chatId=${chat.id}`} />}
+                      className={cn(
+                        "w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs transition-colors truncate",
+                        pathname === `/dashboard` && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("chatId") === chat.id
+                          ? "bg-zinc-900/80 text-white font-medium"
+                          : "text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200"
+                      )}
+                    >
+                      <MessageSquare size={13} className="shrink-0 text-zinc-500" />
+                      <span className="truncate max-w-[160px]">{chat.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+      </SidebarContent>
+
+      <SidebarFooter className="p-4 border-t border-zinc-900/60 bg-zinc-950">
+        {user ? (
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              {user.image ? (
+                <img
+                  src={user.image}
+                  alt={user.name || "Profile"}
+                  className="w-8 h-8 rounded-full object-cover border border-zinc-800"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-bold text-xs text-white">
+                  {user.name?.[0]?.toUpperCase() || "U"}
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+                <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-zinc-400 hover:text-red-400 bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all"
+            >
+              <LogOut size={13} />
+              <span>Log Out</span>
+            </button>
+          </div>
+        ) : (
+          <Link
+            href="/auth/sign-in"
+            className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-850 text-white font-semibold py-2.5 px-4 rounded-xl border border-zinc-800 text-sm transition-all"
+          >
+            <User size={15} />
+            <span>Sign In</span>
+          </Link>
+        )}
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
