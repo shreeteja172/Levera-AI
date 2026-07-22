@@ -39,8 +39,6 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const runtime = "nodejs";
-
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
