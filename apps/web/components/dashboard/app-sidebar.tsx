@@ -28,6 +28,7 @@ import {
   PanelLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface ChatSession {
   id: string;
@@ -76,7 +77,10 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r border-zinc-900 bg-zinc-950 text-zinc-200">
       <SidebarHeader className="p-4 flex flex-row items-center justify-between border-b border-zinc-900/60 bg-zinc-950">
-        <Link href="/dashboard" className="flex items-center gap-2 font-extrabold text-lg text-white">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 font-extrabold text-lg text-white"
+        >
           <svg
             width="20"
             height="20"
@@ -125,7 +129,7 @@ export function AppSidebar() {
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                     pathname === "/dashboard"
                       ? "bg-zinc-900 text-white font-medium"
-                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
                   )}
                 >
                   <MessageSquare size={16} />
@@ -141,7 +145,7 @@ export function AppSidebar() {
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                     pathname === "/problems"
                       ? "bg-zinc-900 text-white font-medium"
-                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
                   )}
                 >
                   <BookOpen size={16} />
@@ -157,7 +161,7 @@ export function AppSidebar() {
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                     pathname === "/dashboard/recent-chats"
                       ? "bg-zinc-900 text-white font-medium"
-                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
                   )}
                 >
                   <History size={16} />
@@ -181,13 +185,22 @@ export function AppSidebar() {
                       render={<Link href={`/dashboard?chatId=${chat.id}`} />}
                       className={cn(
                         "w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs transition-colors truncate",
-                        pathname === `/dashboard` && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("chatId") === chat.id
+                        pathname === `/dashboard` &&
+                          typeof window !== "undefined" &&
+                          new URLSearchParams(window.location.search).get(
+                            "chatId",
+                          ) === chat.id
                           ? "bg-zinc-900/80 text-white font-medium"
-                          : "text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200"
+                          : "text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200",
                       )}
                     >
-                      <MessageSquare size={13} className="shrink-0 text-zinc-500" />
-                      <span className="truncate max-w-[160px]">{chat.title}</span>
+                      <MessageSquare
+                        size={13}
+                        className="shrink-0 text-zinc-500"
+                      />
+                      <span className="truncate max-w-[160px]">
+                        {chat.title}
+                      </span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -202,10 +215,13 @@ export function AppSidebar() {
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
               {user.image ? (
-                <img
+                <Image
                   src={user.image}
+                  width={8}
+                  height={8}
                   alt={user.name || "Profile"}
-                  className="w-8 h-8 rounded-full object-cover border border-zinc-800"
+                  referrerPolicy="no-referrer"
+                  className="rounded-full object-cover border border-zinc-800"
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-bold text-xs text-white">
@@ -213,7 +229,9 @@ export function AppSidebar() {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+                <p className="text-sm font-semibold text-white truncate">
+                  {user.name}
+                </p>
                 <p className="text-xs text-zinc-500 truncate">{user.email}</p>
               </div>
             </div>

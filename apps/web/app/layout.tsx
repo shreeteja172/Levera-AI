@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", exo2.variable)}>
+    <html lang="en" className={cn("dark font-sans", exo2.variable)}>
       <body className={`${GeistSans.variable} ${GeistMono.variable} ${exo2.variable} font-sans`}>
         <Providers>
           {children}
