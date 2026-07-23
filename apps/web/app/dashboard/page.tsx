@@ -64,6 +64,55 @@ function PreBlock({ children }: { children: React.ReactNode }) {
   );
 }
 
+interface ParsedContent {
+  type: "text" | "solutions";
+  text?: string;
+  brute?: string;
+  better?: string;
+  optimal?: string;
+}
+
+function parseMessageContent(content: string): ParsedContent[] {
+  const parts: ParsedContent[] = [];
+  const regex = /<solutions>([\s\S]*?)<\/solutions>/g;
+  
+  let lastIndex = 0;
+  let match;
+  
+  while ((match = regex.exec(content)) !== null) {
+    const textBefore = content.substring(lastIndex, match.index);
+    if (textBefore.trim()) {
+      parts.push({ type: "text", text: textBefore });
+    }
+    
+    const solutionsContent = match[1] ?? "";
+    
+    const bruteMatch = /<brute>([\s\S]*?)<\/brute>/.exec(solutionsContent);
+    const betterMatch = /<better>([\s\S]*?)<\/better>/.exec(solutionsContent);
+    const optimalMatch = /<optimal>([\s\S]*?)<\/optimal>/.exec(solutionsContent);
+    
+    parts.push({
+      type: "solutions",
+      brute: bruteMatch?.[1]?.trim(),
+      better: betterMatch?.[1]?.trim(),
+      optimal: optimalMatch?.[1]?.trim(),
+    });
+    
+    lastIndex = regex.lastIndex;
+  }
+  
+  const textAfter = content.substring(lastIndex);
+  if (textAfter.trim()) {
+    parts.push({ type: "text", text: textAfter });
+  }
+  
+  if (parts.length === 0) {
+    parts.push({ type: "text", text: content });
+  }
+  
+  return parts;
+}
+
 function DashboardChatContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -75,6 +124,7 @@ function DashboardChatContent() {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     const fetchChatSession = async () => {
@@ -115,6 +165,14 @@ function DashboardChatContent() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [inputMessage]);
 
   const deleteChat = async (id: string) => {
     try {
@@ -173,6 +231,46 @@ function DashboardChatContent() {
     }
   }
 
+  const markdownComponents = {
+    pre({ children }: any) {
+      return <PreBlock>{children}</PreBlock>;
+    },
+    code({ className, children, ...props }: any) {
+      const inline = !className;
+      if (inline) {
+        return (
+          <code
+            className="rounded bg-zinc-800/80 px-1.5 py-0.5 text-orange-400 font-mono text-xs before:content-none after:content-none"
+            {...props}
+          >
+            {children}
+          </code>
+        );
+      }
+      return (
+        <code
+          className={`${className} block overflow-x-auto p-4 text-xs font-mono before:content-none after:content-none`}
+          {...props}
+        >
+          {children}
+        </code>
+      );
+    },
+    h1: ({ children }: any) => (
+      <h1 className="mb-4 mt-6 text-xl font-bold text-white border-b border-zinc-900 pb-1">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }: any) => (
+      <h2 className="mb-3 mt-5 text-lg font-semibold text-white">
+        {children}
+      </h2>
+    ),
+    p: ({ children }: any) => (
+      <p className="my-3 leading-relaxed text-zinc-300">{children}</p>
+    ),
+  };
+
   return (
     <div className="flex flex-col h-screen bg-zinc-950 text-white relative">
       <header className="flex h-14 items-center justify-between border-b border-zinc-900 bg-zinc-950 px-6 shrink-0 z-20">
@@ -195,7 +293,7 @@ function DashboardChatContent() {
         )}
       </header>
 
-      <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-32 space-y-6">
         {messages.length === 0 ? (
           <div className="max-w-2xl mx-auto h-full flex flex-col justify-center items-center text-center space-y-8 py-12">
             <div className="space-y-3">
@@ -228,7 +326,7 @@ function DashboardChatContent() {
             </div>
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto space-y-6">
+          <div className="max-w-5xl mx-auto space-y-6">
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -237,58 +335,90 @@ function DashboardChatContent() {
                 }`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-5 py-3.5 text-sm ${
+                  className={`rounded-2xl px-5 py-3.5 text-sm ${
                     msg.role === "user"
-                      ? "bg-zinc-900 border border-zinc-850 text-white rounded-br-none"
-                      : "bg-zinc-900/40 border border-zinc-900 text-zinc-100 rounded-bl-none prose prose-invert prose-sm"
+                      ? "max-w-[85%] bg-zinc-900 border border-zinc-850 text-white rounded-br-none"
+                      : "w-full max-w-none bg-zinc-900/40 border border-zinc-900 text-zinc-100 rounded-bl-none prose prose-invert prose-sm"
                   }`}
                 >
                   {msg.role === "assistant" ? (
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      rehypePlugins={[rehypeHighlight]}
-                      components={{
-                        pre({ children }) {
-                          return <PreBlock>{children}</PreBlock>;
-                        },
-                        code({ className, children, ...props }) {
-                          const inline = !className;
-                          if (inline) {
-                            return (
-                              <code
-                                className="rounded bg-zinc-800/80 px-1.5 py-0.5 text-orange-400 font-mono text-xs before:content-none after:content-none"
-                                {...props}
-                              >
-                                {children}
-                              </code>
-                            );
-                          }
+                    <div className="space-y-4 w-full">
+                      {parseMessageContent(msg.content).map((part, partIdx) => {
+                        if (part.type === "text") {
                           return (
-                            <code
-                              className={`${className} block overflow-x-auto p-4 text-xs font-mono before:content-none after:content-none`}
-                              {...props}
+                            <ReactMarkdown
+                              key={partIdx}
+                              remarkPlugins={[remarkGfm]}
+                              rehypePlugins={[rehypeHighlight]}
+                              components={markdownComponents}
                             >
-                              {children}
-                            </code>
+                              {part.text}
+                            </ReactMarkdown>
                           );
-                        },
-                        h1: ({ children }) => (
-                          <h1 className="mb-4 mt-6 text-xl font-bold text-white border-b border-zinc-900 pb-1">
-                            {children}
-                          </h1>
-                        ),
-                        h2: ({ children }) => (
-                          <h2 className="mb-3 mt-5 text-lg font-semibold text-white">
-                            {children}
-                          </h2>
-                        ),
-                        p: ({ children }) => (
-                          <p className="my-3 leading-relaxed text-zinc-300">{children}</p>
-                        ),
-                      }}
-                    >
-                      {msg.content}
-                    </ReactMarkdown>
+                        } else {
+                          return (
+                            <div key={partIdx} className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full my-4">
+                              {part.brute && (
+                                <div className="flex flex-col bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-3 shadow-xl hover:border-zinc-700/80 transition-all">
+                                  <div className="flex items-center">
+                                    <span className="text-xs font-bold uppercase tracking-wider text-red-400 bg-red-500/10 px-2.5 py-1 rounded-full border border-red-500/10">
+                                      Brute Force
+                                    </span>
+                                  </div>
+                                  <div className="text-sm prose prose-invert prose-sm max-w-none">
+                                    <ReactMarkdown
+                                      remarkPlugins={[remarkGfm]}
+                                      rehypePlugins={[rehypeHighlight]}
+                                      components={markdownComponents}
+                                    >
+                                      {part.brute}
+                                    </ReactMarkdown>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {part.better && (
+                                <div className="flex flex-col bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-3 shadow-xl hover:border-zinc-700/80 transition-all">
+                                  <div className="flex items-center">
+                                    <span className="text-xs font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-full border border-orange-500/10">
+                                      Better Approach
+                                    </span>
+                                  </div>
+                                  <div className="text-sm prose prose-invert prose-sm max-w-none">
+                                    <ReactMarkdown
+                                      remarkPlugins={[remarkGfm]}
+                                      rehypePlugins={[rehypeHighlight]}
+                                      components={markdownComponents}
+                                    >
+                                      {part.better}
+                                    </ReactMarkdown>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {part.optimal && (
+                                <div className="flex flex-col bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-3 shadow-xl hover:border-zinc-700/80 transition-all">
+                                  <div className="flex items-center">
+                                    <span className="text-xs font-bold uppercase tracking-wider text-green-400 bg-green-500/10 px-2.5 py-1 rounded-full border border-green-500/10">
+                                      Optimal Solution
+                                    </span>
+                                  </div>
+                                  <div className="text-sm prose prose-invert prose-sm max-w-none">
+                                    <ReactMarkdown
+                                      remarkPlugins={[remarkGfm]}
+                                      rehypePlugins={[rehypeHighlight]}
+                                      components={markdownComponents}
+                                    >
+                                      {part.optimal}
+                                    </ReactMarkdown>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }
+                      })}
+                    </div>
                   ) : (
                     <div className="whitespace-pre-wrap">{msg.content}</div>
                   )}
@@ -316,9 +446,10 @@ function DashboardChatContent() {
         )}
       </div>
 
-      <div className="p-4 md:p-6 border-t border-zinc-900 bg-zinc-950 shrink-0 z-20">
-        <div className="max-w-3xl mx-auto relative flex items-center bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all">
+      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent z-20 pointer-events-none">
+        <div className="max-w-5xl mx-auto relative flex items-center bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl">
           <textarea
+            ref={textareaRef}
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={(e) => {
@@ -329,7 +460,7 @@ function DashboardChatContent() {
             }}
             placeholder="Type a message or paste a DSA problem description..."
             rows={1}
-            className="flex-1 max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 [scrollbar-width:none] focus:ring-0"
+            className="flex-1 max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0"
           />
           <button
             onClick={() => sendMessage()}
