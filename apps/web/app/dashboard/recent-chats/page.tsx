@@ -177,7 +177,7 @@ export default function RecentChatsPage() {
                       <Trash2 size={13} />
                     </button>
                     <Link
-                      href={`/dashboard?chatId=${chat.id}`}
+                      href={`/dashboard/chat/${chat.id}`}
                       className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white px-3 py-2 rounded-lg border border-zinc-700/30 transition-all font-medium"
                     >
                       <span>Open</span>

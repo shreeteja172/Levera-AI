@@ -124,10 +124,10 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   render={<Link href="/dashboard" />}
-                  isActive={pathname === "/dashboard"}
+                  isActive={pathname === "/dashboard" || pathname.startsWith("/dashboard/chat/")}
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    pathname === "/dashboard"
+                    (pathname === "/dashboard" || pathname.startsWith("/dashboard/chat/"))
                       ? "bg-zinc-900 text-white font-medium"
                       : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
                   )}
@@ -182,14 +182,10 @@ export function AppSidebar() {
                 {recentChats.map((chat) => (
                   <SidebarMenuItem key={chat.id}>
                     <SidebarMenuButton
-                      render={<Link href={`/dashboard?chatId=${chat.id}`} />}
+                      render={<Link href={`/dashboard/chat/${chat.id}`} />}
                       className={cn(
                         "w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs transition-colors truncate",
-                        pathname === `/dashboard` &&
-                          typeof window !== "undefined" &&
-                          new URLSearchParams(window.location.search).get(
-                            "chatId",
-                          ) === chat.id
+                        pathname === `/dashboard/chat/${chat.id}`
                           ? "bg-zinc-900/80 text-white font-medium"
                           : "text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200",
                       )}
