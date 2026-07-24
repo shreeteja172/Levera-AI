@@ -9,6 +9,7 @@ import axios from "axios";
 import { Send, Trash2, ArrowRight, Copy, Check, ChevronDown } from "lucide-react";
 import "highlight.js/styles/github-dark.css";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useSession } from "@/lib/auth-client";
 import { SUPPORTED_MODELS, type ModelOption } from "@/lib/ai/model-list";
 import {
   ModelSelector,
@@ -22,6 +23,7 @@ import {
   ModelSelectorName,
   ModelSelectorLogo,
 } from "@/components/ai-elements/model-selector";
+
 
 interface Message {
   role: "user" | "assistant";
@@ -126,6 +128,8 @@ function parseMessageContent(content: string): ParsedContent[] {
   return parts;
 }
 
+
+
 function DashboardChatContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -138,6 +142,60 @@ function DashboardChatContent() {
 
   const [selectedModel, setSelectedModel] = useState<ModelOption>(SUPPORTED_MODELS[0]!);
   const [isModelSelectorOpen, setIsModelSelectorOpen] = useState(false);
+
+  const { data: session } = useSession();
+  const [greeting, setGreeting] = useState("Good morning");
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) {
+      setGreeting("Good morning");
+    } else if (hour < 18) {
+      setGreeting("Good afternoon");
+    } else {
+      setGreeting("Good evening");
+    }
+  }, []);
+
+  const firstName = session?.user?.name ? session.user.name.split(" ")[0] : "";
+  const displayName = firstName || "there";
+
+  const [thinkingWord, setThinkingWord] = useState("thinking");
+
+  useEffect(() => {
+    if (!loading) {
+      setThinkingWord("thinking");
+      return;
+    }
+
+    const words = [
+      "thinking",
+      "cogitating",
+      "sleuthing",
+      "mulling",
+      "weighing",
+      "honing",
+      "fathoming",
+      "sifting",
+      "crystalising",
+      "musing",
+      "pondering",
+      "contemplating",
+      "figuring",
+      "reckoning",
+      "untangling",
+      "triangluating",
+      "picturing"
+    ];
+
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % words.length;
+      setThinkingWord(words[currentIndex]!);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -251,6 +309,70 @@ function DashboardChatContent() {
     }
   }
 
+  function renderChatInput(className = "max-w-5xl") {
+    return (
+      <div className={`w-full ${className} mx-auto relative flex flex-col bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl`}>
+        <textarea
+          ref={textareaRef}
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
+          placeholder="Type a message or paste a DSA problem description..."
+          rows={1}
+          className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0"
+        />
+        <div className="flex items-center justify-between border-t border-zinc-850/50 mt-1 pt-2 px-2">
+          <ModelSelector open={isModelSelectorOpen} onOpenChange={setIsModelSelectorOpen}>
+            <ModelSelectorTrigger
+              render={
+                <button className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer">
+                  <ModelSelectorLogo provider={selectedModel.logoProvider} className="size-3.5" />
+                  <span className="font-medium">{selectedModel.name}</span>
+                  <ChevronDown size={12} className="text-zinc-500" />
+                </button>
+              }
+            />
+            <ModelSelectorContent className="w-[300px]">
+              <ModelSelectorInput placeholder="Search models..." />
+              <ModelSelectorList>
+                <ModelSelectorEmpty>No model found.</ModelSelectorEmpty>
+                <ModelSelectorGroup heading="Available Models">
+                  {SUPPORTED_MODELS.map((model) => (
+                    <ModelSelectorItem
+                      key={model.id}
+                      value={model.name}
+                      onSelect={() => {
+                        setSelectedModel(model);
+                        setIsModelSelectorOpen(false);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md hover:bg-zinc-900/60 transition-colors text-zinc-300 hover:text-white data-[selected=true]:bg-zinc-900/80 data-[selected=true]:text-white"
+                    >
+                      <ModelSelectorLogo provider={model.logoProvider} className="size-3.5" />
+                      <ModelSelectorName>{model.name}</ModelSelectorName>
+                    </ModelSelectorItem>
+                  ))}
+                </ModelSelectorGroup>
+              </ModelSelectorList>
+            </ModelSelectorContent>
+          </ModelSelector>
+
+          <button
+            onClick={() => sendMessage()}
+            disabled={loading || !inputMessage.trim()}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
+          >
+            <Send size={14} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const markdownComponents = {
     pre({ children }: any) {
       return <PreBlock>{children}</PreBlock>;
@@ -297,7 +419,7 @@ function DashboardChatContent() {
         <div className="flex items-center gap-3">
           <SidebarTrigger className="text-zinc-400 hover:text-white" />
           <div className="h-4 w-px bg-zinc-800" />
-          <span className="text-sm font-semibold tracking-wide text-zinc-300">
+          <span className="text-sm font-medium tracking-wide text-zinc-300">
             {activeChatId ? "Active Chat Session" : "New Conversation"}
           </span>
         </div>
@@ -315,17 +437,21 @@ function DashboardChatContent() {
 
       <div className="flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-32 space-y-6">
         {messages.length === 0 ? (
-          <div className="max-w-2xl mx-auto h-full flex flex-col justify-center items-center text-center space-y-8 py-12">
+          <div className="max-w-2xl mx-auto h-full flex flex-col justify-center items-center text-center space-y-6 py-12">
             <div className="space-y-3">
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-200 to-zinc-500">
-                How can Levera AI help?
+              <h1 className="text-4xl md:text-5xl font-medium tracking-tight text-zinc-100">
+                {greeting}, {displayName}.
               </h1>
               <p className="text-sm text-zinc-400 max-w-md mx-auto">
-                Ask about DSA concepts, request code dry runs, or get help with problem complexity analysis.
+                How can Levera AI help you today? Ask about DSA concepts, code solutions, or complexity analysis.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
+            <div className="w-full">
+              {renderChatInput("max-w-3xl")}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl pt-2">
               {[
                 "Explain the intuition behind Binary Search",
                 "How do I analyze time complexity of Recursion?",
@@ -346,7 +472,7 @@ function DashboardChatContent() {
             </div>
           </div>
         ) : (
-          <div className="max-w-5xl mx-auto space-y-6">
+          <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -381,7 +507,7 @@ function DashboardChatContent() {
                               {part.brute && (
                                 <div className="flex flex-col bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-3 shadow-xl hover:border-zinc-700/80 transition-all">
                                   <div className="flex items-center">
-                                    <span className="text-xs font-bold uppercase tracking-wider text-red-400 bg-red-500/10 px-2.5 py-1 rounded-full border border-red-500/10">
+                                    <span className="text-xs font-medium uppercase tracking-wider text-red-400 bg-red-500/10 px-2.5 py-1 rounded-full border border-red-500/10">
                                       Brute Force
                                     </span>
                                   </div>
@@ -400,7 +526,7 @@ function DashboardChatContent() {
                               {part.better && (
                                 <div className="flex flex-col bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-3 shadow-xl hover:border-zinc-700/80 transition-all">
                                   <div className="flex items-center">
-                                    <span className="text-xs font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-full border border-orange-500/10">
+                                    <span className="text-xs font-medium uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-full border border-orange-500/10">
                                       Better Approach
                                     </span>
                                   </div>
@@ -419,7 +545,7 @@ function DashboardChatContent() {
                               {part.optimal && (
                                 <div className="flex flex-col bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-3 shadow-xl hover:border-zinc-700/80 transition-all">
                                   <div className="flex items-center">
-                                    <span className="text-xs font-bold uppercase tracking-wider text-green-400 bg-green-500/10 px-2.5 py-1 rounded-full border border-green-500/10">
+                                    <span className="text-xs font-medium uppercase tracking-wider text-green-400 bg-green-500/10 px-2.5 py-1 rounded-full border border-green-500/10">
                                       Optimal Solution
                                     </span>
                                   </div>
@@ -443,7 +569,7 @@ function DashboardChatContent() {
                     <div className="whitespace-pre-wrap">{msg.content}</div>
                   )}
                 </div>
-                <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-semibold">
+                <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
                   {msg.role === "user" ? "You" : "Levera AI"}
                 </span>
               </div>
@@ -456,8 +582,8 @@ function DashboardChatContent() {
                   <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
                   <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                 </div>
-                <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-semibold">
-                  Thinking
+                <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
+                  {thinkingWord}
                 </span>
               </div>
             )}
@@ -466,67 +592,13 @@ function DashboardChatContent() {
         )}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent z-20 pointer-events-none">
-        <div className="max-w-5xl mx-auto relative flex flex-col bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl">
-          <textarea
-            ref={textareaRef}
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-              }
-            }}
-            placeholder="Type a message or paste a DSA problem description..."
-            rows={1}
-            className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0"
-          />
-          <div className="flex items-center justify-between border-t border-zinc-850/50 mt-1 pt-2 px-2">
-            <ModelSelector open={isModelSelectorOpen} onOpenChange={setIsModelSelectorOpen}>
-              <ModelSelectorTrigger
-                render={
-                  <button className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer">
-                    <ModelSelectorLogo provider={selectedModel.logoProvider} className="size-3.5" />
-                    <span className="font-medium">{selectedModel.name}</span>
-                    <ChevronDown size={12} className="text-zinc-500" />
-                  </button>
-                }
-              />
-              <ModelSelectorContent className="w-[300px]">
-                <ModelSelectorInput placeholder="Search models..." />
-                <ModelSelectorList>
-                  <ModelSelectorEmpty>No model found.</ModelSelectorEmpty>
-                  <ModelSelectorGroup heading="Available Models">
-                    {SUPPORTED_MODELS.map((model) => (
-                      <ModelSelectorItem
-                        key={model.id}
-                        value={model.name}
-                        onSelect={() => {
-                          setSelectedModel(model);
-                          setIsModelSelectorOpen(false);
-                        }}
-                        className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md hover:bg-zinc-900/60 transition-colors text-zinc-300 hover:text-white data-[selected=true]:bg-zinc-900/80 data-[selected=true]:text-white"
-                      >
-                        <ModelSelectorLogo provider={model.logoProvider} className="size-3.5" />
-                        <ModelSelectorName>{model.name}</ModelSelectorName>
-                      </ModelSelectorItem>
-                    ))}
-                  </ModelSelectorGroup>
-                </ModelSelectorList>
-              </ModelSelectorContent>
-            </ModelSelector>
-
-            <button
-              onClick={() => sendMessage()}
-              disabled={loading || !inputMessage.trim()}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
-            >
-              <Send size={14} />
-            </button>
+      {messages.length > 0 && (
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent z-20 pointer-events-none">
+          <div className="max-w-3xl mx-auto pointer-events-auto">
+            {renderChatInput("max-w-3xl")}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

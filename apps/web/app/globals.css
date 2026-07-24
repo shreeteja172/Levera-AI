@@ -47,8 +47,8 @@
 }
 
 @theme {
-  --font-sans: var(--font-exo2), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-instrument: var(--font-exo2), sans-serif;
+  --font-sans: "Tiempos Text", Georgia, Cambria, "Times New Roman", Times, serif, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-instrument: "Tiempos Text", Georgia, serif, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
 }
 
@@ -139,7 +139,7 @@ a {
     @apply border-border outline-ring/50;
   }
   body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, a, li, td, th {
-    font-family: var(--font-exo2), sans-serif !important;
+    font-family: "Tiempos Text", Georgia, Cambria, "Times New Roman", Times, serif !important;
   }
   code, pre, kbd, samp, .font-mono, code *, pre * {
     font-family: var(--font-geist-mono), ui-monospace, monospace !important;

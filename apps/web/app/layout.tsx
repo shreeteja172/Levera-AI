@@ -37,7 +37,7 @@ export default function RootLayout({
               background: "#141414",
               color: "#ededed",
               border: "1px solid #2a2a2a",
-              fontFamily: "var(--font-exo2), system-ui, sans-serif",
+              fontFamily: '"Tiempos Text", Georgia, Cambria, "Times New Roman", Times, serif',
               fontSize: "0.875rem",
               borderRadius: "8px",
               padding: "12px 16px",

@@ -138,13 +138,13 @@ export default function ProblemsClient() {
           <nav className="flex items-center gap-6">
             <Link
               href="/dashboard"
-              className="text-sm font-semibold text-zinc-400 hover:text-white transition-colors"
+              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
             >
               Levera AI
             </Link>
             <Link
               href="/problems"
-              className="text-sm font-semibold text-orange-500 hover:text-orange-400 transition-colors"
+              className="text-sm font-medium text-orange-500 hover:text-orange-400 transition-colors"
             >
               Problems
             </Link>

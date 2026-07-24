@@ -79,7 +79,7 @@ export function AppSidebar() {
       <SidebarHeader className="p-4 flex flex-row items-center justify-between border-b border-zinc-900/60 bg-zinc-950">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 font-extrabold text-lg text-white"
+          className="flex items-center gap-2 font-medium text-lg text-white"
         >
           <svg
             width="20"
@@ -108,7 +108,7 @@ export function AppSidebar() {
         <div className="px-2">
           <button
             onClick={handleNewChat}
-            className="w-full flex items-center justify-center gap-2 bg-orange-600/10 hover:bg-orange-600/20 text-orange-500 border border-orange-500/20 font-semibold py-2 px-4 rounded-xl transition-all duration-200"
+            className="w-full flex items-center justify-center gap-2 bg-orange-600/10 hover:bg-orange-600/20 text-orange-500 border border-orange-500/20 font-medium py-2 px-4 rounded-xl transition-all duration-200"
           >
             <Plus size={16} />
             <span>New Chat</span>
@@ -116,7 +116,7 @@ export function AppSidebar() {
         </div>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-zinc-500 text-[10px] font-bold tracking-wider uppercase px-3">
+          <SidebarGroupLabel className="text-zinc-500 text-[10px] font-medium tracking-wider uppercase px-3">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -174,7 +174,7 @@ export function AppSidebar() {
 
         {recentChats.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-zinc-500 text-[10px] font-bold tracking-wider uppercase px-3">
+            <SidebarGroupLabel className="text-zinc-500 text-[10px] font-medium tracking-wider uppercase px-3">
               Recents
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -224,12 +224,12 @@ export function AppSidebar() {
                   className="rounded-full object-cover border border-zinc-800"
                 />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-bold text-xs text-white">
+                <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-medium text-xs text-white">
                   {user.name?.[0]?.toUpperCase() || "U"}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white truncate">
+                <p className="text-sm font-medium text-white truncate">
                   {user.name}
                 </p>
                 <p className="text-xs text-zinc-500 truncate">{user.email}</p>
@@ -237,7 +237,7 @@ export function AppSidebar() {
             </div>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-zinc-400 hover:text-red-400 bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all"
+              className="w-full flex items-center justify-center gap-2 text-xs font-medium text-zinc-400 hover:text-red-400 bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all"
             >
               <LogOut size={13} />
               <span>Log Out</span>
@@ -246,7 +246,7 @@ export function AppSidebar() {
         ) : (
           <Link
             href="/auth/sign-in"
-            className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-850 text-white font-semibold py-2.5 px-4 rounded-xl border border-zinc-800 text-sm transition-all"
+            className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-850 text-white font-medium py-2.5 px-4 rounded-xl border border-zinc-800 text-sm transition-all"
           >
             <User size={15} />
             <span>Sign In</span>

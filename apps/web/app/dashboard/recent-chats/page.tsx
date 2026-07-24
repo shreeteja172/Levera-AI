@@ -68,7 +68,7 @@ export default function RecentChatsPage() {
         <div className="flex items-center gap-3">
           <SidebarTrigger className="text-zinc-400 hover:text-white" />
           <div className="h-4 w-px bg-zinc-800" />
-          <span className="text-sm font-semibold tracking-wide text-zinc-300">
+          <span className="text-sm font-medium tracking-wide text-zinc-300">
             Recent Chats History
           </span>
         </div>
@@ -85,7 +85,7 @@ export default function RecentChatsPage() {
 
       <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-8 space-y-6">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white mb-2">
+          <h1 className="text-3xl font-medium tracking-tight text-white mb-2">
             Conversation History
           </h1>
           <p className="text-sm text-zinc-400">
@@ -105,7 +105,7 @@ export default function RecentChatsPage() {
             />
           </div>
           <div className="text-xs text-zinc-500 shrink-0 font-medium self-end sm:self-center">
-            Total Sessions: <span className="text-zinc-300 font-bold">{chats.length}</span>
+            Total Sessions: <span className="text-zinc-300 font-medium">{chats.length}</span>
           </div>
         </div>
 
@@ -114,7 +114,7 @@ export default function RecentChatsPage() {
             <div className="w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 mb-4 animate-pulse">
               <MessageSquare size={20} />
             </div>
-            <h3 className="text-lg font-bold text-white mb-1">
+            <h3 className="text-lg font-medium text-white mb-1">
               {searchQuery ? "No matching chats found" : "No chats yet"}
             </h3>
             <p className="text-xs text-zinc-500 max-w-sm">
@@ -125,7 +125,7 @@ export default function RecentChatsPage() {
             {!searchQuery && (
               <Link
                 href="/dashboard"
-                className="mt-6 bg-orange-600 hover:bg-orange-500 text-white font-semibold text-xs px-5 py-2.5 rounded-lg transition-colors"
+                className="mt-6 bg-orange-600 hover:bg-orange-500 text-white font-medium text-xs px-5 py-2.5 rounded-lg transition-colors"
               >
                 Start Chatting
               </Link>
@@ -144,7 +144,7 @@ export default function RecentChatsPage() {
                       <div className="p-1.5 rounded-lg bg-orange-600/10 text-orange-500 shrink-0 border border-orange-500/10">
                         <MessageSquare size={14} />
                       </div>
-                      <h3 className="font-semibold text-sm text-zinc-200 line-clamp-1 group-hover:text-white transition-colors">
+                      <h3 className="font-medium text-sm text-zinc-200 line-clamp-1 group-hover:text-white transition-colors">
                         {chat.title}
                       </h3>
                     </div>
@@ -178,7 +178,7 @@ export default function RecentChatsPage() {
                     </button>
                     <Link
                       href={`/dashboard?chatId=${chat.id}`}
-                      className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white px-3 py-2 rounded-lg border border-zinc-700/30 transition-all font-semibold"
+                      className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white px-3 py-2 rounded-lg border border-zinc-700/30 transition-all font-medium"
                     >
                       <span>Open</span>
                       <ExternalLink size={11} />
