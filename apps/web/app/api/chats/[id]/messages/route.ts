@@ -2,15 +2,12 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
-import { Groq } from "groq-sdk";
-
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+import { generateText } from "ai";
+import { getModel } from "@/lib/ai/models";
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id: sessionId } = await params;
@@ -33,12 +30,16 @@ export async function POST(
       return NextResponse.json({ error: "Chat not found" }, { status: 404 });
     }
 
-    const { content } = await req.json();
+    const {
+      content,
+      provider = "groq",
+      model = "openai/gpt-oss-120b",
+    } = await req.json();
 
     if (!content?.trim()) {
       return NextResponse.json(
         { error: "Content is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -66,33 +67,26 @@ export async function POST(
       },
     });
 
-    const completionMessages = [
-      {
-        role: "system" as const,
-        content:
-          "You are Levera AI, a helpful, accurate AI assistant specializing in Data Structures & Algorithms (DSA). When the user asks for a coding solution to a problem, or requests code for a problem, you MUST structure your answer by providing the Brute Force, Better, and Optimal solutions (if they exist) using the following XML-like tag format:\n\n<solutions>\n<brute>\nProvide the Brute Force code solution here. Mention time and space complexity at the start. Wrap the code in markdown code blocks with the correct language tag.\n</brute>\n<better>\nProvide the Better code solution here (e.g. hash map instead of nested loops, or sorting first). Mention time and space complexity. Wrap the code in markdown code blocks. If no distinct 'better' approach exists (e.g. only brute and optimal), leave this tag empty or omit it.\n</better>\n<optimal>\nProvide the Optimal code solution here. Mention time and space complexity. Wrap the code in markdown code blocks.\n</optimal>\n</solutions>\n\nKeep any explanation or surrounding text concise and place them outside the <solutions> tag.",
-      },
-      ...existingMessages.map((msg) => ({
-        role: (msg.role === "assistant" ? "assistant" : "user") as "assistant" | "user",
-        content: msg.content,
-      })),
-    ];
+    const aiModel = getModel(provider, model);
 
     let reply = "";
     try {
-      const completion = await groq.chat.completions.create({
-        model: "openai/gpt-oss-120b",
-        messages: completionMessages,
+      const { text } = await generateText({
+        model: aiModel,
+        system:
+          "You are Levera AI, a helpful, accurate AI assistant specializing in Data Structures & Algorithms (DSA). When the user asks for a coding solution to a problem, or requests code for a problem, you MUST structure your answer by providing the Brute Force, Better, and Optimal solutions (if they exist) using the following XML-like tag format:\n\n<solutions>\n<brute>\nProvide the Brute Force code solution here. Mention time and space complexity at the start. Wrap the code in markdown code blocks with the correct language tag.\n</brute>\n<better>\nProvide the Better code solution here (e.g. hash map instead of nested loops, or sorting first). Mention time and space complexity. Wrap the code in markdown code blocks. If no distinct 'better' approach exists (e.g. only brute and optimal), leave this tag empty or omit it.\n</better>\n<optimal>\nProvide the Optimal code solution here. Mention time and space complexity. Wrap the code in markdown code blocks.\n</optimal>\n</solutions>\n\nKeep any explanation or surrounding text concise and place them outside the <solutions> tag.",
+        messages: existingMessages.map((msg) => ({
+          role: (msg.role === "assistant" ? "assistant" : "user") as
+            "assistant" | "user",
+          content: msg.content,
+        })),
         temperature: 0.7,
-        max_completion_tokens: 2048,
-        top_p: 1,
-        stream: false,
-        reasoning_effort: "medium",
+        maxOutputTokens: 2048,
       });
 
-      reply = completion.choices[0]?.message?.content ?? "";
+      reply = text;
     } catch (err: any) {
-      console.error("Groq Error in messages route:", err);
+      console.error("AI Error in messages route:", err);
       reply = `Error: ${err.message || "Failed to contact the AI model."}`;
     }
 
@@ -123,7 +117,7 @@ export async function POST(
     console.error("Error appending message:", error);
     return NextResponse.json(
       { error: error.message || "Failed to append message" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

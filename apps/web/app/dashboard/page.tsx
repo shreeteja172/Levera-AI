@@ -6,9 +6,22 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import axios from "axios";
-import { Send, Trash2, ArrowRight, Copy, Check } from "lucide-react";
+import { Send, Trash2, ArrowRight, Copy, Check, ChevronDown } from "lucide-react";
 import "highlight.js/styles/github-dark.css";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SUPPORTED_MODELS, type ModelOption } from "@/lib/ai/model-list";
+import {
+  ModelSelector,
+  ModelSelectorTrigger,
+  ModelSelectorContent,
+  ModelSelectorInput,
+  ModelSelectorList,
+  ModelSelectorEmpty,
+  ModelSelectorGroup,
+  ModelSelectorItem,
+  ModelSelectorName,
+  ModelSelectorLogo,
+} from "@/components/ai-elements/model-selector";
 
 interface Message {
   role: "user" | "assistant";
@@ -123,6 +136,9 @@ function DashboardChatContent() {
   const [loading, setLoading] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
 
+  const [selectedModel, setSelectedModel] = useState<ModelOption>(SUPPORTED_MODELS[0]!);
+  const [isModelSelectorOpen, setIsModelSelectorOpen] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -206,6 +222,8 @@ function DashboardChatContent() {
         const createRes = await axios.post("/api/chats", {
           title,
           message: prompt,
+          provider: selectedModel.provider,
+          model: selectedModel.id,
         });
         currentId = createRes.data.id;
         setMessages(createRes.data.messages);
@@ -215,6 +233,8 @@ function DashboardChatContent() {
       } else {
         const appendRes = await axios.post(`/api/chats/${currentId}/messages`, {
           content: prompt,
+          provider: selectedModel.provider,
+          model: selectedModel.id,
         });
         setMessages(appendRes.data.messages);
         window.dispatchEvent(new CustomEvent("levera_chats_updated"));
@@ -447,7 +467,7 @@ function DashboardChatContent() {
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent z-20 pointer-events-none">
-        <div className="max-w-5xl mx-auto relative flex items-center bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl">
+        <div className="max-w-5xl mx-auto relative flex flex-col bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl">
           <textarea
             ref={textareaRef}
             value={inputMessage}
@@ -460,15 +480,51 @@ function DashboardChatContent() {
             }}
             placeholder="Type a message or paste a DSA problem description..."
             rows={1}
-            className="flex-1 max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0"
+            className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0"
           />
-          <button
-            onClick={() => sendMessage()}
-            disabled={loading || !inputMessage.trim()}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
-          >
-            <Send size={15} />
-          </button>
+          <div className="flex items-center justify-between border-t border-zinc-850/50 mt-1 pt-2 px-2">
+            <ModelSelector open={isModelSelectorOpen} onOpenChange={setIsModelSelectorOpen}>
+              <ModelSelectorTrigger
+                render={
+                  <button className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer">
+                    <ModelSelectorLogo provider={selectedModel.logoProvider} className="size-3.5" />
+                    <span className="font-medium">{selectedModel.name}</span>
+                    <ChevronDown size={12} className="text-zinc-500" />
+                  </button>
+                }
+              />
+              <ModelSelectorContent className="w-[300px]">
+                <ModelSelectorInput placeholder="Search models..." />
+                <ModelSelectorList>
+                  <ModelSelectorEmpty>No model found.</ModelSelectorEmpty>
+                  <ModelSelectorGroup heading="Available Models">
+                    {SUPPORTED_MODELS.map((model) => (
+                      <ModelSelectorItem
+                        key={model.id}
+                        value={model.name}
+                        onSelect={() => {
+                          setSelectedModel(model);
+                          setIsModelSelectorOpen(false);
+                        }}
+                        className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md hover:bg-zinc-900/60 transition-colors text-zinc-300 hover:text-white data-[selected=true]:bg-zinc-900/80 data-[selected=true]:text-white"
+                      >
+                        <ModelSelectorLogo provider={model.logoProvider} className="size-3.5" />
+                        <ModelSelectorName>{model.name}</ModelSelectorName>
+                      </ModelSelectorItem>
+                    ))}
+                  </ModelSelectorGroup>
+                </ModelSelectorList>
+              </ModelSelectorContent>
+            </ModelSelector>
+
+            <button
+              onClick={() => sendMessage()}
+              disabled={loading || !inputMessage.trim()}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
+            >
+              <Send size={14} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
