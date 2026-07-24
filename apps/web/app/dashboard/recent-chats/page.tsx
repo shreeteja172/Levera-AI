@@ -5,6 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import { MessageSquare, Trash2, ExternalLink, Calendar, Search, Trash } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SkeletonBlock } from "@/components/ui/skeleton-block";
 
 interface Message {
   role: "user" | "assistant";
@@ -21,13 +22,32 @@ interface ChatSession {
 export default function RecentChatsPage() {
   const [chats, setChats] = useState<ChatSession[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const loadChats = async () => {
+    setError(null);
+    setLoading(true);
+    const startTime = Date.now();
     try {
       const res = await axios.get("/api/chats");
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime < 200) {
+        await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
+      }
       setChats(res.data);
     } catch (e) {
-      console.error("Failed to load chats:", e);
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime < 200) {
+        await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
+      }
+      let msg = "Failed to load chat history.";
+      if (axios.isAxiosError(e) && e.response?.data?.error) {
+        msg = e.response.data.error;
+      }
+      setError(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,7 +129,55 @@ export default function RecentChatsPage() {
           </div>
         </div>
 
-        {filteredChats.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="flex flex-col justify-between p-5 rounded-2xl border border-zinc-900 bg-zinc-900/10 animate-pulse space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="p-1.5 rounded-lg bg-zinc-800 shrink-0 border border-zinc-800 w-7 h-7" />
+                      <SkeletonBlock width="45%" height="16px" rounded="rounded-md" />
+                    </div>
+                    <SkeletonBlock width="48px" height="18px" rounded="rounded" />
+                  </div>
+                  <div className="space-y-2">
+                    <SkeletonBlock width="100%" height="12px" rounded="rounded-md" />
+                    <SkeletonBlock width="75%" height="12px" rounded="rounded-md" />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-5 pt-3 border-t border-zinc-900/60">
+                  <SkeletonBlock width="70px" height="14px" rounded="rounded-md" />
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-8 h-8 rounded-lg bg-zinc-800" />
+                    <div className="w-16 h-8 rounded-lg bg-zinc-800" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-red-500/20 bg-red-500/5 min-h-[300px]">
+            <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-white mb-2">Failed to load conversations</h3>
+            <p className="text-xs text-zinc-500 max-w-sm mb-6">{error}</p>
+            <button
+              onClick={loadChats}
+              className="bg-red-500/25 hover:bg-red-500/40 text-red-200 border border-red-500/30 font-medium text-xs px-5 py-2.5 rounded-lg transition-colors cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
+        ) : filteredChats.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-zinc-900 bg-zinc-950 min-h-[300px]">
             <div className="w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 mb-4 animate-pulse">
               <MessageSquare size={20} />

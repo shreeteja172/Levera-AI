@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { SkeletonBlock } from "@/components/ui/skeleton-block";
 
 interface ChatSession {
   id: string;
@@ -40,19 +41,52 @@ interface ChatSession {
 export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: sessionData } = useSession();
+  const { data: sessionData, isPending: sessionPending } = useSession();
   const user = sessionData?.user;
   const { toggleSidebar } = useSidebar();
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [recentChats, setRecentChats] = useState<ChatSession[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [skeletonCount, setSkeletonCount] = useState(4);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const cached = localStorage.getItem("levera:lastChatCount");
+      if (cached) {
+        const count = parseInt(cached, 10);
+        if (!isNaN(count)) {
+          setSkeletonCount(Math.min(Math.max(count, 1), 4));
+        }
+      }
+    }
+
     const loadChats = async () => {
+      setLoading(true);
+      const startTime = Date.now();
       try {
         const res = await axios.get("/api/chats");
-        setRecentChats(res.data.slice(0, 7));
+        const chats = res.data;
+        if (typeof window !== "undefined") {
+          localStorage.setItem("levera:lastChatCount", String(chats.length));
+        }
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime < 200) {
+          await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
+        }
+        setRecentChats(chats.slice(0, 7));
       } catch (e) {
         console.error("Failed to load chats from database:", e);
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime < 200) {
+          await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -172,7 +206,23 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {recentChats.length > 0 && (
+        {loading ? (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-zinc-500 text-[10px] font-medium tracking-wider uppercase px-3">
+              Recents
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="mt-1 space-y-2 px-3">
+                {[...Array(skeletonCount)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-2.5 py-1.5">
+                    <SkeletonBlock width="13px" height="13px" rounded="rounded" className="shrink-0 bg-zinc-800" />
+                    <SkeletonBlock width={i === 0 ? "70%" : i === 1 ? "85%" : i === 2 ? "60%" : "75%"} height="12px" rounded="rounded" className="bg-zinc-800/50" />
+                  </div>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ) : recentChats.length > 0 ? (
           <SidebarGroup>
             <SidebarGroupLabel className="text-zinc-500 text-[10px] font-medium tracking-wider uppercase px-3">
               Recents
@@ -203,11 +253,22 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-        )}
+        ) : null}
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-zinc-900/60 bg-zinc-950">
-        {user ? (
+        {!mounted || sessionPending ? (
+          <div className="flex flex-col gap-3 animate-pulse">
+            <div className="flex items-center gap-3">
+              <SkeletonBlock width="32px" height="32px" rounded="rounded-full" className="bg-zinc-800 shrink-0" />
+              <div className="flex-1 min-w-0 space-y-1.5">
+                <SkeletonBlock width="60%" height="14px" className="bg-zinc-800" />
+                <SkeletonBlock width="85%" height="10px" className="bg-zinc-800/60" />
+              </div>
+            </div>
+            <SkeletonBlock width="100%" height="32px" rounded="rounded-xl" className="bg-zinc-900" />
+          </div>
+        ) : user ? (
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
               {user.image ? (

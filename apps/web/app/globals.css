@@ -138,8 +138,9 @@ a {
   * {
     @apply border-border outline-ring/50;
   }
-  body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, a, li, td, th {
+  body, button, input, select, textarea, label, strong, b, h1, h2, h3, h4, h5, h6, p, span, a, li, td, th {
     font-family: "Tiempos Text", Georgia, Cambria, "Times New Roman", Times, serif !important;
+    font-weight: normal !important;
   }
   code, pre, kbd, samp, .font-mono, code *, pre * {
     font-family: var(--font-geist-mono), ui-monospace, monospace !important;

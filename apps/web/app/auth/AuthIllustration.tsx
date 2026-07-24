@@ -349,13 +349,13 @@ export default function AuthIllustration() {
         </div>
       </div>
 
-      <div className={styles.notificationCard}>
+      {/* <div className={styles.notificationCard}>
         <span className={styles.notifFire}>🔥</span>
         <div className={styles.notifContent}>
           <span className={styles.notifTitle}>Daily Challenge Completed</span>
           <span className={styles.notifSub}>Keep improving your problem solving skills</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
