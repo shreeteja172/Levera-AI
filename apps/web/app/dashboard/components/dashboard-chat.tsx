@@ -33,6 +33,7 @@ import {
 } from "@/components/ai-elements/model-selector";
 
 interface Message {
+  id?: string;
   role: "user" | "assistant";
   content: string;
 }
@@ -137,6 +138,22 @@ function parseMessageContent(content: string): ParsedContent[] {
   return parts;
 }
 
+function extractProblemData(content: string) {
+  const problemMatch = /<problem>([\s\S]*?)<\/problem>/.exec(content);
+
+  const solutions = parseMessageContent(content).find(
+    (part) => part.type === "solutions",
+  );
+
+  return {
+    title: problemMatch?.[1]?.trim() || "Unknown Problem",
+    brute: solutions?.brute || null,
+    better: solutions?.better || null,
+    optimal: solutions?.optimal || null,
+    language: "cpp",
+  };
+}
+
 export function DashboardChat({ chatId }: { chatId: string | null }) {
   const router = useRouter();
 
@@ -215,48 +232,55 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
 
-  const fetchChatSession = useCallback(async (id: string | null) => {
-    latestChatIdRef.current = id;
-    setChatError(null);
-    if (!id) {
-      setMessages([]);
-      setActiveChatId(null);
-      setChatLoading(false);
-      return;
-    }
-    setChatLoading(true);
-    setMessages([]);
-    const startTime = Date.now();
-    try {
-      const res = await axios.get(`/api/chats/${id}`);
-      const elapsedTime = Date.now() - startTime;
-      if (elapsedTime < 200) {
-        await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
-      }
-      if (latestChatIdRef.current !== id) return;
-      if (res.data && !res.data.notFound) {
-        setMessages(res.data.messages);
-        setActiveChatId(id);
-      } else {
-        router.push("/dashboard");
-      }
-    } catch (e) {
-      const elapsedTime = Date.now() - startTime;
-      if (elapsedTime < 200) {
-        await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
-      }
-      if (latestChatIdRef.current !== id) return;
-      let msg = "Failed to load the conversation.";
-      if (axios.isAxiosError(e) && e.response?.data?.error) {
-        msg = e.response.data.error;
-      }
-      setChatError(msg);
-    } finally {
-      if (latestChatIdRef.current === id) {
+  const fetchChatSession = useCallback(
+    async (id: string | null) => {
+      latestChatIdRef.current = id;
+      setChatError(null);
+      if (!id) {
+        setMessages([]);
+        setActiveChatId(null);
         setChatLoading(false);
+        return;
       }
-    }
-  }, [router]);
+      setChatLoading(true);
+      setMessages([]);
+      const startTime = Date.now();
+      try {
+        const res = await axios.get(`/api/chats/${id}`);
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime < 200) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, 200 - elapsedTime),
+          );
+        }
+        if (latestChatIdRef.current !== id) return;
+        if (res.data && !res.data.notFound) {
+          setMessages(res.data.messages);
+          setActiveChatId(id);
+        } else {
+          router.push("/dashboard");
+        }
+      } catch (e) {
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime < 200) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, 200 - elapsedTime),
+          );
+        }
+        if (latestChatIdRef.current !== id) return;
+        let msg = "Failed to load the conversation.";
+        if (axios.isAxiosError(e) && e.response?.data?.error) {
+          msg = e.response.data.error;
+        }
+        setChatError(msg);
+      } finally {
+        if (latestChatIdRef.current === id) {
+          setChatLoading(false);
+        }
+      }
+    },
+    [router],
+  );
 
   useEffect(() => {
     fetchChatSession(chatId);
@@ -286,6 +310,20 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
   }, [inputMessage]);
+
+  const saveProblem = async (content: string) => {
+    try {
+      const problem = extractProblemData(content);
+
+      console.log("Saving:", problem);
+
+      const res = await axios.post("/api/saved-problems", problem);
+
+      console.log("Saved:", res.data);
+    } catch (error) {
+      console.error("Save failed:", error);
+    }
+  };
 
   const deleteChat = async (id: string) => {
     try {
@@ -323,6 +361,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           provider: selectedModel.provider,
           model: selectedModel.id,
         });
+        console.log(createRes);
         currentId = createRes.data.id;
         setMessages(createRes.data.messages);
         setActiveChatId(currentId);
@@ -334,6 +373,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           provider: selectedModel.provider,
           model: selectedModel.id,
         });
+        // console.log(appendRes);
         setMessages(appendRes.data.messages);
         window.dispatchEvent(new CustomEvent("levera_chats_updated"));
       }
@@ -373,7 +413,9 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         <div className="flex items-center justify-between border-t border-zinc-850/50 mt-1 pt-2 px-2">
           <ModelSelector
             open={isModelSelectorOpen}
-            onOpenChange={chatLoading || sessionPending ? () => {} : setIsModelSelectorOpen}
+            onOpenChange={
+              chatLoading || sessionPending ? () => {} : setIsModelSelectorOpen
+            }
           >
             <ModelSelectorTrigger
               render={
@@ -419,7 +461,9 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
           <button
             onClick={() => sendMessage()}
-            disabled={loading || chatLoading || sessionPending || !inputMessage.trim()}
+            disabled={
+              loading || chatLoading || sessionPending || !inputMessage.trim()
+            }
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
           >
             <Send size={14} />
@@ -496,20 +540,50 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
               <div className="flex flex-col items-end">
                 <div className="flex items-start gap-3 max-w-[85%]">
                   <div className="flex flex-col items-end gap-2 bg-zinc-900 border border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-64">
-                    <SkeletonBlock width="100%" height="14px" rounded="rounded-md" />
-                    <SkeletonBlock width="60%" height="14px" rounded="rounded-md" />
+                    <SkeletonBlock
+                      width="100%"
+                      height="14px"
+                      rounded="rounded-md"
+                    />
+                    <SkeletonBlock
+                      width="60%"
+                      height="14px"
+                      rounded="rounded-md"
+                    />
                   </div>
-                  <SkeletonBlock width="32px" height="32px" rounded="rounded-full" className="shrink-0" />
+                  <SkeletonBlock
+                    width="32px"
+                    height="32px"
+                    rounded="rounded-full"
+                    className="shrink-0"
+                  />
                 </div>
               </div>
 
               <div className="flex flex-col items-start w-full">
                 <div className="flex items-start gap-3 w-full">
-                  <SkeletonBlock width="32px" height="32px" rounded="rounded-full" className="shrink-0" />
+                  <SkeletonBlock
+                    width="32px"
+                    height="32px"
+                    rounded="rounded-full"
+                    className="shrink-0"
+                  />
                   <div className="flex-1 space-y-2.5 bg-zinc-900/20 border border-zinc-900 rounded-2xl rounded-bl-none p-5">
-                    <SkeletonBlock width="80%" height="14px" rounded="rounded-md" />
-                    <SkeletonBlock width="95%" height="14px" rounded="rounded-md" />
-                    <SkeletonBlock width="45%" height="14px" rounded="rounded-md" />
+                    <SkeletonBlock
+                      width="80%"
+                      height="14px"
+                      rounded="rounded-md"
+                    />
+                    <SkeletonBlock
+                      width="95%"
+                      height="14px"
+                      rounded="rounded-md"
+                    />
+                    <SkeletonBlock
+                      width="45%"
+                      height="14px"
+                      rounded="rounded-md"
+                    />
                   </div>
                 </div>
               </div>
@@ -517,25 +591,58 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
               <div className="flex flex-col items-end">
                 <div className="flex items-start gap-3 max-w-[85%]">
                   <div className="flex flex-col items-end gap-2 bg-zinc-900 border border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-80">
-                    <SkeletonBlock width="100%" height="14px" rounded="rounded-md" />
-                    <SkeletonBlock width="40%" height="14px" rounded="rounded-md" />
+                    <SkeletonBlock
+                      width="100%"
+                      height="14px"
+                      rounded="rounded-md"
+                    />
+                    <SkeletonBlock
+                      width="40%"
+                      height="14px"
+                      rounded="rounded-md"
+                    />
                   </div>
-                  <SkeletonBlock width="32px" height="32px" rounded="rounded-full" className="shrink-0" />
+                  <SkeletonBlock
+                    width="32px"
+                    height="32px"
+                    rounded="rounded-full"
+                    className="shrink-0"
+                  />
                 </div>
               </div>
             </div>
           ) : (
             <div className="max-w-2xl mx-auto h-full flex flex-col justify-center items-center text-center space-y-6 py-12 animate-pulse">
               <div className="space-y-3 flex flex-col items-center">
-                <SkeletonBlock width="320px" height="40px" rounded="rounded-lg" className="bg-zinc-800" />
-                <SkeletonBlock width="440px" height="16px" rounded="rounded-lg" className="bg-zinc-800/60" />
+                <SkeletonBlock
+                  width="320px"
+                  height="40px"
+                  rounded="rounded-lg"
+                  className="bg-zinc-800"
+                />
+                <SkeletonBlock
+                  width="440px"
+                  height="16px"
+                  rounded="rounded-lg"
+                  className="bg-zinc-800/60"
+                />
               </div>
 
               <div className="w-full max-w-3xl">
                 <div className="w-full h-24 bg-zinc-900/50 border border-zinc-850 rounded-2xl p-4 flex flex-col justify-between">
-                  <SkeletonBlock width="40%" height="14px" rounded="rounded-md" className="bg-zinc-800" />
+                  <SkeletonBlock
+                    width="40%"
+                    height="14px"
+                    rounded="rounded-md"
+                    className="bg-zinc-800"
+                  />
                   <div className="flex justify-between items-center pt-2 border-t border-zinc-850/50">
-                    <SkeletonBlock width="120px" height="24px" rounded="rounded-lg" className="bg-zinc-800" />
+                    <SkeletonBlock
+                      width="120px"
+                      height="24px"
+                      rounded="rounded-lg"
+                      className="bg-zinc-800"
+                    />
                     <div className="w-9 h-9 rounded-xl bg-zinc-850" />
                   </div>
                 </div>
@@ -547,7 +654,12 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
                     key={i}
                     className="flex items-center justify-between p-4 rounded-xl border border-zinc-900 bg-zinc-900/10 h-12"
                   >
-                    <SkeletonBlock width="75%" height="12px" rounded="rounded-md" className="bg-zinc-800/60" />
+                    <SkeletonBlock
+                      width="75%"
+                      height="12px"
+                      rounded="rounded-md"
+                      className="bg-zinc-800/60"
+                    />
                     <div className="w-3.5 h-3.5 rounded bg-zinc-800 shrink-0" />
                   </div>
                 ))}
@@ -557,14 +669,23 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         ) : chatError ? (
           <div className="max-w-md mx-auto flex flex-col items-center justify-center p-6 border border-red-500/20 bg-red-500/5 rounded-2xl text-center space-y-4 my-12">
             <div className="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
                 <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" />
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
             <div className="space-y-1">
-              <h3 className="font-semibold text-sm text-zinc-200">Failed to load chat</h3>
+              <h3 className="font-semibold text-sm text-zinc-200">
+                Failed to load chat
+              </h3>
               <p className="text-xs text-zinc-500">{chatError}</p>
             </div>
             <button
@@ -712,6 +833,16 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
                     <div className="whitespace-pre-wrap">{msg.content}</div>
                   )}
                 </div>
+
+                {msg.role === "assistant" && (
+                  <button
+                    onClick={() => saveProblem(msg.content)}
+                    className="mt-2 text-xs text-zinc-400 hover:text-white"
+                  >
+                    Save as Problem
+                  </button>
+                )}
+
                 <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
                   {msg.role === "user" ? "You" : "Levera AI"}
                 </span>

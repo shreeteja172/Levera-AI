@@ -28,21 +28,33 @@ export type SavedProblemMinAggregateOutputType = {
   id: string | null
   userId: string | null
   problemId: string | null
+  language: string | null
+  notes: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type SavedProblemMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   problemId: string | null
+  language: string | null
+  notes: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type SavedProblemCountAggregateOutputType = {
   id: number
   userId: number
   problemId: number
+  language: number
+  notes: number
+  brute: number
+  better: number
+  optimal: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -51,21 +63,33 @@ export type SavedProblemMinAggregateInputType = {
   id?: true
   userId?: true
   problemId?: true
+  language?: true
+  notes?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type SavedProblemMaxAggregateInputType = {
   id?: true
   userId?: true
   problemId?: true
+  language?: true
+  notes?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type SavedProblemCountAggregateInputType = {
   id?: true
   userId?: true
   problemId?: true
+  language?: true
+  notes?: true
+  brute?: true
+  better?: true
+  optimal?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -145,7 +169,13 @@ export type SavedProblemGroupByOutputType = {
   id: string
   userId: string
   problemId: string
+  language: string
+  notes: string | null
+  brute: runtime.JsonValue | null
+  better: runtime.JsonValue | null
+  optimal: runtime.JsonValue | null
   createdAt: Date
+  updatedAt: Date
   _count: SavedProblemCountAggregateOutputType | null
   _min: SavedProblemMinAggregateOutputType | null
   _max: SavedProblemMaxAggregateOutputType | null
@@ -173,7 +203,13 @@ export type SavedProblemWhereInput = {
   id?: Prisma.StringFilter<"SavedProblem"> | string
   userId?: Prisma.StringFilter<"SavedProblem"> | string
   problemId?: Prisma.StringFilter<"SavedProblem"> | string
+  language?: Prisma.StringFilter<"SavedProblem"> | string
+  notes?: Prisma.StringNullableFilter<"SavedProblem"> | string | null
+  brute?: Prisma.JsonNullableFilter<"SavedProblem">
+  better?: Prisma.JsonNullableFilter<"SavedProblem">
+  optimal?: Prisma.JsonNullableFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   problem?: Prisma.XOR<Prisma.ProblemScalarRelationFilter, Prisma.ProblemWhereInput>
 }
@@ -182,7 +218,13 @@ export type SavedProblemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   problemId?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  brute?: Prisma.SortOrderInput | Prisma.SortOrder
+  better?: Prisma.SortOrderInput | Prisma.SortOrder
+  optimal?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   problem?: Prisma.ProblemOrderByWithRelationInput
 }
@@ -195,7 +237,13 @@ export type SavedProblemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SavedProblemWhereInput | Prisma.SavedProblemWhereInput[]
   userId?: Prisma.StringFilter<"SavedProblem"> | string
   problemId?: Prisma.StringFilter<"SavedProblem"> | string
+  language?: Prisma.StringFilter<"SavedProblem"> | string
+  notes?: Prisma.StringNullableFilter<"SavedProblem"> | string | null
+  brute?: Prisma.JsonNullableFilter<"SavedProblem">
+  better?: Prisma.JsonNullableFilter<"SavedProblem">
+  optimal?: Prisma.JsonNullableFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   problem?: Prisma.XOR<Prisma.ProblemScalarRelationFilter, Prisma.ProblemWhereInput>
 }, "id" | "userId_problemId">
@@ -204,7 +252,13 @@ export type SavedProblemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   problemId?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  brute?: Prisma.SortOrderInput | Prisma.SortOrder
+  better?: Prisma.SortOrderInput | Prisma.SortOrder
+  optimal?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.SavedProblemCountOrderByAggregateInput
   _max?: Prisma.SavedProblemMaxOrderByAggregateInput
   _min?: Prisma.SavedProblemMinOrderByAggregateInput
@@ -217,12 +271,24 @@ export type SavedProblemScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"SavedProblem"> | string
   userId?: Prisma.StringWithAggregatesFilter<"SavedProblem"> | string
   problemId?: Prisma.StringWithAggregatesFilter<"SavedProblem"> | string
+  language?: Prisma.StringWithAggregatesFilter<"SavedProblem"> | string
+  notes?: Prisma.StringNullableWithAggregatesFilter<"SavedProblem"> | string | null
+  brute?: Prisma.JsonNullableWithAggregatesFilter<"SavedProblem">
+  better?: Prisma.JsonNullableWithAggregatesFilter<"SavedProblem">
+  optimal?: Prisma.JsonNullableWithAggregatesFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SavedProblem"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SavedProblem"> | Date | string
 }
 
 export type SavedProblemCreateInput = {
   id?: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSavedProblemsInput
   problem: Prisma.ProblemCreateNestedOneWithoutSavesInput
 }
@@ -231,12 +297,24 @@ export type SavedProblemUncheckedCreateInput = {
   id?: string
   userId: string
   problemId: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SavedProblemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSavedProblemsNestedInput
   problem?: Prisma.ProblemUpdateOneRequiredWithoutSavesNestedInput
 }
@@ -245,26 +323,50 @@ export type SavedProblemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   problemId?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SavedProblemCreateManyInput = {
   id?: string
   userId: string
   problemId: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SavedProblemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SavedProblemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   problemId?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SavedProblemListRelationFilter = {
@@ -286,21 +388,33 @@ export type SavedProblemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   problemId?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  brute?: Prisma.SortOrder
+  better?: Prisma.SortOrder
+  optimal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SavedProblemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   problemId?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SavedProblemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   problemId?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SavedProblemCreateNestedManyWithoutUserInput = {
@@ -389,14 +503,26 @@ export type SavedProblemUncheckedUpdateManyWithoutProblemNestedInput = {
 
 export type SavedProblemCreateWithoutUserInput = {
   id?: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
   problem: Prisma.ProblemCreateNestedOneWithoutSavesInput
 }
 
 export type SavedProblemUncheckedCreateWithoutUserInput = {
   id?: string
   problemId: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SavedProblemCreateOrConnectWithoutUserInput = {
@@ -432,19 +558,37 @@ export type SavedProblemScalarWhereInput = {
   id?: Prisma.StringFilter<"SavedProblem"> | string
   userId?: Prisma.StringFilter<"SavedProblem"> | string
   problemId?: Prisma.StringFilter<"SavedProblem"> | string
+  language?: Prisma.StringFilter<"SavedProblem"> | string
+  notes?: Prisma.StringNullableFilter<"SavedProblem"> | string | null
+  brute?: Prisma.JsonNullableFilter<"SavedProblem">
+  better?: Prisma.JsonNullableFilter<"SavedProblem">
+  optimal?: Prisma.JsonNullableFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
 }
 
 export type SavedProblemCreateWithoutProblemInput = {
   id?: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSavedProblemsInput
 }
 
 export type SavedProblemUncheckedCreateWithoutProblemInput = {
   id?: string
   userId: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SavedProblemCreateOrConnectWithoutProblemInput = {
@@ -476,49 +620,97 @@ export type SavedProblemUpdateManyWithWhereWithoutProblemInput = {
 export type SavedProblemCreateManyUserInput = {
   id?: string
   problemId: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SavedProblemUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   problem?: Prisma.ProblemUpdateOneRequiredWithoutSavesNestedInput
 }
 
 export type SavedProblemUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   problemId?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SavedProblemUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   problemId?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SavedProblemCreateManyProblemInput = {
   id?: string
   userId: string
+  language: string
+  notes?: string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SavedProblemUpdateWithoutProblemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSavedProblemsNestedInput
 }
 
 export type SavedProblemUncheckedUpdateWithoutProblemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SavedProblemUncheckedUpdateManyWithoutProblemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  better?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -527,7 +719,13 @@ export type SavedProblemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   userId?: boolean
   problemId?: boolean
+  language?: boolean
+  notes?: boolean
+  brute?: boolean
+  better?: boolean
+  optimal?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedProblem"]>
@@ -536,7 +734,13 @@ export type SavedProblemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   userId?: boolean
   problemId?: boolean
+  language?: boolean
+  notes?: boolean
+  brute?: boolean
+  better?: boolean
+  optimal?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedProblem"]>
@@ -545,7 +749,13 @@ export type SavedProblemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   userId?: boolean
   problemId?: boolean
+  language?: boolean
+  notes?: boolean
+  brute?: boolean
+  better?: boolean
+  optimal?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedProblem"]>
@@ -554,10 +764,16 @@ export type SavedProblemSelectScalar = {
   id?: boolean
   userId?: boolean
   problemId?: boolean
+  language?: boolean
+  notes?: boolean
+  brute?: boolean
+  better?: boolean
+  optimal?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type SavedProblemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "problemId" | "createdAt", ExtArgs["result"]["savedProblem"]>
+export type SavedProblemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "problemId" | "language" | "notes" | "brute" | "better" | "optimal" | "createdAt" | "updatedAt", ExtArgs["result"]["savedProblem"]>
 export type SavedProblemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
@@ -581,7 +797,13 @@ export type $SavedProblemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     userId: string
     problemId: string
+    language: string
+    notes: string | null
+    brute: runtime.JsonValue | null
+    better: runtime.JsonValue | null
+    optimal: runtime.JsonValue | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["savedProblem"]>
   composites: {}
 }
@@ -1010,7 +1232,13 @@ export interface SavedProblemFieldRefs {
   readonly id: Prisma.FieldRef<"SavedProblem", 'String'>
   readonly userId: Prisma.FieldRef<"SavedProblem", 'String'>
   readonly problemId: Prisma.FieldRef<"SavedProblem", 'String'>
+  readonly language: Prisma.FieldRef<"SavedProblem", 'String'>
+  readonly notes: Prisma.FieldRef<"SavedProblem", 'String'>
+  readonly brute: Prisma.FieldRef<"SavedProblem", 'Json'>
+  readonly better: Prisma.FieldRef<"SavedProblem", 'Json'>
+  readonly optimal: Prisma.FieldRef<"SavedProblem", 'Json'>
   readonly createdAt: Prisma.FieldRef<"SavedProblem", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"SavedProblem", 'DateTime'>
 }
     
 
