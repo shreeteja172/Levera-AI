@@ -145,12 +145,32 @@ function extractProblemData(content: string) {
     (part) => part.type === "solutions",
   );
 
+  let language = "cpp";
+  const solutionText = solutions?.optimal || solutions?.better || solutions?.brute;
+  if (solutionText) {
+    const langMatch = /```(\w+)/.exec(solutionText);
+    if (langMatch?.[1]) {
+      const parsedLang = langMatch[1].toLowerCase();
+      if (parsedLang === "py") {
+        language = "python";
+      } else if (parsedLang === "js") {
+        language = "javascript";
+      } else if (parsedLang === "ts") {
+        language = "typescript";
+      } else if (parsedLang === "cs") {
+        language = "csharp";
+      } else {
+        language = parsedLang;
+      }
+    }
+  }
+
   return {
     title: problemMatch?.[1]?.trim() || "Unknown Problem",
     brute: solutions?.brute || null,
     better: solutions?.better || null,
     optimal: solutions?.optimal || null,
-    language: "cpp",
+    language,
   };
 }
 
