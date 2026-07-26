@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
 import {
   Send,
@@ -96,14 +97,15 @@ interface ParsedContent {
 }
 
 function parseMessageContent(content: string): ParsedContent[] {
+  const cleanContent = content.replace(/<problem>([\s\S]*?)<\/problem>/g, "").trim();
   const parts: ParsedContent[] = [];
   const regex = /<solutions>([\s\S]*?)<\/solutions>/g;
 
   let lastIndex = 0;
   let match;
 
-  while ((match = regex.exec(content)) !== null) {
-    const textBefore = content.substring(lastIndex, match.index);
+  while ((match = regex.exec(cleanContent)) !== null) {
+    const textBefore = cleanContent.substring(lastIndex, match.index);
     if (textBefore.trim()) {
       parts.push({ type: "text", text: textBefore });
     }
@@ -126,16 +128,24 @@ function parseMessageContent(content: string): ParsedContent[] {
     lastIndex = regex.lastIndex;
   }
 
-  const textAfter = content.substring(lastIndex);
+  const textAfter = cleanContent.substring(lastIndex);
   if (textAfter.trim()) {
     parts.push({ type: "text", text: textAfter });
   }
 
   if (parts.length === 0) {
-    parts.push({ type: "text", text: content });
+    parts.push({ type: "text", text: cleanContent });
   }
 
   return parts;
+}
+
+function createSlug(title: string) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-");
 }
 
 function extractProblemData(content: string) {
@@ -181,6 +191,25 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const [chatTitle, setChatTitle] = useState<string | null>(null);
+  const [savedProblemSlugs, setSavedProblemSlugs] = useState<string[]>([]);
+
+  const fetchSavedProblems = useCallback(async () => {
+    try {
+      const res = await axios.get("/api/saved-problems");
+      if (Array.isArray(res.data)) {
+        const slugs = res.data.map((sp: any) => sp.problem?.slug).filter(Boolean);
+        setSavedProblemSlugs(slugs);
+      }
+    } catch (e) {
+      console.error("Failed to fetch saved problems:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSavedProblems();
+  }, [fetchSavedProblems]);
+
 
   const [selectedModel, setSelectedModel] = useState<ModelOption>(
     SUPPORTED_MODELS[0]!,
@@ -259,6 +288,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
       if (!id) {
         setMessages([]);
         setActiveChatId(null);
+        setChatTitle(null);
         setChatLoading(false);
         return;
       }
@@ -277,6 +307,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         if (res.data && !res.data.notFound) {
           setMessages(res.data.messages);
           setActiveChatId(id);
+          setChatTitle(res.data.title || null);
         } else {
           router.push("/dashboard");
         }
@@ -335,11 +366,21 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     try {
       const problem = extractProblemData(content);
 
+      if (problem.title === "Unknown Problem" && chatTitle) {
+        problem.title = chatTitle;
+      }
+
       console.log("Saving:", problem);
 
-      const res = await axios.post("/api/saved-problems", problem);
+      const savePromise = axios.post("/api/saved-problems", problem);
 
-      console.log("Saved:", res.data);
+      await toast.promise(savePromise, {
+        loading: "Saving problem...",
+        success: "Problem saved successfully!",
+        error: "Failed to save problem.",
+      });
+
+      fetchSavedProblems();
     } catch (error) {
       console.error("Save failed:", error);
     }
@@ -385,6 +426,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         currentId = createRes.data.id;
         setMessages(createRes.data.messages);
         setActiveChatId(currentId);
+        setChatTitle(createRes.data.title || title);
         window.dispatchEvent(new CustomEvent("levera_chats_updated"));
         window.history.replaceState(null, "", `/dashboard/chat/${currentId}`);
       } else {
@@ -395,6 +437,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         });
         // console.log(appendRes);
         setMessages(appendRes.data.messages);
+        setChatTitle(appendRes.data.title || chatTitle);
         window.dispatchEvent(new CustomEvent("levera_chats_updated"));
       }
     } catch (err: any) {
@@ -425,7 +468,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
               sendMessage();
             }
           }}
-          disabled={loading || chatLoading || sessionPending}
+          disabled={!mounted || loading || chatLoading || sessionPending}
           placeholder="Type a message or paste a DSA problem description..."
           rows={1}
           className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -440,7 +483,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             <ModelSelectorTrigger
               render={
                 <button
-                  disabled={chatLoading || loading || sessionPending}
+                  disabled={!mounted || chatLoading || loading || sessionPending}
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ModelSelectorLogo
@@ -482,7 +525,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           <button
             onClick={() => sendMessage()}
             disabled={
-              loading || chatLoading || sessionPending || !inputMessage.trim()
+              !mounted || loading || chatLoading || sessionPending || !inputMessage.trim()
             }
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
           >
@@ -854,14 +897,32 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
                   )}
                 </div>
 
-                {msg.role === "assistant" && (
-                  <button
-                    onClick={() => saveProblem(msg.content)}
-                    className="mt-2 text-xs text-zinc-400 hover:text-white"
-                  >
-                    Save as Problem
-                  </button>
-                )}
+                {msg.role === "assistant" && msg.content.includes("</solutions>") && (() => {
+                  const problemData = extractProblemData(msg.content);
+                  const title = problemData.title === "Unknown Problem" && chatTitle ? chatTitle : problemData.title;
+                  const slug = createSlug(title);
+                  const isSaved = savedProblemSlugs.includes(slug);
+                  return (
+                    <button
+                      onClick={() => !isSaved && saveProblem(msg.content)}
+                      disabled={isSaved}
+                      className={`mt-2.5 text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                        isSaved
+                          ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 cursor-default font-medium"
+                          : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-850 cursor-pointer"
+                      }`}
+                    >
+                      {isSaved ? (
+                        <>
+                          <Check size={12} className="text-emerald-400" />
+                          <span>Saved to Problems</span>
+                        </>
+                      ) : (
+                        <span>Save as Problem</span>
+                      )}
+                    </button>
+                  );
+                })()}
 
                 <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
                   {msg.role === "user" ? "You" : "Levera AI"}
