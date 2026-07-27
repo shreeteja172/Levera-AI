@@ -37,7 +37,31 @@ export default function SignUpPage() {
   }
 
   return (
-    <main className="flex justify-center items-center bg-[#EAE7DF] p-6 min-h-screen box-border font-sans max-[480px]:p-3">
+    <main className="flex justify-center items-center bg-[#EAE7DF] p-6 min-h-screen box-border font-sans max-[480px]:p-3 relative">
+      <Link
+        href="/"
+        className="absolute top-6 left-6 z-50 flex items-center h-11 w-11 hover:w-[120px] rounded-full bg-white/90 hover:bg-white text-[#1A1A1A] border border-[rgba(0,0,0,0.08)] shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group overflow-hidden max-[1024px]:top-4 max-[1024px]:left-4 cursor-pointer"
+      >
+        <div className="flex items-center justify-start w-full pl-[13px] gap-2.5 whitespace-nowrap">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="transform group-hover:-translate-x-0.5 transition-transform duration-300 text-[#FF5A1F] shrink-0"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[0.8rem] font-semibold tracking-wide text-[#1A1A1A]">
+            Go Home
+          </span>
+        </div>
+      </Link>
       <div className="max-w-[1200px] w-full h-[min(800px,calc(100vh-48px))] min-h-[600px] bg-white rounded-[24px] border border-[rgba(0,0,0,0.12)] shadow-[0_24px_70px_-12px_rgba(0,0,0,0.18),0_8px_24px_-8px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.8)] flex overflow-hidden relative transition-all duration-300 ease max-[1024px]:h-auto max-[1024px]:min-h-[700px] max-[1024px]:flex-col max-[1024px]:max-w-[550px] desktop-short:h-[calc(100vh-48px)] desktop-short:min-h-[550px]">
         <section className="w-[45%] bg-[#F5F3EE] p-[clamp(24px,4vh,48px)] flex flex-col justify-between relative overflow-y-auto box-border [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.1)_transparent] [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-[rgba(0,0,0,0.1)] [&::-webkit-scrollbar-thumb]:rounded-[2px] max-[1024px]:w-full max-[1024px]:p-8 max-[480px]:px-4 max-[480px]:py-6">
           <div className="flex items-center gap-[10px] font-normal text-[1.35rem] text-[#1A1A1A] tracking-[-0.02em]">
@@ -172,12 +196,16 @@ export default function SignUpPage() {
                 <span>Continue with Google</span>
               </button>
 
-              <p className="text-[0.85rem] text-[#64748B] text-center mt-1">
-                Already have an account?
-                <Link href="/auth/sign-in" className="text-[#FF5A1F] font-normal ml-1 transition-[text-decoration] duration-200 hover:underline">
+              <div className="flex items-center justify-center gap-3 mt-2 pt-4 border-t border-[rgba(0,0,0,0.06)] text-[0.85rem]">
+                <span className="text-[#64748B]">Already have an account?</span>
+                <Link
+                  href="/auth/sign-in"
+                  className="px-4 py-1.5 bg-[#111111] hover:bg-[#FF5A1F] rounded-full text-white font-medium text-[0.8rem] transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(255,90,31,0.2)] hover:-translate-y-0.5 active:translate-y-0"
+                  style={{ color: "#ffffff" }}
+                >
                   Sign In
                 </Link>
-              </p>
+              </div>
             </div>
           </div>
         </section>
