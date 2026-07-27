@@ -4,7 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Search, Trash2, BookOpen, MessageSquare, Code2, Sparkles, ChevronRight } from "lucide-react";
+import { Search, Trash2, BookOpen, MessageSquare, Code2, ChevronRight } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function ProblemsPage() {
@@ -64,7 +64,7 @@ export default function ProblemsPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold font-sans tracking-tight text-white flex items-center gap-2">
-              Saved Problems <Sparkles size={20} className="text-orange-500" />
+              Saved Problems
             </h1>
             <p className="text-sm text-zinc-400 mt-1">
               Your personalized, AI-curated DSA notebook. Learn from your mistakes and track optimal solutions.

@@ -6,7 +6,7 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import { Copy, Check, ArrowLeft, Trash2, Calendar, Code2, Sparkles } from "lucide-react";
+import { Copy, Check, ArrowLeft, Trash2, Calendar, Code2 } from "lucide-react";
 import toast from "react-hot-toast";
 import "highlight.js/styles/github-dark.css";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -234,7 +234,7 @@ export default function ProblemPage() {
 
         <div className="space-y-4">
           <h1 className="text-3xl font-extrabold font-sans tracking-tight text-white flex items-center gap-2">
-            {problem.problem.title} <Sparkles size={20} className="text-orange-500" />
+            {problem.problem.title}
           </h1>
 
           <div className="flex flex-wrap items-center gap-6 text-sm text-zinc-400 bg-zinc-900/20 border border-zinc-900 rounded-2xl p-4">

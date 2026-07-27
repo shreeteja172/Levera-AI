@@ -274,11 +274,11 @@ export function AppSidebar() {
               {user.image ? (
                 <Image
                   src={user.image}
-                  width={8}
-                  height={8}
+                  width={32}
+                  height={32}
                   alt={user.name || "Profile"}
                   referrerPolicy="no-referrer"
-                  className="rounded-full object-cover border border-zinc-800"
+                  className="w-8 h-8 rounded-full object-cover border border-zinc-800"
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-medium text-xs text-white">
