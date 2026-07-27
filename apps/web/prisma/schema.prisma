@@ -135,6 +135,9 @@ model SavedProblem {
   language String
 
   notes String?
+  bruteNotes   String?
+  betterNotes  String?
+  optimalNotes String?
 
   brute   Json?
   better  Json?

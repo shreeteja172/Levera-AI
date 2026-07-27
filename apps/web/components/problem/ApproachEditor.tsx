@@ -9,11 +9,12 @@ import { Edit3, Eye, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 export interface ApproachEditorProps {
   problemId: string;
   initialValue: string;
+  noteType?: "notes" | "bruteNotes" | "betterNotes" | "optimalNotes";
 }
 
 type SaveStatus = "idle" | "typing" | "saving" | "saved" | "error";
 
-export function ApproachEditor({ problemId, initialValue }: ApproachEditorProps) {
+export function ApproachEditor({ problemId, initialValue, noteType = "notes" }: ApproachEditorProps) {
   const [value, setValue] = useState(initialValue);
   const [activeTab, setActiveTab] = useState<"write" | "preview">("write");
   const [status, setStatus] = useState<SaveStatus>("idle");
@@ -47,7 +48,7 @@ export function ApproachEditor({ problemId, initialValue }: ApproachEditorProps)
     setStatus("saving");
     try {
       await axios.patch(`/api/saved-problems/${problemId}`, {
-        notes: content,
+        [noteType]: content,
       });
       setStatus("saved");
       setErrorMessage("");
@@ -56,6 +57,13 @@ export function ApproachEditor({ problemId, initialValue }: ApproachEditorProps)
       setStatus("error");
       setErrorMessage(error.response?.data?.error || "Failed to autosave");
     }
+  };
+
+  const getPlaceholder = () => {
+    if (noteType === "bruteNotes") return "Write your Brute Force notes here...";
+    if (noteType === "betterNotes") return "Write your Better Approach notes here...";
+    if (noteType === "optimalNotes") return "Write your Optimal Solution notes here...";
+    return "Enter text or type '/' for commands...";
   };
 
   return (
@@ -119,7 +127,7 @@ export function ApproachEditor({ problemId, initialValue }: ApproachEditorProps)
           <textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Enter text or type '/' for commands..."
+            placeholder={getPlaceholder()}
             className="flex-1 w-full bg-zinc-950/40 text-zinc-300 placeholder-zinc-600 p-4 border-none outline-none focus:ring-0 text-sm font-sans resize-y min-h-[10rem] custom-scrollbar focus:outline-none"
           />
         ) : (

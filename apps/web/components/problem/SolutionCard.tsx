@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CodeBlock } from "./CodeBlock";
 import { ComplexityBadge } from "./ComplexityBadge";
+import { ApproachEditor } from "./ApproachEditor";
 import { Code2, BookOpen, Lightbulb } from "lucide-react";
 
 interface SolutionCardProps {
@@ -18,6 +19,9 @@ interface SolutionCardProps {
   spaceComplexity: string;
   accentColor: string;
   borderColor: string;
+  problemId: string;
+  initialUserNotes: string;
+  noteType: "bruteNotes" | "betterNotes" | "optimalNotes";
 }
 
 export function SolutionCard({
@@ -31,6 +35,9 @@ export function SolutionCard({
   spaceComplexity,
   accentColor,
   borderColor,
+  problemId,
+  initialUserNotes,
+  noteType,
 }: SolutionCardProps) {
   const [activeTab, setActiveTab] = useState<"code" | "explanation">("code");
 
@@ -131,7 +138,7 @@ export function SolutionCard({
               </div>
 
               {mentorNotes.trim() ? (
-                <div className="mt-4 p-4 border border-orange-500/10 bg-orange-500/5 rounded-xl space-y-2">
+                <div className="mt-2 p-4 border border-orange-500/10 bg-orange-500/5 rounded-xl space-y-2">
                   <div className="flex items-center gap-2 text-orange-400 font-semibold text-xs tracking-wider uppercase">
                     <Lightbulb size={14} className="text-orange-400" />
                     <span>💡 Mentor Notes</span>
@@ -153,6 +160,18 @@ export function SolutionCard({
                   </div>
                 </div>
               )}
+
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-2 text-zinc-400 font-semibold text-xs tracking-wider uppercase select-none">
+                  <span className="w-1 h-3.5 bg-orange-500 rounded-full" />
+                  <span>My Notes</span>
+                </div>
+                <ApproachEditor
+                  problemId={problemId}
+                  initialValue={initialUserNotes}
+                  noteType={noteType}
+                />
+              </div>
             </div>
           )}
         </div>

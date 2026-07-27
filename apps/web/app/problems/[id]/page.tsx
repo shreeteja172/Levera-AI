@@ -15,6 +15,9 @@ interface SavedProblem {
   optimal: string | null;
   createdAt: string;
   notes: string | null;
+  bruteNotes: string | null;
+  betterNotes: string | null;
+  optimalNotes: string | null;
   problem: {
     title: string;
   };

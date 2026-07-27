@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Editor } from "@/lib/DynamicEditor";
 import { SolutionCard } from "./SolutionCard";
 import { 
   ArrowLeft, 
@@ -23,6 +22,9 @@ interface SavedProblem {
   optimal: string | null;
   createdAt: string;
   notes: string | null;
+  bruteNotes: string | null;
+  betterNotes: string | null;
+  optimalNotes: string | null;
   problem: {
     title: string;
   };
@@ -39,8 +41,6 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
-
-  const [activeCardTab, setActiveCardTab] = useState<"code" | "explanation">("code");
 
   const parseSolution = (markdown: string | null, type: "brute" | "better" | "optimal") => {
     if (!markdown) {
@@ -126,9 +126,33 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
   };
 
   const activeSolutions = [
-    { type: "Brute Force" as const, parsed: bruteParsed, icon: <Cpu className="text-red-400 w-5 h-5" />, accentColor: "text-red-400", borderColor: "border-red-500/80" },
-    { type: "Better" as const, parsed: betterParsed, icon: <Zap className="text-amber-400 w-5 h-5" />, accentColor: "text-amber-400", borderColor: "border-amber-500/80" },
-    { type: "Optimal" as const, parsed: optimalParsed, icon: <Trophy className="text-emerald-400 w-5 h-5" />, accentColor: "text-emerald-400", borderColor: "border-emerald-500/80" },
+    { 
+      type: "Brute Force" as const, 
+      parsed: bruteParsed, 
+      icon: <Cpu className="text-red-400 w-5 h-5" />, 
+      accentColor: "text-red-400", 
+      borderColor: "border-red-500/80",
+      initialUserNotes: problem.bruteNotes || "",
+      noteType: "bruteNotes" as const
+    },
+    { 
+      type: "Better" as const, 
+      parsed: betterParsed, 
+      icon: <Zap className="text-amber-400 w-5 h-5" />, 
+      accentColor: "text-amber-400", 
+      borderColor: "border-amber-500/80",
+      initialUserNotes: problem.betterNotes || "",
+      noteType: "betterNotes" as const
+    },
+    { 
+      type: "Optimal" as const, 
+      parsed: optimalParsed, 
+      icon: <Trophy className="text-emerald-400 w-5 h-5" />, 
+      accentColor: "text-emerald-400", 
+      borderColor: "border-emerald-500/80",
+      initialUserNotes: problem.optimalNotes || "",
+      noteType: "optimalNotes" as const
+    },
   ].filter(s => s.parsed.exists);
 
   return (
@@ -150,12 +174,12 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
               title="Delete saved problem"
             >
               <Trash2 size={13} />
-              <span>Delete Saved</span>
+              <span>Delete This Problem</span>
             </button>
           </div>
 
           <div className="text-center space-y-3 py-4">
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-orange-400 via-red-500 to-amber-500 bg-clip-text text-transparent tracking-tight font-exo2">
               {problem.problem.title}
             </h1>
             <div className="inline-flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-900/30 border border-zinc-900 px-3 py-1 rounded-full font-mono">
@@ -165,20 +189,11 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
           </div>
         </div>
 
-        <section className="space-y-4 max-w-4xl mx-auto">
-          <div className="flex items-center gap-2 text-zinc-400 font-semibold text-sm">
-            <span className="w-1.5 h-6 bg-orange-500 rounded-full" />
-            <h2>Write Your Approach here 🚀</h2>
-          </div>
-          <div className="w-full">
-            <Editor problemId={problem.id} initialValue={problem.notes || ""} />
-          </div>
-        </section>
 
         <section className="space-y-4 relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-zinc-400 font-semibold text-sm">
-              <span className="w-1.5 h-6 bg-blue-500 rounded-full" />
+              <span className="w-1.5 h-6 bg-orange-500 rounded-full" />
               <h2>Solution Approaches Progression</h2>
             </div>
             
@@ -227,6 +242,9 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
                     spaceComplexity={sol.parsed.spaceComplexity}
                     accentColor={sol.accentColor}
                     borderColor={sol.borderColor}
+                    problemId={problem.id}
+                    initialUserNotes={sol.initialUserNotes}
+                    noteType={sol.noteType}
                   />
                   {index < activeSolutions.length - 1 && (
                     <div className="hidden lg:flex items-center justify-center shrink-0 self-center px-2 select-none">
