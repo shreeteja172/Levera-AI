@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Search, Trash2, BookOpen, MessageSquare, Code2, ChevronRight } from "lucide-react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState<any[]>([]);
@@ -51,7 +50,13 @@ export default function ProblemsPage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
       <header className="h-16 border-b border-zinc-900 flex items-center justify-between px-6 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <SidebarTrigger className="text-zinc-400 hover:text-white" />
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 text-zinc-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-zinc-900 border border-zinc-900 hover:border-zinc-800 text-xs font-semibold tracking-wide transition-all cursor-pointer"
+          >
+            <MessageSquare size={13} className="text-orange-500" />
+            <span>Go to Chatbot</span>
+          </Link>
           <div className="h-4 w-px bg-zinc-800" />
           <div className="flex items-center gap-2">
             <BookOpen size={18} className="text-orange-500" />

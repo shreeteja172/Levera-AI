@@ -1,5 +1,3 @@
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function ProblemsLayout({
@@ -9,12 +7,9 @@ export default function ProblemsLayout({
 }) {
   return (
     <TooltipProvider>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          {children}
-        </SidebarInset>
-      </SidebarProvider>
+      <div className="min-h-screen bg-zinc-950 text-zinc-200">
+        {children}
+      </div>
     </TooltipProvider>
   );
 }

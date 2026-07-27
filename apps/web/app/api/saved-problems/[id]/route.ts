@@ -78,3 +78,45 @@ export async function DELETE(
   }
 }
 
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    const session = await getServerSession();
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { notes, language } = await req.json();
+
+    const updateData: any = {};
+    if (notes !== undefined) updateData.notes = notes;
+    if (language !== undefined) updateData.language = language;
+
+    const updated = await prisma.savedProblem.update({
+      where: {
+        id,
+        userId: session.user.id,
+      },
+      data: updateData,
+    });
+
+    return NextResponse.json(updated);
+  } catch (error: any) {
+    console.error("Patch saved problem error:", error);
+
+    return NextResponse.json(
+      {
+        error: error.message || "Failed to update saved problem",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+}
+
+
