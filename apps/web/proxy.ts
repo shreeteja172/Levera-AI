@@ -1,18 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { authRateLimit, generalRateLimit } from "@/lib/rateLimit";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0] ?? "127.0.0.1";
 
   if (pathname.includes(".") && !pathname.endsWith(".html")) {
     return NextResponse.next();
+  }
+
+  const isSensitiveAuthPage =
+    pathname.startsWith("/auth/sign-in") ||
+    pathname.startsWith("/auth/sign-up") ||
+    pathname.startsWith("/auth/verify-otp");
+
+  if (isSensitiveAuthPage) {
+    const { success } = await authRateLimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many attempts. Try again shortly." },
+        { status: 429 },
+      );
+    }
+  } else {
+    const { success } = await generalRateLimit.limit(ip);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
   }
 
   if (pathname === "/home" || pathname.startsWith("/home/")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  const isProtectedPage = pathname.startsWith("/dashboard") || pathname.startsWith("/problems");
+  const isProtectedPage =
+    pathname.startsWith("/dashboard") || pathname.startsWith("/problems");
 
   const isAuthOrLandingPage =
     pathname.startsWith("/auth/sign-in") ||
@@ -20,9 +44,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/auth/verify-otp");
 
   try {
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
+    const session = await auth.api.getSession({ headers: request.headers });
 
     if (session && isAuthOrLandingPage) {
       if (pathname.startsWith("/auth/extension")) {
@@ -33,7 +55,9 @@ export async function proxy(request: NextRequest) {
 
     if (!session && isProtectedPage) {
       const callbackURL = encodeURIComponent(pathname + request.nextUrl.search);
-      return NextResponse.redirect(new URL(`/auth/sign-in?callbackURL=${callbackURL}`, request.url));
+      return NextResponse.redirect(
+        new URL(`/auth/sign-in?callbackURL=${callbackURL}`, request.url),
+      );
     }
   } catch (error) {
     console.error("Error in proxy.ts session verification:", error);
@@ -41,7 +65,6 @@ export async function proxy(request: NextRequest) {
 
   return NextResponse.next();
 }
-
 
 export const config = {
   matcher: [

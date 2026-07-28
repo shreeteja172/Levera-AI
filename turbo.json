@@ -21,7 +21,9 @@
         "BREVO_SENDER_EMAIL",
         "OPENROUTER_API_KEY",
         "GROQ_API_KEY",
-        "OPENAI_API_KEY"
+        "OPENAI_API_KEY",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN"  
       ]
     },
     "lint": {
