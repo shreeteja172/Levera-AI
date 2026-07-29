@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
+import { validateBearerToken } from "@/lib/extension-auth";
+import prisma from "@/lib/prisma";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -11,7 +13,7 @@ export async function OPTIONS() {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
 }
@@ -19,6 +21,43 @@ export async function OPTIONS() {
 export async function POST(req: NextRequest) {
   try {
     const problem = await req.json();
+
+    const authResult = await validateBearerToken(req);
+    if (authResult && problem.slug) {
+      const { user } = authResult;
+      try {
+        const dbProblem = await prisma.problem.upsert({
+          where: { slug: problem.slug },
+          update: {
+            title: problem.title || "",
+            difficulty: problem.difficulty || "",
+          },
+          create: {
+            slug: problem.slug,
+            title: problem.title || "",
+            difficulty: problem.difficulty || "",
+          },
+        });
+
+        await prisma.solveHistory.upsert({
+          where: {
+            userId_problemId: {
+              userId: user.id,
+              problemId: dbProblem.id,
+            },
+          },
+          update: {
+            solvedAt: new Date(),
+          },
+          create: {
+            userId: user.id,
+            problemId: dbProblem.id,
+          },
+        });
+      } catch (dbError) {
+        console.error("Failed to save solve history:", dbError);
+      }
+    }
 
     const prompt = `
 You are an expert competitive programmer.

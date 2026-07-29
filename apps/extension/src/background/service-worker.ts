@@ -54,18 +54,94 @@ async function pruneStaleEntries() {
   }
 }
 
+let activePollInterval: any = null;
+
+async function startPollingToken() {
+  if (activePollInterval) {
+    clearInterval(activePollInterval);
+  }
+
+  const checkPoll = async () => {
+    const stored = await chrome.storage.local.get("pendingLogin");
+    const pendingLogin = stored.pendingLogin;
+
+    if (!pendingLogin) {
+      if (activePollInterval) {
+        clearInterval(activePollInterval);
+        activePollInterval = null;
+      }
+      return;
+    }
+
+    if (Date.now() > pendingLogin.expiresAt) {
+      await chrome.storage.local.remove("pendingLogin");
+      if (activePollInterval) {
+        clearInterval(activePollInterval);
+        activePollInterval = null;
+      }
+      return;
+    }
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const res = await fetch(`${apiUrl}/api/extension/token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ deviceCode: pendingLogin.deviceCode }),
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        await chrome.storage.local.set({
+          token: data.token,
+          user: data.user,
+        });
+        await chrome.storage.local.remove("pendingLogin");
+        if (activePollInterval) {
+          clearInterval(activePollInterval);
+          activePollInterval = null;
+        }
+      } else if (res.status === 202) {
+      } else {
+        await chrome.storage.local.remove("pendingLogin");
+        if (activePollInterval) {
+          clearInterval(activePollInterval);
+          activePollInterval = null;
+        }
+      }
+    } catch (err) {
+      console.error("Error polling in background:", err);
+    }
+  };
+
+  await checkPoll();
+  activePollInterval = setInterval(checkPoll, 3000);
+}
+
+chrome.storage.local.get("pendingLogin").then((stored) => {
+  if (stored.pendingLogin) {
+    startPollingToken();
+  }
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "START_ANALYSIS") {
-    const { slug, tabId } = message;
+    const { slug, tabId, token } = message;
     if (slug && tabId) {
-      analyzeProblemInBackground(slug, tabId);
+      analyzeProblemInBackground(slug, tabId, token);
     }
+    return false;
+  }
+  if (message.type === "START_LOGIN_POLL") {
+    startPollingToken();
     return false;
   }
   return true;
 });
 
-async function analyzeProblemInBackground(slug: string, tabId: number) {
+async function analyzeProblemInBackground(slug: string, tabId: number, token?: string) {
   const existing = await chrome.storage.session.get(slug);
   if (existing[slug] && (existing[slug] as any).status === "loading") {
     const oldController = activeControllers.get(slug);
@@ -125,11 +201,16 @@ async function analyzeProblemInBackground(slug: string, tabId: number) {
       throw new Error("API URL not configured in extension.");
     }
 
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const res = await fetch(`${apiUrl}/api/ai/analyze`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify(problem),
       signal: controller.signal,
     });
