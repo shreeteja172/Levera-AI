@@ -8,10 +8,15 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const session = await getServerSession();
 
-    const problem = await prisma.savedProblem.findUnique({
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const problem = await prisma.savedProblem.findFirst({
       where: {
         id,
+        userId: session.user.id,
       },
       include: {
         problem: true,
@@ -90,7 +95,8 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { notes, language, bruteNotes, betterNotes, optimalNotes } = await req.json();
+    const { notes, language, bruteNotes, betterNotes, optimalNotes } =
+      await req.json();
 
     const updateData: Record<string, string | undefined> = {};
     if (notes !== undefined) updateData.notes = notes;
@@ -121,5 +127,3 @@ export async function PATCH(
     );
   }
 }
-
-
