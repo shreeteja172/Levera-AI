@@ -9,7 +9,14 @@
 * 🟢 You can import this file directly.
 */
 
+export const ProgrammingLanguage = {
+  cpp: 'cpp',
+  python: 'python',
+  java: 'java',
+  javascript: 'javascript',
+  typescript: 'typescript',
+  go: 'go',
+  rust: 'rust'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type ProgrammingLanguage = (typeof ProgrammingLanguage)[keyof typeof ProgrammingLanguage]

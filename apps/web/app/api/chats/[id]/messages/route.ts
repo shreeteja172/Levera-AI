@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { generateText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
+import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
 
 export async function POST(
   req: Request,
@@ -69,9 +70,19 @@ export async function POST(
 
     let reply = "";
     try {
+      const userPref = (session.user as any).preferredLanguage;
+      const systemPromptContent =
+        LEVERA_SYSTEM_PROMPT +
+        (userPref
+          ? `\n\nThe user's preferred programming language is ${
+              PROGRAMMING_LANGUAGES.find((l) => l.value === userPref)?.label ||
+              userPref
+            }. Unless the user explicitly requests another programming language in their current message, generate all code examples using this language.`
+          : "");
+
       const { text } = await generateText({
         model: aiModel,
-        system: LEVERA_SYSTEM_PROMPT,
+        system: systemPromptContent,
         messages: existingMessages.map((msg) => ({
           role: (msg.role === "assistant" ? "assistant" : "user") as
             "assistant" | "user",
@@ -82,7 +93,6 @@ export async function POST(
       });
 
       reply = text;
-
     } catch (err) {
       console.error("AI Error in messages route:", err);
       reply = `Error: ${(err as Error).message || "Failed to contact the AI model."}`;

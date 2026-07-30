@@ -32,6 +32,7 @@ export type UserMinAggregateOutputType = {
   emailVerified: boolean | null
   password: string | null
   isPro: boolean | null
+  preferredLanguage: $Enums.ProgrammingLanguage | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +45,7 @@ export type UserMaxAggregateOutputType = {
   emailVerified: boolean | null
   password: string | null
   isPro: boolean | null
+  preferredLanguage: $Enums.ProgrammingLanguage | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +58,7 @@ export type UserCountAggregateOutputType = {
   emailVerified: number
   password: number
   isPro: number
+  preferredLanguage: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -70,6 +73,7 @@ export type UserMinAggregateInputType = {
   emailVerified?: true
   password?: true
   isPro?: true
+  preferredLanguage?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +86,7 @@ export type UserMaxAggregateInputType = {
   emailVerified?: true
   password?: true
   isPro?: true
+  preferredLanguage?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +99,7 @@ export type UserCountAggregateInputType = {
   emailVerified?: true
   password?: true
   isPro?: true
+  preferredLanguage?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -179,6 +185,7 @@ export type UserGroupByOutputType = {
   emailVerified: boolean
   password: string | null
   isPro: boolean
+  preferredLanguage: $Enums.ProgrammingLanguage | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -212,6 +219,7 @@ export type UserWhereInput = {
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   password?: Prisma.StringNullableFilter<"User"> | string | null
   isPro?: Prisma.BoolFilter<"User"> | boolean
+  preferredLanguage?: Prisma.EnumProgrammingLanguageNullableFilter<"User"> | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -230,6 +238,7 @@ export type UserOrderByWithRelationInput = {
   emailVerified?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   isPro?: Prisma.SortOrder
+  preferredLanguage?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
@@ -251,6 +260,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   password?: Prisma.StringNullableFilter<"User"> | string | null
   isPro?: Prisma.BoolFilter<"User"> | boolean
+  preferredLanguage?: Prisma.EnumProgrammingLanguageNullableFilter<"User"> | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -269,6 +279,7 @@ export type UserOrderByWithAggregationInput = {
   emailVerified?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   isPro?: Prisma.SortOrder
+  preferredLanguage?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -287,6 +298,7 @@ export type UserScalarWhereWithAggregatesInput = {
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   isPro?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  preferredLanguage?: Prisma.EnumProgrammingLanguageNullableWithAggregatesFilter<"User"> | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -299,6 +311,7 @@ export type UserCreateInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -317,6 +330,7 @@ export type UserUncheckedCreateInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -335,6 +349,7 @@ export type UserUpdateInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -353,6 +368,7 @@ export type UserUncheckedUpdateInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -371,6 +387,7 @@ export type UserCreateManyInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -383,6 +400,7 @@ export type UserUpdateManyMutationInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -395,6 +413,7 @@ export type UserUncheckedUpdateManyInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -407,6 +426,7 @@ export type UserCountOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
+  preferredLanguage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -419,6 +439,7 @@ export type UserMaxOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
+  preferredLanguage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -431,6 +452,7 @@ export type UserMinOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isPro?: Prisma.SortOrder
+  preferredLanguage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -455,6 +477,10 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableEnumProgrammingLanguageFieldUpdateOperationsInput = {
+  set?: $Enums.ProgrammingLanguage | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -555,6 +581,7 @@ export type UserCreateWithoutSessionsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -572,6 +599,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -605,6 +633,7 @@ export type UserUpdateWithoutSessionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -622,6 +651,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -639,6 +669,7 @@ export type UserCreateWithoutAccountsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -656,6 +687,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -689,6 +721,7 @@ export type UserUpdateWithoutAccountsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -706,6 +739,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -723,6 +757,7 @@ export type UserCreateWithoutDeviceCodesInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -740,6 +775,7 @@ export type UserUncheckedCreateWithoutDeviceCodesInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -773,6 +809,7 @@ export type UserUpdateWithoutDeviceCodesInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -790,6 +827,7 @@ export type UserUncheckedUpdateWithoutDeviceCodesInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -807,6 +845,7 @@ export type UserCreateWithoutSolveHistoryInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -824,6 +863,7 @@ export type UserUncheckedCreateWithoutSolveHistoryInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -857,6 +897,7 @@ export type UserUpdateWithoutSolveHistoryInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -874,6 +915,7 @@ export type UserUncheckedUpdateWithoutSolveHistoryInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -891,6 +933,7 @@ export type UserCreateWithoutSavedProblemsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -908,6 +951,7 @@ export type UserUncheckedCreateWithoutSavedProblemsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -941,6 +985,7 @@ export type UserUpdateWithoutSavedProblemsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -958,6 +1003,7 @@ export type UserUncheckedUpdateWithoutSavedProblemsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -975,6 +1021,7 @@ export type UserCreateWithoutChatsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -992,6 +1039,7 @@ export type UserUncheckedCreateWithoutChatsInput = {
   emailVerified?: boolean
   password?: string | null
   isPro?: boolean
+  preferredLanguage?: $Enums.ProgrammingLanguage | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1025,6 +1073,7 @@ export type UserUpdateWithoutChatsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1042,6 +1091,7 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredLanguage?: Prisma.NullableEnumProgrammingLanguageFieldUpdateOperationsInput | $Enums.ProgrammingLanguage | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1135,6 +1185,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   emailVerified?: boolean
   password?: boolean
   isPro?: boolean
+  preferredLanguage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1154,6 +1205,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   password?: boolean
   isPro?: boolean
+  preferredLanguage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1166,6 +1218,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   password?: boolean
   isPro?: boolean
+  preferredLanguage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1178,11 +1231,12 @@ export type UserSelectScalar = {
   emailVerified?: boolean
   password?: boolean
   isPro?: boolean
+  preferredLanguage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "emailVerified" | "password" | "isPro" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "emailVerified" | "password" | "isPro" | "preferredLanguage" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1213,6 +1267,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     emailVerified: boolean
     password: string | null
     isPro: boolean
+    preferredLanguage: $Enums.ProgrammingLanguage | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1651,6 +1706,7 @@ export interface UserFieldRefs {
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly isPro: Prisma.FieldRef<"User", 'Boolean'>
+  readonly preferredLanguage: Prisma.FieldRef<"User", 'ProgrammingLanguage'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

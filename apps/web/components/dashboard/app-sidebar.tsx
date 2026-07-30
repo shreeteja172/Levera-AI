@@ -26,7 +26,9 @@ import {
   LogOut,
   User,
   PanelLeft,
+  Settings,
 } from "lucide-react";
+import { SettingsDialog } from "@/components/dashboard/SettingsDialog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
@@ -51,6 +53,7 @@ export function AppSidebar() {
   const user = sessionData?.user;
   const { toggleSidebar } = useSidebar();
 
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -82,14 +85,18 @@ export function AppSidebar() {
         }
         const elapsedTime = Date.now() - startTime;
         if (elapsedTime < 200) {
-          await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
+          await new Promise((resolve) =>
+            setTimeout(resolve, 200 - elapsedTime),
+          );
         }
         setRecentChats(chats.slice(0, 7));
       } catch (e) {
         console.error("Failed to load chats from database:", e);
         const elapsedTime = Date.now() - startTime;
         if (elapsedTime < 200) {
-          await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
+          await new Promise((resolve) =>
+            setTimeout(resolve, 200 - elapsedTime),
+          );
         }
       } finally {
         setLoading(false);
@@ -164,10 +171,14 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   render={<Link href="/dashboard" />}
-                  isActive={pathname === "/dashboard" || pathname.startsWith("/dashboard/chat/")}
+                  isActive={
+                    pathname === "/dashboard" ||
+                    pathname.startsWith("/dashboard/chat/")
+                  }
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    (pathname === "/dashboard" || pathname.startsWith("/dashboard/chat/"))
+                    pathname === "/dashboard" ||
+                      pathname.startsWith("/dashboard/chat/")
                       ? "bg-zinc-900 text-white font-medium"
                       : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
                   )}
@@ -221,8 +232,26 @@ export function AppSidebar() {
               <SidebarMenu className="mt-1 space-y-2 px-3">
                 {[...Array(skeletonCount)].map((_, i) => (
                   <div key={i} className="flex items-center gap-2.5 py-1.5">
-                    <SkeletonBlock width="13px" height="13px" rounded="rounded" className="shrink-0 bg-zinc-800" />
-                    <SkeletonBlock width={i === 0 ? "70%" : i === 1 ? "85%" : i === 2 ? "60%" : "75%"} height="12px" rounded="rounded" className="bg-zinc-800/50" />
+                    <SkeletonBlock
+                      width="13px"
+                      height="13px"
+                      rounded="rounded"
+                      className="shrink-0 bg-zinc-800"
+                    />
+                    <SkeletonBlock
+                      width={
+                        i === 0
+                          ? "70%"
+                          : i === 1
+                            ? "85%"
+                            : i === 2
+                              ? "60%"
+                              : "75%"
+                      }
+                      height="12px"
+                      rounded="rounded"
+                      className="bg-zinc-800/50"
+                    />
                   </div>
                 ))}
               </SidebarMenu>
@@ -266,13 +295,31 @@ export function AppSidebar() {
         {!mounted || sessionPending ? (
           <div className="flex flex-col gap-3 animate-pulse">
             <div className="flex items-center gap-3">
-              <SkeletonBlock width="32px" height="32px" rounded="rounded-full" className="bg-zinc-800 shrink-0" />
+              <SkeletonBlock
+                width="32px"
+                height="32px"
+                rounded="rounded-full"
+                className="bg-zinc-800 shrink-0"
+              />
               <div className="flex-1 min-w-0 space-y-1.5">
-                <SkeletonBlock width="60%" height="14px" className="bg-zinc-800" />
-                <SkeletonBlock width="85%" height="10px" className="bg-zinc-800/60" />
+                <SkeletonBlock
+                  width="60%"
+                  height="14px"
+                  className="bg-zinc-800"
+                />
+                <SkeletonBlock
+                  width="85%"
+                  height="10px"
+                  className="bg-zinc-800/60"
+                />
               </div>
             </div>
-            <SkeletonBlock width="100%" height="32px" rounded="rounded-xl" className="bg-zinc-900" />
+            <SkeletonBlock
+              width="100%"
+              height="32px"
+              rounded="rounded-xl"
+              className="bg-zinc-900"
+            />
           </div>
         ) : user ? (
           <div className="flex flex-col gap-3">
@@ -298,13 +345,22 @@ export function AppSidebar() {
                 <p className="text-xs text-zinc-500 truncate">{user.email}</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 text-xs font-medium text-zinc-400 hover:text-red-400 bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all"
-            >
-              <LogOut size={13} />
-              <span>Log Out</span>
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900/50 hover:bg-zinc-900 border border-zinc-800 hover:border-zinc-700 py-2 rounded-xl transition-all cursor-pointer"
+              >
+                <Settings size={13} />
+                <span>Settings</span>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-red-400 bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all cursor-pointer"
+              >
+                <LogOut size={13} />
+                <span>Log Out</span>
+              </button>
+            </div>
           </div>
         ) : (
           <Link
@@ -315,6 +371,7 @@ export function AppSidebar() {
             <span>Sign In</span>
           </Link>
         )}
+        <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </SidebarFooter>
     </Sidebar>
   );

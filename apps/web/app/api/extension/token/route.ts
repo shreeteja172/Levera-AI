@@ -50,7 +50,14 @@ export async function POST(request: Request) {
 
   const user = await prisma.user.findUnique({
     where: { id: record.userId! },
-    select: { id: true, email: true, name: true, image: true, isPro: true },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
+      isPro: true,
+      preferredLanguage: true,
+    },
   });
 
   await prisma.deviceCode.delete({ where: { id: record.id } });

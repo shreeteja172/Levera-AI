@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
 import { validateBearerToken } from "@/lib/extension-auth";
 import prisma from "@/lib/prisma";
+import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -118,14 +119,23 @@ Do NOT write **# Heading**.
 Write proper markdown only.
 `;
 
+    const systemPromptContent =
+      "You are an expert competitive programming assistant. Always provide the optimal solution only." +
+      (authResult?.user?.preferredLanguage
+        ? `\n\nThe user's preferred programming language is ${
+            PROGRAMMING_LANGUAGES.find(
+              (l) => l.value === authResult.user.preferredLanguage,
+            )?.label || authResult.user.preferredLanguage
+          }. Unless the user explicitly asks for another language, generate all code examples in this language.`
+        : "");
+
     const completion = await groq.chat.completions.create({
       model: "openai/gpt-oss-120b",
       temperature: 0.2,
       messages: [
         {
           role: "system",
-          content:
-            "You are an expert competitive programming assistant. Always provide the optimal solution only.",
+          content: systemPromptContent,
         },
         {
           role: "user",

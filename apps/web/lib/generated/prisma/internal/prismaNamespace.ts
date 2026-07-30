@@ -1213,6 +1213,7 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   password: 'password',
   isPro: 'isPro',
+  preferredLanguage: 'preferredLanguage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1411,6 +1412,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'ProgrammingLanguage'
+ */
+export type EnumProgrammingLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProgrammingLanguage'>
+    
+
+
+/**
+ * Reference to a field of type 'ProgrammingLanguage[]'
+ */
+export type ListEnumProgrammingLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProgrammingLanguage[]'>
     
 
 

@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { generateText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
+import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
 
 export async function GET() {
   try {
@@ -83,9 +84,19 @@ export async function POST(req: Request) {
 
     if (message) {
       try {
+        const userPref = (session.user as any).preferredLanguage;
+        const systemPromptContent =
+          LEVERA_SYSTEM_PROMPT +
+          (userPref
+            ? `\n\nThe user's preferred programming language is ${
+                PROGRAMMING_LANGUAGES.find((l) => l.value === userPref)
+                  ?.label || userPref
+              }. Unless the user explicitly requests another programming language in their current message, generate all code examples using this language.`
+            : "");
+
         const { text: reply } = await generateText({
           model: aiModel,
-          system: LEVERA_SYSTEM_PROMPT,
+          system: systemPromptContent,
           prompt: message,
           temperature: 0.7,
           maxOutputTokens: 2048,
@@ -114,7 +125,8 @@ export async function POST(req: Request) {
         return NextResponse.json(updatedSession);
       } catch (err) {
         console.error("AI generation error:", err);
-        const errorMsg = (err as Error).message || "Failed to contact the AI model.";
+        const errorMsg =
+          (err as Error).message || "Failed to contact the AI model.";
         const updatedSession = await prisma.chatSession.update({
           where: {
             id: newSession.id,

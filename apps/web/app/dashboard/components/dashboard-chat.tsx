@@ -20,6 +20,7 @@ import "highlight.js/styles/github-dark.css";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useSession } from "@/lib/auth-client";
 import { SUPPORTED_MODELS, type ModelOption } from "@/lib/ai/model-list";
+import { OnboardingLanguageModal } from "@/components/dashboard/OnboardingLanguageModal";
 import {
   ModelSelector,
   ModelSelectorTrigger,
@@ -222,7 +223,14 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     setMounted(true);
   }, []);
 
-  const { data: session, isPending: sessionPending } = useSession();
+  const { data: session, isPending: sessionPending, refetch: refetchSession } = useSession();
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+
+  useEffect(() => {
+    if (!sessionPending && session?.user && !(session.user as any).preferredLanguage) {
+      setOnboardingOpen(true);
+    }
+  }, [session, sessionPending]);
   const [greeting, setGreeting] = useState("Good morning");
 
   useEffect(() => {
@@ -457,6 +465,8 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   }
 
   function renderChatInput(className = "max-w-5xl") {
+    const isLanguageUnset = !sessionPending && session?.user && !(session.user as any).preferredLanguage;
+
     return (
       <div
         className={`w-full ${className} mx-auto relative flex flex-col bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl`}
@@ -471,8 +481,8 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
               sendMessage();
             }
           }}
-          disabled={!mounted || loading || chatLoading || sessionPending}
-          placeholder="Type a message or paste a DSA problem description..."
+          disabled={!mounted || loading || chatLoading || sessionPending || isLanguageUnset}
+          placeholder={isLanguageUnset ? "Select a preferred programming language to start chatting..." : "Type a message or paste a DSA problem description..."}
           rows={1}
           className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
         />
@@ -525,15 +535,24 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             </ModelSelectorContent>
           </ModelSelector>
 
-          <button
-            onClick={() => sendMessage()}
-            disabled={
-              !mounted || loading || chatLoading || sessionPending || !inputMessage.trim()
-            }
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
-          >
-            <Send size={14} />
-          </button>
+          {isLanguageUnset ? (
+            <button
+              onClick={() => setOnboardingOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-orange-600/10"
+            >
+              Select Language
+            </button>
+          ) : (
+            <button
+              onClick={() => sendMessage()}
+              disabled={
+                !mounted || loading || chatLoading || sessionPending || !inputMessage.trim()
+              }
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
+            >
+              <Send size={14} />
+            </button>
+          )}
         </div>
       </div>
     );
@@ -966,6 +985,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           </div>
         </div>
       )}
+      <OnboardingLanguageModal
+        open={onboardingOpen}
+        onOpenChange={setOnboardingOpen}
+        onSuccess={() => refetchSession()}
+      />
     </div>
   );
 }

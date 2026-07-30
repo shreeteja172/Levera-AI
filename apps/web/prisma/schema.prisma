@@ -20,6 +20,7 @@ model User {
   emailVerified Boolean @default(false)
   password      String?
   isPro         Boolean @default(false)
+  preferredLanguage ProgrammingLanguage?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -174,3 +175,14 @@ model ChatMessage {
 
   @@map("chat_message")
 }
+
+enum ProgrammingLanguage {
+  cpp
+  python
+  java
+  javascript
+  typescript
+  go
+  rust
+}
+

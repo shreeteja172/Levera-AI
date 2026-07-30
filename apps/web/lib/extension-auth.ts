@@ -9,7 +9,14 @@ export async function validateBearerToken(request: Request) {
     where: { token },
     include: {
       user: {
-        select: { id: true, email: true, name: true, image: true, isPro: true },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          image: true,
+          isPro: true,
+          preferredLanguage: true,
+        },
       },
     },
   });
