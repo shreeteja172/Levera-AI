@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, Suspense } from "react";
+import { useState, useRef, useEffect, Suspense, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -34,9 +34,36 @@ function OTPVerificationForm() {
     useRef<HTMLInputElement>(null),
   ];
 
+  const verifyCode = useCallback(async (otpValue: string) => {
+    if (!email) {
+      toast.error("No email address provided");
+      return;
+    }
+    try {
+      setLoading(true);
+      const result = await authClient.signIn.emailOtp({
+        email,
+        otp: otpValue,
+        callbackURL: "/dashboard",
+      });
+
+      if (result.error) {
+        toast.error(result.error.message || "Verification failed");
+      } else {
+        toast.success("Signed in successfully!");
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Verification failed");
+    } finally {
+      setLoading(false);
+    }
+  }, [email, router]);
+
   // Focus the first input on load
   useEffect(() => {
     inputRefs[0]?.current?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Countdown timer for resend
@@ -52,7 +79,7 @@ function OTPVerificationForm() {
     if (code.every((digit) => digit !== "")) {
       verifyCode(code.join(""));
     }
-  }, [code]);
+  }, [code, verifyCode]);
 
   const handleInputChange = (value: string, index: number) => {
     if (value && !/^\d$/.test(value)) return;
@@ -91,32 +118,6 @@ function OTPVerificationForm() {
     const digits = pastedData.split("");
     setCode(digits);
     inputRefs[5]?.current?.focus();
-  };
-
-  const verifyCode = async (otpValue: string) => {
-    if (!email) {
-      toast.error("No email address provided");
-      return;
-    }
-    try {
-      setLoading(true);
-      const result = await authClient.signIn.emailOtp({
-        email,
-        otp: otpValue,
-        callbackURL: "/dashboard",
-      });
-
-      if (result.error) {
-        toast.error(result.error.message || "Verification failed");
-      } else {
-        toast.success("Signed in successfully!");
-        router.push("/dashboard");
-      }
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Verification failed");
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleResend = async () => {

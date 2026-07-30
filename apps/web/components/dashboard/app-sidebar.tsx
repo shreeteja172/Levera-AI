@@ -31,10 +31,16 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
 
+interface ChatMessage {
+  id: string;
+  role: string;
+  content: string;
+}
+
 interface ChatSession {
   id: string;
   title: string;
-  messages: any[];
+  messages: ChatMessage[];
   createdAt: number;
 }
 

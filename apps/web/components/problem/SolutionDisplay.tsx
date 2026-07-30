@@ -59,8 +59,8 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
     let timeComplexity = (timeMatch && timeMatch[1]) ? timeMatch[1].trim() : "";
     let spaceComplexity = (spaceMatch && spaceMatch[1]) ? spaceMatch[1].trim() : "";
 
-    timeComplexity = timeComplexity.replace(/[\*\$\`]/g, "").trim();
-    spaceComplexity = spaceComplexity.replace(/[\*\$\`]/g, "").trim();
+    timeComplexity = timeComplexity.replace(/[*$`]/g, "").trim();
+    spaceComplexity = spaceComplexity.replace(/[*$`]/g, "").trim();
 
     if (!timeComplexity) {
       timeComplexity = type === "brute" ? "O(N²)" : type === "better" ? "O(N log N)" : "O(N)";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -23,6 +23,24 @@ export function ApproachEditor({ problemId, initialValue, noteType = "notes" }: 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const initialMount = useRef(true);
 
+  const saveApproach = useCallback(async (content: string) => {
+    setStatus("saving");
+    try {
+      await axios.patch(`/api/saved-problems/${problemId}`, {
+        [noteType]: content,
+      });
+      setStatus("saved");
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Autosave error:", error);
+      setStatus("error");
+      const errMessage = axios.isAxiosError(error)
+        ? error.response?.data?.error || error.message
+        : error instanceof Error ? error.message : "Failed to autosave";
+      setErrorMessage(errMessage);
+    }
+  }, [problemId, noteType]);
+
   useEffect(() => {
     if (initialMount.current) {
       initialMount.current = false;
@@ -42,22 +60,7 @@ export function ApproachEditor({ problemId, initialValue, noteType = "notes" }: 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [value]);
-
-  const saveApproach = async (content: string) => {
-    setStatus("saving");
-    try {
-      await axios.patch(`/api/saved-problems/${problemId}`, {
-        [noteType]: content,
-      });
-      setStatus("saved");
-      setErrorMessage("");
-    } catch (error: any) {
-      console.error("Autosave error:", error);
-      setStatus("error");
-      setErrorMessage(error.response?.data?.error || "Failed to autosave");
-    }
-  };
+  }, [value, saveApproach]);
 
   const getPlaceholder = () => {
     if (noteType === "bruteNotes") return "Write your Brute Force notes here...";

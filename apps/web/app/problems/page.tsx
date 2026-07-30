@@ -6,8 +6,20 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Search, Trash2, BookOpen, MessageSquare, Code2, ChevronRight } from "lucide-react";
 
+interface SavedProblemItem {
+  id: string;
+  language: string;
+  brute: unknown;
+  better: unknown;
+  optimal: unknown;
+  problem?: {
+    title: string;
+    slug: string;
+  };
+}
+
 export default function ProblemsPage() {
-  const [problems, setProblems] = useState<any[]>([]);
+  const [problems, setProblems] = useState<SavedProblemItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -132,17 +144,17 @@ export default function ProblemsPage() {
 
                   <div className="flex items-center justify-between mt-6 pt-4 border-t border-zinc-900/50">
                     <div className="flex gap-2">
-                      {sp.brute && (
+                      {!!sp.brute && (
                         <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 border border-red-500/10">
                           Brute
                         </span>
                       )}
-                      {sp.better && (
+                      {!!sp.better && (
                         <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/10">
                           Better
                         </span>
                       )}
-                      {sp.optimal && (
+                      {!!sp.optimal && (
                         <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/10">
                           Optimal
                         </span>

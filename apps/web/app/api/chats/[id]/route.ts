@@ -33,10 +33,10 @@ export async function GET(
     }
 
     return NextResponse.json(chat);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching chat:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to fetch chat" },
+      { error: (error as Error).message || "Failed to fetch chat" },
       { status: 500 }
     );
   }
@@ -72,10 +72,10 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting chat:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to delete chat" },
+      { error: (error as Error).message || "Failed to delete chat" },
       { status: 500 }
     );
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -42,6 +42,7 @@ interface Message {
 function PreBlock({ children }: { children: React.ReactNode }) {
   const [copied, setCopied] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const extractText = (node: any): string => {
     if (!node) return "";
     if (typeof node === "string") return node;
@@ -198,7 +199,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     try {
       const res = await axios.get("/api/saved-problems");
       if (Array.isArray(res.data)) {
-        const slugs = res.data.map((sp: any) => sp.problem?.slug).filter(Boolean);
+        const slugs = res.data.map((sp: { problem?: { slug?: string } }) => sp.problem?.slug).filter(Boolean) as string[];
         setSavedProblemSlugs(slugs);
       }
     } catch (e) {
@@ -440,9 +441,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         setChatTitle(appendRes.data.title || chatTitle);
         window.dispatchEvent(new CustomEvent("levera_chats_updated"));
       }
-    } catch (err: any) {
+    } catch (err) {
       const errorMsg =
-        err.response?.data?.error || "Failed to contact the server.";
+        axios.isAxiosError(err)
+          ? err.response?.data?.error || err.message
+          : err instanceof Error ? err.message : "Failed to contact the server.";
       const errorAssistantMessage: Message = {
         role: "assistant",
         content: `Error: ${errorMsg}`,
@@ -537,10 +540,10 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   }
 
   const markdownComponents = {
-    pre({ children }: any) {
+    pre({ children }: React.ComponentPropsWithoutRef<"pre">) {
       return <PreBlock>{children}</PreBlock>;
     },
-    code({ className, children, ...props }: any) {
+    code({ className, children, ...props }: React.ComponentPropsWithoutRef<"code">) {
       const inline = !className;
       if (inline) {
         return (
@@ -561,15 +564,15 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         </code>
       );
     },
-    h1: ({ children }: any) => (
+    h1: ({ children }: React.ComponentPropsWithoutRef<"h1">) => (
       <h1 className="mb-4 mt-6 text-xl font-bold text-white border-b border-zinc-900 pb-1">
         {children}
       </h1>
     ),
-    h2: ({ children }: any) => (
+    h2: ({ children }: React.ComponentPropsWithoutRef<"h2">) => (
       <h2 className="mb-3 mt-5 text-lg font-semibold text-white">{children}</h2>
     ),
-    p: ({ children }: any) => (
+    p: ({ children }: React.ComponentPropsWithoutRef<"p">) => (
       <p className="my-3 leading-relaxed text-zinc-300">{children}</p>
     ),
   };

@@ -17,7 +17,6 @@ export const CodeBlock = ({
   language,
   filename,
   code,
-  highlightLines = [],
 }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
   const [wrapLines, setWrapLines] = useState(true);

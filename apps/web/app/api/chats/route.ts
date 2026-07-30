@@ -30,10 +30,10 @@ export async function GET() {
     });
 
     return NextResponse.json(chats);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching chats:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to fetch chats" },
+      { error: (error as Error).message || "Failed to fetch chats" },
       { status: 500 },
     );
   }
@@ -112,9 +112,9 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json(updatedSession);
-      } catch (err: any) {
+      } catch (err) {
         console.error("AI generation error:", err);
-        const errorMsg = err.message || "Failed to contact the AI model.";
+        const errorMsg = (err as Error).message || "Failed to contact the AI model.";
         const updatedSession = await prisma.chatSession.update({
           where: {
             id: newSession.id,
@@ -140,10 +140,10 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(newSession);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating chat:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to create chat" },
+      { error: (error as Error).message || "Failed to create chat" },
       { status: 500 },
     );
   }
@@ -164,10 +164,10 @@ export async function DELETE() {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting all chats:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to delete all chats" },
+      { error: (error as Error).message || "Failed to delete all chats" },
       { status: 500 },
     );
   }

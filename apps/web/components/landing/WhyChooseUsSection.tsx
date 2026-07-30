@@ -80,7 +80,7 @@ export default function WhyChooseUsSection() {
                 <p><span className="text-[#F43F5E]">function</span> <span className="text-[#0EA5E9]">binarySearch</span>(arr, target) {"{"}</p>
                 <p className="pl-6">let left = <span className="text-[#10B981]">0</span>;</p>
                 <p className="pl-6">let right = arr.length - <span className="text-[#10B981]">1</span>;</p>
-                <p className="pl-6 text-zinc-500">// AI Agent: &quot;Notice how we cut the search space in half...&quot;</p>
+                <p className="pl-6 text-zinc-500">{"// AI Agent: \"Notice how we cut the search space in half...\""}</p>
                 <p className="pl-6"><span className="text-[#F43F5E]">while</span> (left &lt;= right) {"{"}</p>
                 <p className="pl-12">let mid = Math.<span className="text-[#0EA5E9]">floor</span>((left + right) / <span className="text-[#10B981]">2</span>);</p>
                 <p className="pl-12 text-white"><span className="inline-block w-2.5 h-5 bg-zinc-400 animate-pulse align-middle" /></p>

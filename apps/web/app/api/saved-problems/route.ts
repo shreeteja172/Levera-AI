@@ -31,12 +31,12 @@ export async function GET() {
     });
 
     return NextResponse.json(savedProblems);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Fetch saved problems error:", error);
 
     return NextResponse.json(
       {
-        error: error.message || "Failed to fetch saved problems",
+        error: (error as Error).message || "Failed to fetch saved problems",
       },
       {
         status: 500,
@@ -102,12 +102,12 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(savedProblem);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Save problem error:", error);
 
     return NextResponse.json(
       {
-        error: error.message || "Failed to save problem",
+        error: (error as Error).message || "Failed to save problem",
       },
       {
         status: 500,

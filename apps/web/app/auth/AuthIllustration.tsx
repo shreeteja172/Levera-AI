@@ -3,6 +3,17 @@
 import { useState, useEffect } from "react";
 import styles from "./auth.module.css";
 
+const INITIAL_ARRAY = [35, 75, 50, 90, 20, 60, 45, 80];
+
+const CODE_SNIPPET = `function hasPath(g, src, dst) {
+  if (src === dst) return true;
+  for (let n of g[src]) {
+    if (hasPath(g, n, dst)) 
+      return true;
+  }
+  return false;
+}`;
+
 export default function AuthIllustration() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeNode, setActiveNode] = useState<number>(1);
@@ -18,22 +29,21 @@ export default function AuthIllustration() {
     return () => clearInterval(interval);
   }, []);
 
-  const initialArray = [35, 75, 50, 90, 20, 60, 45, 80];
-  const [array, setArray] = useState(initialArray);
+  const [array, setArray] = useState(INITIAL_ARRAY);
   const [sortingIndices, setSortingIndices] = useState<[number, number]>([-1, -1]);
   const [isSorted, setIsSorted] = useState(false);
   const [sortedCount, setSortedCount] = useState(-1);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    let arr = [...initialArray];
+    let arr = [...INITIAL_ARRAY];
     let i = 0;
     let j = 0;
     let sorted = false;
 
     const sortStep = () => {
       if (sorted) {
-        arr = [...initialArray];
+        arr = [...INITIAL_ARRAY];
         setArray(arr);
         setSortingIndices([-1, -1]);
         setIsSorted(false);
@@ -78,15 +88,6 @@ export default function AuthIllustration() {
     return () => clearTimeout(timer);
   }, []);
 
-  const codeSnippet = `function hasPath(g, src, dst) {
-  if (src === dst) return true;
-  for (let n of g[src]) {
-    if (hasPath(g, n, dst)) 
-      return true;
-  }
-  return false;
-}`;
-
   const [typedCode, setTypedCode] = useState("");
 
   useEffect(() => {
@@ -94,8 +95,8 @@ export default function AuthIllustration() {
     let timer: NodeJS.Timeout;
 
     const type = () => {
-      if (index < codeSnippet.length) {
-        setTypedCode(codeSnippet.slice(0, index + 1));
+      if (index < CODE_SNIPPET.length) {
+        setTypedCode(CODE_SNIPPET.slice(0, index + 1));
         index++;
         timer = setTimeout(type, 45);
       } else {

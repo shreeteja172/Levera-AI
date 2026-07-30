@@ -64,12 +64,12 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Delete saved problem error:", error);
 
     return NextResponse.json(
       {
-        error: error.message || "Failed to delete saved problem",
+        error: (error as Error).message || "Failed to delete saved problem",
       },
       {
         status: 500,
@@ -92,7 +92,7 @@ export async function PATCH(
 
     const { notes, language, bruteNotes, betterNotes, optimalNotes } = await req.json();
 
-    const updateData: any = {};
+    const updateData: Record<string, string | undefined> = {};
     if (notes !== undefined) updateData.notes = notes;
     if (language !== undefined) updateData.language = language;
     if (bruteNotes !== undefined) updateData.bruteNotes = bruteNotes;
@@ -108,12 +108,12 @@ export async function PATCH(
     });
 
     return NextResponse.json(updated);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Patch saved problem error:", error);
 
     return NextResponse.json(
       {
-        error: error.message || "Failed to update saved problem",
+        error: (error as Error).message || "Failed to update saved problem",
       },
       {
         status: 500,

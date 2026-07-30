@@ -33,7 +33,6 @@ export function SolutionCard({
   language,
   timeComplexity,
   spaceComplexity,
-  accentColor,
   borderColor,
   problemId,
   initialUserNotes,

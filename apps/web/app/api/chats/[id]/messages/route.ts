@@ -83,9 +83,9 @@ export async function POST(
 
       reply = text;
 
-    } catch (err: any) {
+    } catch (err) {
       console.error("AI Error in messages route:", err);
-      reply = `Error: ${err.message || "Failed to contact the AI model."}`;
+      reply = `Error: ${(err as Error).message || "Failed to contact the AI model."}`;
     }
 
     const finalSession = await prisma.chatSession.update({
@@ -111,10 +111,10 @@ export async function POST(
     });
 
     return NextResponse.json(finalSession);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error appending message:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to append message" },
+      { error: (error as Error).message || "Failed to append message" },
       { status: 500 },
     );
   }
