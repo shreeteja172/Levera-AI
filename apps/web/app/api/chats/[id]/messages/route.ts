@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { generateText } from "ai";
+import { streamText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
 import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
@@ -68,9 +68,8 @@ export async function POST(
 
     const aiModel = getModel(provider, model);
 
-    let reply = "";
     try {
-      const userPref = (session.user as any).preferredLanguage;
+      const userPref = (session.user as { preferredLanguage?: string }).preferredLanguage;
       const systemPromptContent =
         LEVERA_SYSTEM_PROMPT +
         (userPref
@@ -80,7 +79,7 @@ export async function POST(
             }. Unless the user explicitly requests another programming language in their current message, generate all code examples using this language.`
           : "");
 
-      const { text } = await generateText({
+      const result = await streamText({
         model: aiModel,
         system: systemPromptContent,
         messages: existingMessages.map((msg) => ({
@@ -90,37 +89,52 @@ export async function POST(
         })),
         temperature: 0.7,
         maxOutputTokens: 2048,
+        onFinish: async ({ text }) => {
+          try {
+            await prisma.chatSession.update({
+              where: {
+                id: sessionId,
+              },
+              data: {
+                updatedAt: new Date(),
+                messages: {
+                  create: {
+                    role: "assistant",
+                    content: text,
+                  },
+                },
+              },
+            });
+          } catch (dbErr) {
+            console.error("Failed to save assistant message to DB:", dbErr);
+          }
+        },
       });
 
-      reply = text;
+      return result.toTextStreamResponse();
     } catch (err) {
       console.error("AI Error in messages route:", err);
-      reply = `Error: ${(err as Error).message || "Failed to contact the AI model."}`;
+      const errorMsg = (err as Error).message || "Failed to contact the AI model.";
+      try {
+        await prisma.chatSession.update({
+          where: {
+            id: sessionId,
+          },
+          data: {
+            updatedAt: new Date(),
+            messages: {
+              create: {
+                role: "assistant",
+                content: `Error: ${errorMsg}`,
+              },
+            },
+          },
+        });
+      } catch (dbErr) {
+        console.error("Failed to save error assistant message to DB:", dbErr);
+      }
+      return NextResponse.json({ error: errorMsg }, { status: 500 });
     }
-
-    const finalSession = await prisma.chatSession.update({
-      where: {
-        id: sessionId,
-      },
-      data: {
-        updatedAt: new Date(),
-        messages: {
-          create: {
-            role: "assistant",
-            content: reply,
-          },
-        },
-      },
-      include: {
-        messages: {
-          orderBy: {
-            createdAt: "asc",
-          },
-        },
-      },
-    });
-
-    return NextResponse.json(finalSession);
   } catch (error) {
     console.error("Error appending message:", error);
     return NextResponse.json(

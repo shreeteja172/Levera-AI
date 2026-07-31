@@ -147,6 +147,7 @@ function parseMessageContent(content: string): ParsedContent[] {
 
 interface SolutionsBlockProps {
   part: ParsedContent;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   markdownComponents: any;
 }
 
@@ -326,7 +327,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const [onboardingOpen, setOnboardingOpen] = useState(false);
 
   useEffect(() => {
-    if (!sessionPending && session?.user && !(session.user as any).preferredLanguage) {
+    if (!sessionPending && session?.user && !(session.user as { preferredLanguage?: string }).preferredLanguage) {
       setOnboardingOpen(true);
     }
   }, [session, sessionPending]);
@@ -345,6 +346,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
   const firstName = session?.user?.name ? session.user.name.split(" ")[0] : "";
   const displayName = firstName || "there";
+
+  const isThinking =
+    loading &&
+    (messages.length === 0 ||
+      messages[messages.length - 1]?.content === "");
 
   const [thinkingWord, setThinkingWord] = useState("thinking");
 
@@ -384,10 +390,25 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   }, [loading]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const latestChatIdRef = useRef<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
+
+  const scrollToBottom = useCallback((force = false) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const threshold = 150; // px
+    const isNearBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight <= threshold;
+
+    if (force || isNearBottom) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
 
   const fetchChatSession = useCallback(
     async (id: string | null) => {
@@ -416,6 +437,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           setMessages(res.data.messages);
           setActiveChatId(id);
           setChatTitle(res.data.title || null);
+          setTimeout(() => scrollToBottom(true), 50);
         } else {
           router.push("/dashboard");
         }
@@ -438,7 +460,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         }
       }
     },
-    [router],
+    [router, scrollToBottom],
   );
 
   useEffect(() => {
@@ -455,12 +477,17 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     window.addEventListener("levera_new_chat", handleNewChatEvent);
     return () => {
       window.removeEventListener("levera_new_chat", handleNewChatEvent);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, []);
 
+
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+    scrollToBottom(false);
+  }, [messages, loading, scrollToBottom]);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -507,64 +534,162 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   };
 
   async function sendMessage(textToSend?: string) {
+    if (loading) return;
+
     const prompt = (textToSend || inputMessage).trim();
     if (!prompt) return;
 
     setInputMessage("");
-
     setLoading(true);
 
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     const userMessage: Message = { role: "user", content: prompt };
-    const tempMessages = [...messages, userMessage];
+    const assistantPlaceholder: Message = { role: "assistant", content: "" };
+    const tempMessages = [...messages, userMessage, assistantPlaceholder];
     setMessages(tempMessages);
+
+    setTimeout(() => scrollToBottom(true), 0);
 
     let currentId = activeChatId;
 
     try {
+      let response: Response;
       if (!currentId) {
         const title =
           prompt.length > 35 ? prompt.substring(0, 35) + "..." : prompt;
-        const createRes = await axios.post("/api/chats", {
-          title,
-          message: prompt,
-          provider: selectedModel.provider,
-          model: selectedModel.id,
+        response = await fetch("/api/chats", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            message: prompt,
+            provider: selectedModel.provider,
+            model: selectedModel.id,
+          }),
+          signal: controller.signal,
         });
-        console.log(createRes);
-        currentId = createRes.data.id;
-        setMessages(createRes.data.messages);
-        setActiveChatId(currentId);
-        setChatTitle(createRes.data.title || title);
-        window.dispatchEvent(new CustomEvent("levera_chats_updated"));
-        window.history.replaceState(null, "", `/dashboard/chat/${currentId}`);
+
+        if (!response.ok) {
+          let errMsg = "Failed to create chat";
+          try {
+            const body = await response.json();
+            errMsg = body.error || errMsg;
+          } catch {
+            // ignore
+          }
+          throw new Error(errMsg);
+        }
+
+        const chatId = response.headers.get("x-chat-id");
+        const chatTitleVal = response.headers.get("x-chat-title");
+        if (chatId) {
+          currentId = chatId;
+          setActiveChatId(currentId);
+          setChatTitle(chatTitleVal || title);
+          window.dispatchEvent(new CustomEvent("levera_chats_updated"));
+          window.history.replaceState(null, "", `/dashboard/chat/${currentId}`);
+        }
       } else {
-        const appendRes = await axios.post(`/api/chats/${currentId}/messages`, {
-          content: prompt,
-          provider: selectedModel.provider,
-          model: selectedModel.id,
+        response = await fetch(`/api/chats/${currentId}/messages`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: prompt,
+            provider: selectedModel.provider,
+            model: selectedModel.id,
+          }),
+          signal: controller.signal,
         });
-        // console.log(appendRes);
-        setMessages(appendRes.data.messages);
-        setChatTitle(appendRes.data.title || chatTitle);
-        window.dispatchEvent(new CustomEvent("levera_chats_updated"));
+
+        if (!response.ok) {
+          let errMsg = "Failed to append message";
+          try {
+            const body = await response.json();
+            errMsg = body.error || errMsg;
+          } catch {
+            // ignore
+          }
+          throw new Error(errMsg);
+        }
       }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("No response body reader available.");
+      }
+
+      const decoder = new TextDecoder();
+      let streamedText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        streamedText += chunk;
+
+        setMessages((prev) => {
+          const updated = [...prev];
+          const lastIdx = updated.length - 1;
+          if (lastIdx >= 0 && updated[lastIdx]?.role === "assistant") {
+            updated[lastIdx] = {
+              ...updated[lastIdx],
+              content: streamedText,
+            };
+          }
+          return updated;
+        });
+
+        scrollToBottom(false);
+      }
+
+      window.dispatchEvent(new CustomEvent("levera_chats_updated"));
     } catch (err) {
-      const errorMsg =
-        axios.isAxiosError(err)
-          ? err.response?.data?.error || err.message
-          : err instanceof Error ? err.message : "Failed to contact the server.";
-      const errorAssistantMessage: Message = {
-        role: "assistant",
-        content: `Error: ${errorMsg}`,
-      };
-      setMessages([...tempMessages, errorAssistantMessage]);
+      if (err instanceof Error && err.name === "AbortError") {
+        return;
+      }
+
+      let errorMsg = "Failed to contact the server.";
+      if (err instanceof Error) {
+        errorMsg = err.message;
+      }
+
+      setMessages((prev) => {
+        const updated = [...prev];
+        const lastIdx = updated.length - 1;
+        const errMsgContent = `Error: ${errorMsg}\n\n⚠️ Response interrupted.`;
+        if (lastIdx >= 0 && updated[lastIdx]?.role === "assistant") {
+          updated[lastIdx] = {
+            ...updated[lastIdx],
+            content: errMsgContent,
+          };
+        } else {
+          updated.push({
+            role: "assistant",
+            content: errMsgContent,
+          });
+        }
+        return updated;
+      });
     } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+      }
       setLoading(false);
     }
   }
 
   function renderChatInput(className = "max-w-5xl") {
-    const isLanguageUnset = !sessionPending && session?.user && !(session.user as any).preferredLanguage;
+    const isLanguageUnset = !sessionPending && session?.user && !(session.user as { preferredLanguage?: string }).preferredLanguage;
 
     return (
       <div
@@ -717,7 +842,10 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         )}
       </header>
 
-      <div className="flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-32 space-y-6">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-32 space-y-6"
+      >
         {!mounted || sessionPending || chatLoading ? (
           chatId ? (
             <div className="max-w-3xl mx-auto space-y-6">
@@ -995,7 +1123,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
               </div>
             ))}
 
-            {loading && (
+            {isThinking && (
               <div className="flex flex-col items-start">
                 <div className="rounded-2xl rounded-bl-none px-5 py-3.5 bg-zinc-900/40 border border-zinc-900 flex items-center gap-2">
                   <div
