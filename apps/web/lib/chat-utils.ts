@@ -1,9 +1,13 @@
 export interface ParsedContent {
-  type: "text" | "solutions";
+  type: "text" | "solutions" | "hints";
   text?: string;
   brute?: string;
   better?: string;
   optimal?: string;
+  hint1?: string;
+  hint2?: string;
+  pattern?: string;
+  pseudocode?: string;
 }
 
 export function parseMessageContent(content: string): ParsedContent[] {
@@ -11,33 +15,31 @@ export function parseMessageContent(content: string): ParsedContent[] {
     .replace(/<problem>([\s\S]*?)<\/problem>/g, "")
     .trim();
 
+  const hintsStartIndex = cleanContent.indexOf("<hints>");
   const solutionsStartIndex = cleanContent.indexOf("<solutions>");
-  if (solutionsStartIndex === -1) {
+
+  if (hintsStartIndex === -1 && solutionsStartIndex === -1) {
     return [{ type: "text", text: cleanContent }];
   }
 
   const parts: ParsedContent[] = [];
 
-  const textBefore = cleanContent.substring(0, solutionsStartIndex);
+  const firstBlockStart =
+    hintsStartIndex !== -1 && solutionsStartIndex !== -1
+      ? Math.min(hintsStartIndex, solutionsStartIndex)
+      : hintsStartIndex !== -1
+        ? hintsStartIndex
+        : solutionsStartIndex;
+
+  const textBefore = cleanContent.substring(0, firstBlockStart);
   if (textBefore.trim()) {
     parts.push({ type: "text", text: textBefore });
   }
 
-  const solutionsEndTagIndex = cleanContent.indexOf("</solutions>", solutionsStartIndex);
-  let solutionsContent = "";
-  let textAfter = "";
-
-  if (solutionsEndTagIndex !== -1) {
-    solutionsContent = cleanContent.substring(
-      solutionsStartIndex + "<solutions>".length,
-      solutionsEndTagIndex
-    );
-    textAfter = cleanContent.substring(solutionsEndTagIndex + "</solutions>".length);
-  } else {
-    solutionsContent = cleanContent.substring(solutionsStartIndex + "<solutions>".length);
-  }
-
-  const extractTagContent = (contentStr: string, tagName: string): string | undefined => {
+  const extractTagContent = (
+    contentStr: string,
+    tagName: string,
+  ): string | undefined => {
     const startTag = `<${tagName}>`;
     const endTag = `</${tagName}>`;
     const startIdx = contentStr.indexOf(startTag);
@@ -48,7 +50,10 @@ export function parseMessageContent(content: string): ParsedContent[] {
       return contentStr.substring(startIdx + startTag.length, endIdx).trim();
     } else {
       const remaining = contentStr.substring(startIdx + startTag.length);
-      const nextTagMatch = /<(brute|better|optimal)>/g.exec(remaining);
+      const nextTagMatch =
+        /<(brute|better|optimal|hint1|hint2|pattern|pseudocode|hints|solutions)>/g.exec(
+          remaining,
+        );
       if (nextTagMatch) {
         return remaining.substring(0, nextTagMatch.index).trim();
       }
@@ -56,16 +61,83 @@ export function parseMessageContent(content: string): ParsedContent[] {
     }
   };
 
-  const brute = extractTagContent(solutionsContent, "brute");
-  const better = extractTagContent(solutionsContent, "better");
-  const optimal = extractTagContent(solutionsContent, "optimal");
+  if (hintsStartIndex !== -1) {
+    const hintsEndTagIndex = cleanContent.indexOf("</hints>", hintsStartIndex);
+    let hintsContent = "";
+    if (hintsEndTagIndex !== -1) {
+      hintsContent = cleanContent.substring(
+        hintsStartIndex + "<hints>".length,
+        hintsEndTagIndex,
+      );
+    } else {
+      if (solutionsStartIndex !== -1 && solutionsStartIndex > hintsStartIndex) {
+        hintsContent = cleanContent.substring(
+          hintsStartIndex + "<hints>".length,
+          solutionsStartIndex,
+        );
+      } else {
+        hintsContent = cleanContent.substring(
+          hintsStartIndex + "<hints>".length,
+        );
+      }
+    }
 
-  parts.push({
-    type: "solutions",
-    brute,
-    better,
-    optimal,
-  });
+    const hint1 = extractTagContent(hintsContent, "hint1");
+    const hint2 = extractTagContent(hintsContent, "hint2");
+    const pattern = extractTagContent(hintsContent, "pattern");
+    const pseudocode = extractTagContent(hintsContent, "pseudocode");
+
+    if (
+      hint1 !== undefined ||
+      hint2 !== undefined ||
+      pattern !== undefined ||
+      pseudocode !== undefined
+    ) {
+      parts.push({
+        type: "hints",
+        hint1,
+        hint2,
+        pattern,
+        pseudocode,
+      });
+    }
+  }
+
+  let textAfter = "";
+  if (solutionsStartIndex !== -1) {
+    const solutionsEndTagIndex = cleanContent.indexOf(
+      "</solutions>",
+      solutionsStartIndex,
+    );
+    let solutionsContent = "";
+
+    if (solutionsEndTagIndex !== -1) {
+      solutionsContent = cleanContent.substring(
+        solutionsStartIndex + "<solutions>".length,
+        solutionsEndTagIndex,
+      );
+      textAfter = cleanContent.substring(
+        solutionsEndTagIndex + "</solutions>".length,
+      );
+    } else {
+      solutionsContent = cleanContent.substring(
+        solutionsStartIndex + "<solutions>".length,
+      );
+    }
+
+    const brute = extractTagContent(solutionsContent, "brute");
+    const better = extractTagContent(solutionsContent, "better");
+    const optimal = extractTagContent(solutionsContent, "optimal");
+
+    if (brute !== undefined || better !== undefined || optimal !== undefined) {
+      parts.push({
+        type: "solutions",
+        brute,
+        better,
+        optimal,
+      });
+    }
+  }
 
   if (textAfter.trim()) {
     parts.push({ type: "text", text: textAfter });
@@ -85,9 +157,9 @@ export function createSlug(title: string) {
 export function extractProblemData(content: string) {
   const problemMatch = /<problem>([\s\S]*?)<\/problem>/.exec(content);
 
-  const solutions = parseMessageContent(content).find(
-    (part) => part.type === "solutions",
-  );
+  const parsed = parseMessageContent(content);
+  const solutions = parsed.find((part) => part.type === "solutions");
+  const hints = parsed.find((part) => part.type === "hints");
 
   let language = "cpp";
   const solutionText =
@@ -115,6 +187,14 @@ export function extractProblemData(content: string) {
     brute: solutions?.brute || null,
     better: solutions?.better || null,
     optimal: solutions?.optimal || null,
+    hints: hints
+      ? {
+          hint1: hints.hint1 || null,
+          hint2: hints.hint2 || null,
+          pattern: hints.pattern || null,
+          pseudocode: hints.pseudocode || null,
+        }
+      : null,
     language,
   };
 }

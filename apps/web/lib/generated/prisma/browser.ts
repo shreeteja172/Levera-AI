@@ -58,6 +58,11 @@ export type SolveHistory = Prisma.SolveHistoryModel
  */
 export type SavedProblem = Prisma.SavedProblemModel
 /**
+ * Model HintProgress
+ * 
+ */
+export type HintProgress = Prisma.HintProgressModel
+/**
  * Model ChatSession
  * 
  */

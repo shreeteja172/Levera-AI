@@ -14,6 +14,7 @@ import {
   Zap,
   Trophy,
   ArrowRight,
+  Lock,
 } from "lucide-react";
 import {
   REVIEW_INTERVALS,
@@ -21,13 +22,17 @@ import {
   isDue,
   getReviewDayDifference,
 } from "@/lib/review";
+import { HintsBlock } from "./HintsBlock";
+import { createSlug } from "@/lib/chat-utils";
 
 interface SavedProblem {
   id: string;
+  userId: string;
   language: string;
   brute: string | null;
   better: string | null;
   optimal: string | null;
+  hints: any;
   createdAt: string;
   nextReviewAt: string;
   lastReviewedAt: string | null;
@@ -63,6 +68,62 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
     showUndo: boolean;
   } | null>(null);
   const undoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const problemSlug = createSlug(problem.problem.title);
+  const [unlockedLevel, setUnlockedLevel] = useState<number>(0);
+  const [revealedLevel, setRevealedLevel] = useState<number>(0);
+  const [activeUnlockRequest, setActiveUnlockRequest] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const res = await fetch(`/api/hints/progress?slug=${problemSlug}`);
+        if (res.ok) {
+          const data = await res.json();
+          setUnlockedLevel(data.unlockedLevel);
+          setRevealedLevel(data.revealedLevel);
+        }
+      } catch (e) {
+        console.error("Failed to load progress:", e);
+      }
+    };
+    fetchProgress();
+  }, [problemSlug]);
+
+  const handleUpdateProgress = async (unlocked: number, revealed: number) => {
+    setUnlockedLevel(unlocked);
+    setRevealedLevel(revealed);
+
+    try {
+      await fetch("/api/hints/progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          problemSlug,
+          unlockedLevel: unlocked,
+          revealedLevel: revealed,
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to save progress:", e);
+    }
+  };
+
+  const hints = problem.hints as {
+    hint1?: string | null;
+    hint2?: string | null;
+    pattern?: string | null;
+    pseudocode?: string | null;
+  } | null;
+
+  const hasHints =
+    !!hints &&
+    (!!hints.hint1 ||
+      !!hints.hint2 ||
+      !!hints.pattern ||
+      !!hints.pseudocode);
 
   useEffect(() => {
     return () => {
@@ -238,7 +299,23 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
     }
   };
 
-  const activeSolutions = [
+  interface ActiveSolutionItem {
+    type: "Brute Force" | "Better" | "Optimal";
+    parsed: {
+      code: string;
+      explanation: string;
+      timeComplexity: string;
+      spaceComplexity: string;
+      exists: boolean;
+    };
+    icon: React.ReactNode;
+    accentColor: string;
+    borderColor: string;
+    initialUserNotes: string;
+    noteType: "bruteNotes" | "betterNotes" | "optimalNotes";
+  }
+
+  const activeSolutions: ActiveSolutionItem[] = [
     {
       type: "Brute Force" as const,
       parsed: bruteParsed,
@@ -397,6 +474,15 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
           );
         })()}
 
+        {hasHints && (
+          <HintsBlock
+            hints={hints}
+            markdownComponents={null}
+            unlockedLevel={unlockedLevel}
+            onUpdateUnlockedLevel={(lvl) => handleUpdateProgress(lvl, revealedLevel)}
+          />
+        )}
+
         <section className="space-y-4 relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-zinc-400 font-semibold text-sm">
@@ -436,35 +522,128 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
               className="flex overflow-x-auto gap-6 pb-6 pt-2 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none]"
               style={{ scrollbarWidth: "none" }}
             >
-              {activeSolutions.map((sol, index) => (
-                <React.Fragment key={sol.type}>
-                  <SolutionCard
-                    title={problem.problem.title}
-                    type={sol.type}
-                    icon={sol.icon}
-                    code={sol.parsed.code}
-                    explanation={sol.parsed.explanation}
-                    language={problem.language}
-                    timeComplexity={sol.parsed.timeComplexity}
-                    spaceComplexity={sol.parsed.spaceComplexity}
-                    accentColor={sol.accentColor}
-                    borderColor={sol.borderColor}
-                    problemId={problem.id}
-                    initialUserNotes={sol.initialUserNotes}
-                    noteType={sol.noteType}
-                  />
-                  {index < activeSolutions.length - 1 && (
-                    <div className="hidden lg:flex items-center justify-center shrink-0 self-center px-2 select-none">
-                      <div className="flex flex-col items-center gap-1">
-                        <ArrowRight className="w-6 h-6 text-zinc-700 animate-pulse" />
-                        <span className="text-[10px] font-bold text-zinc-600 tracking-widest uppercase">
-                          Optimizing
-                        </span>
+              {activeSolutions.map((sol, index) => {
+                const isLocked =
+                  hasHints &&
+                  ((sol.type === "Brute Force" && revealedLevel < 1) ||
+                    (sol.type === "Better" && revealedLevel < 2) ||
+                    (sol.type === "Optimal" && revealedLevel < 3));
+
+                const canUnlock =
+                  (sol.type === "Brute Force" && revealedLevel === 0) ||
+                  (sol.type === "Better" && revealedLevel === 1) ||
+                  (sol.type === "Optimal" && revealedLevel === 2);
+
+                const targetLevel =
+                  sol.type === "Brute Force" ? 1 : sol.type === "Better" ? 2 : 3;
+
+                return (
+                  <React.Fragment key={sol.type}>
+                    <div className="relative shrink-0 w-full md:w-[480px]">
+                      <div
+                        className={
+                          isLocked
+                            ? "filter blur-sm pointer-events-none select-none opacity-20 transition-all duration-300"
+                            : "transition-all duration-300"
+                        }
+                      >
+                        <SolutionCard
+                          title={problem.problem.title}
+                          type={sol.type}
+                          icon={sol.icon}
+                          code={sol.parsed.code}
+                          explanation={sol.parsed.explanation}
+                          language={problem.language}
+                          timeComplexity={sol.parsed.timeComplexity}
+                          spaceComplexity={sol.parsed.spaceComplexity}
+                          accentColor={sol.accentColor}
+                          borderColor={sol.borderColor}
+                          problemId={problem.id}
+                          initialUserNotes={sol.initialUserNotes}
+                          noteType={sol.noteType}
+                        />
                       </div>
+
+                      {isLocked && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/40 border border-zinc-900/50 rounded-2xl p-6 text-center space-y-4 backdrop-blur-xs z-10">
+                          {activeUnlockRequest === sol.type ? (
+                            <div className="bg-zinc-900/60 border border-zinc-850 rounded-xl p-4 w-full max-w-sm text-center space-y-3 shadow-xl animate-in zoom-in-95 duration-200">
+                              <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 mx-auto">
+                                <Lock className="w-4 h-4" />
+                              </div>
+                              <div className="space-y-1">
+                                <p className="text-xs font-bold text-zinc-200 uppercase tracking-wide">
+                                  Have you attempted the problem?
+                                </p>
+                                <p className="text-[10px] text-zinc-500">
+                                  We highly recommend attempting to write your own solution before checking the model code.
+                                </p>
+                              </div>
+                              <div className="flex items-center justify-center gap-3 pt-1">
+                                <button
+                                  onClick={() => {
+                                    handleUpdateProgress(unlockedLevel, targetLevel);
+                                    setActiveUnlockRequest(null);
+                                  }}
+                                  className="px-4 py-2 bg-[#ff7d00] hover:bg-[#ff7d00]/90 text-white rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                                >
+                                  Yes, reveal
+                                </button>
+                                <button
+                                  onClick={() => setActiveUnlockRequest(null)}
+                                  className="px-4 py-2 bg-zinc-950 border border-zinc-850 hover:border-zinc-850 text-zinc-450 hover:text-zinc-200 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                                >
+                                  Not yet
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-3 max-w-xs">
+                              <div className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-850 flex items-center justify-center text-zinc-550 shadow-lg mx-auto">
+                                <Lock className="w-4 h-4 text-orange-500" />
+                              </div>
+                              <div className="space-y-1">
+                                <h4 className="text-xs font-black tracking-wide text-zinc-200 uppercase font-mono">
+                                  {sol.type === "Brute Force"
+                                    ? "Brute Force"
+                                    : sol.type === "Better"
+                                      ? "Better Approach"
+                                      : "Optimal Solution"}{" "}
+                                  Locked
+                                </h4>
+                                <p className="text-[10px] text-zinc-500 leading-relaxed">
+                                  {canUnlock
+                                    ? `Practice active recall! Try implementing this approach first.`
+                                    : `Please unlock the previous approach first to follow the progression.`}
+                                </p>
+                              </div>
+                              {canUnlock && (
+                                <button
+                                  onClick={() => setActiveUnlockRequest(sol.type)}
+                                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-orange-650/10 hover:bg-orange-650/20 text-orange-500 border border-orange-500/20 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                                >
+                                  Unlock approach
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </React.Fragment>
-              ))}
+
+                    {index < activeSolutions.length - 1 && (
+                      <div className="hidden lg:flex items-center justify-center shrink-0 self-center px-2 select-none">
+                        <div className="flex flex-col items-center gap-1">
+                          <ArrowRight className="w-6 h-6 text-zinc-700 animate-pulse" />
+                          <span className="text-[10px] font-bold text-zinc-600 tracking-widest uppercase">
+                            Optimizing
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </div>
           </div>
         </section>

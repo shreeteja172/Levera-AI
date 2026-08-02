@@ -405,6 +405,7 @@ export const ModelName = {
   Problem: 'Problem',
   SolveHistory: 'SolveHistory',
   SavedProblem: 'SavedProblem',
+  HintProgress: 'HintProgress',
   ChatSession: 'ChatSession',
   ChatMessage: 'ChatMessage'
 } as const
@@ -422,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "deviceCode" | "problem" | "solveHistory" | "savedProblem" | "chatSession" | "chatMessage"
+    modelProps: "user" | "session" | "account" | "verification" | "deviceCode" | "problem" | "solveHistory" | "savedProblem" | "hintProgress" | "chatSession" | "chatMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1018,6 +1019,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HintProgress: {
+      payload: Prisma.$HintProgressPayload<ExtArgs>
+      fields: Prisma.HintProgressFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HintProgressFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HintProgressFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>
+        }
+        findFirst: {
+          args: Prisma.HintProgressFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HintProgressFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>
+        }
+        findMany: {
+          args: Prisma.HintProgressFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>[]
+        }
+        create: {
+          args: Prisma.HintProgressCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>
+        }
+        createMany: {
+          args: Prisma.HintProgressCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HintProgressCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>[]
+        }
+        delete: {
+          args: Prisma.HintProgressDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>
+        }
+        update: {
+          args: Prisma.HintProgressUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>
+        }
+        deleteMany: {
+          args: Prisma.HintProgressDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HintProgressUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HintProgressUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>[]
+        }
+        upsert: {
+          args: Prisma.HintProgressUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintProgressPayload>
+        }
+        aggregate: {
+          args: Prisma.HintProgressAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHintProgress>
+        }
+        groupBy: {
+          args: Prisma.HintProgressGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HintProgressGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HintProgressCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HintProgressCountAggregateOutputType> | number
+        }
+      }
+    }
     ChatSession: {
       payload: Prisma.$ChatSessionPayload<ExtArgs>
       fields: Prisma.ChatSessionFieldRefs
@@ -1318,6 +1393,7 @@ export const SavedProblemScalarFieldEnum = {
   brute: 'brute',
   better: 'better',
   optimal: 'optimal',
+  hints: 'hints',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   nextReviewAt: 'nextReviewAt',
@@ -1326,6 +1402,18 @@ export const SavedProblemScalarFieldEnum = {
 } as const
 
 export type SavedProblemScalarFieldEnum = (typeof SavedProblemScalarFieldEnum)[keyof typeof SavedProblemScalarFieldEnum]
+
+
+export const HintProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  problemSlug: 'problemSlug',
+  unlockedLevel: 'unlockedLevel',
+  revealedLevel: 'revealedLevel',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HintProgressScalarFieldEnum = (typeof HintProgressScalarFieldEnum)[keyof typeof HintProgressScalarFieldEnum]
 
 
 export const ChatSessionScalarFieldEnum = {
@@ -1646,6 +1734,7 @@ export type GlobalOmitConfig = {
   problem?: Prisma.ProblemOmit
   solveHistory?: Prisma.SolveHistoryOmit
   savedProblem?: Prisma.SavedProblemOmit
+  hintProgress?: Prisma.HintProgressOmit
   chatSession?: Prisma.ChatSessionOmit
   chatMessage?: Prisma.ChatMessageOmit
 }

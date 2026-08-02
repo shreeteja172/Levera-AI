@@ -9,10 +9,12 @@ import { ArrowLeft } from "lucide-react";
 
 interface SavedProblem {
   id: string;
+  userId: string;
   language: string;
   brute: string | null;
   better: string | null;
   optimal: string | null;
+  hints: any;
   createdAt: string;
   nextReviewAt: string;
   lastReviewedAt: string | null;

@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
+import { useSession } from "@/lib/auth-client";
 import {
   parseMessageContent,
   extractProblemData,
   createSlug,
 } from "@/lib/chat-utils";
 import { SolutionsBlock } from "./SolutionsBlock";
+import { HintsBlock } from "@/components/problem/HintsBlock";
 
 interface Message {
   id?: string;
@@ -50,6 +52,88 @@ export function MessageList({
   messagesEndRef,
   markdownComponents,
 }: MessageListProps) {
+  const { data: session } = useSession();
+  const userId = session?.user?.id || "guest";
+
+  const [hintProgressMap, setHintProgressMap] = useState<Record<string, { unlockedLevel: number, revealedLevel: number }>>({});
+
+  useEffect(() => {
+    if (!userId || userId === "guest") return;
+
+    const fetchProgress = async () => {
+      const foundSlugs: string[] = [];
+      messages.forEach((msg) => {
+        if (msg.role === "assistant") {
+          const problemData = extractProblemData(msg.content);
+          if (problemData.title && problemData.title !== "Unknown Problem") {
+            const slug = createSlug(problemData.title);
+            if (!foundSlugs.includes(slug)) {
+              foundSlugs.push(slug);
+            }
+          }
+        }
+      });
+
+      const slugsToFetch = foundSlugs.filter(
+        (slug) => hintProgressMap[slug] === undefined
+      );
+
+      if (slugsToFetch.length === 0) return;
+
+      setHintProgressMap((prev) => {
+        const next = { ...prev };
+        slugsToFetch.forEach((slug) => {
+          next[slug] = { unlockedLevel: 0, revealedLevel: 0 };
+        });
+        return next;
+      });
+
+      const updates: Record<string, { unlockedLevel: number, revealedLevel: number }> = {};
+      await Promise.all(
+        slugsToFetch.map(async (slug) => {
+          try {
+            const res = await fetch(`/api/hints/progress?slug=${slug}`);
+            if (res.ok) {
+              const data = await res.json();
+              updates[slug] = data;
+            }
+          } catch (e) {
+            console.error("Failed to load progress for slug", slug, e);
+          }
+        })
+      );
+
+      if (Object.keys(updates).length > 0) {
+        setHintProgressMap((prev) => ({ ...prev, ...updates }));
+      }
+    };
+
+    fetchProgress();
+  }, [messages, userId]);
+
+  const handleUpdateProgress = async (slug: string, unlockedLevel: number, revealedLevel: number) => {
+    setHintProgressMap((prev) => ({
+      ...prev,
+      [slug]: { unlockedLevel, revealedLevel },
+    }));
+
+    try {
+      await fetch("/api/hints/progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          problemSlug: slug,
+          unlockedLevel,
+          revealedLevel,
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to sync progress to server:", e);
+    }
+  };
+
   if (!mounted || sessionPending || chatLoading) {
     if (chatId) {
       return (
@@ -190,27 +274,85 @@ export function MessageList({
           >
             {msg.role === "assistant" ? (
               <div className="space-y-4 w-full">
-                {parseMessageContent(msg.content).map((part, partIdx) => {
-                  if (part.type === "text") {
-                    return (
-                      <ReactMarkdown
-                        key={partIdx}
-                        remarkPlugins={[remarkGfm]}
-                        components={markdownComponents}
-                      >
-                        {part.text}
-                      </ReactMarkdown>
-                    );
-                  } else {
-                    return (
-                      <SolutionsBlock
-                        key={partIdx}
-                        part={part}
-                        markdownComponents={markdownComponents}
-                      />
-                    );
-                  }
-                })}
+                {(() => {
+                  const problemData = extractProblemData(msg.content);
+                  const title =
+                    problemData.title === "Unknown Problem" && chatTitle
+                      ? chatTitle
+                      : problemData.title;
+                  const slug = createSlug(title);
+                  
+                  const hasHints =
+                    !!problemData.hints &&
+                    (!!problemData.hints.hint1 ||
+                      !!problemData.hints.hint2 ||
+                      !!problemData.hints.pattern ||
+                      !!problemData.hints.pseudocode);
+                  const progress = hintProgressMap[slug] || { unlockedLevel: 0, revealedLevel: 0 };
+                  const parts = parseMessageContent(msg.content);
+                  const solutionsStarted = msg.content.includes("<solutions>") || 
+                                           msg.content.includes("<brute>") || 
+                                           msg.content.includes("<better>") || 
+                                           msg.content.includes("<optimal>");
+                  const isLastMessage = index === messages.length - 1;
+
+                  return (
+                    <div className="space-y-2">
+                      {parts.map((part, partIdx) => {
+                        if (part.type === "text") {
+                          return (
+                            <ReactMarkdown
+                              key={partIdx}
+                              remarkPlugins={[remarkGfm]}
+                              components={markdownComponents}
+                            >
+                              {part.text}
+                            </ReactMarkdown>
+                          );
+                        } else if (part.type === "hints") {
+                          return (
+                            <HintsBlock
+                              key={partIdx}
+                              hints={problemData.hints}
+                              markdownComponents={markdownComponents}
+                              unlockedLevel={progress.unlockedLevel}
+                              onUpdateUnlockedLevel={(lvl) =>
+                                handleUpdateProgress(slug, lvl, progress.revealedLevel)
+                              }
+                            />
+                          );
+                        } else {
+                          return (
+                            <SolutionsBlock
+                              key={partIdx}
+                              part={part}
+                              markdownComponents={markdownComponents}
+                              hasHints={hasHints}
+                              revealedLevel={progress.revealedLevel}
+                              onUpdateRevealedLevel={(lvl) =>
+                                handleUpdateProgress(slug, progress.unlockedLevel, lvl)
+                              }
+                            />
+                          );
+                        }
+                      })}
+
+                      {hasHints && !solutionsStarted && isLastMessage && chatLoading && (
+                        <div className="w-full my-6 bg-[#001524]/20 border border-[#15616d]/20 rounded-2xl p-5 space-y-4 animate-pulse">
+                          <div className="flex items-center gap-2">
+                            <div className="h-4 w-4 bg-zinc-800 rounded-full" />
+                            <div className="h-3 w-32 bg-zinc-800 rounded" />
+                          </div>
+                          <div className="h-24 bg-zinc-900/40 rounded-xl flex items-center justify-center">
+                            <span className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase font-mono animate-pulse">
+                              AI is formulating solutions approaches...
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             ) : (
               <div className="whitespace-pre-wrap">{msg.content}</div>

@@ -78,6 +78,22 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     setMounted(true);
   }, []);
 
+  const [hintMode, setHintMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("levera_progressive_hints");
+      setHintMode(saved === "true");
+    }
+  }, []);
+
+  const handleToggleHintMode = (val: boolean) => {
+    setHintMode(val);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("levera_progressive_hints", String(val));
+    }
+  };
+
   const {
     data: session,
     isPending: sessionPending,
@@ -288,6 +304,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             message: prompt,
             provider: selectedModel.provider,
             model: selectedModel.id,
+            hintMode,
           }),
           signal: controller.signal,
         });
@@ -322,6 +339,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             content: prompt,
             provider: selectedModel.provider,
             model: selectedModel.id,
+            hintMode,
           }),
           signal: controller.signal,
         });
@@ -426,6 +444,8 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         setIsModelSelectorOpen={setIsModelSelectorOpen}
         onSendMessage={sendMessage}
         setOnboardingOpen={setOnboardingOpen}
+        hintMode={hintMode}
+        onToggleHintMode={handleToggleHintMode}
       />
     );
   }

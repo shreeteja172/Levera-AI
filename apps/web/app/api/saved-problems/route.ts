@@ -53,7 +53,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, language, brute, better, optimal } = await req.json();
+    const { title, language, brute, better, optimal, hints } = await req.json();
 
     if (!title || !language) {
       return NextResponse.json(
@@ -87,6 +87,7 @@ export async function POST(req: Request) {
         brute,
         better,
         optimal,
+        hints: hints || undefined,
       },
       create: {
         userId: session.user.id,
@@ -95,6 +96,7 @@ export async function POST(req: Request) {
         brute,
         better,
         optimal,
+        hints: hints || undefined,
       },
       include: {
         problem: true,

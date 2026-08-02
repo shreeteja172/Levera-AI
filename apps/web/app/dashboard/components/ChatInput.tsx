@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { Send, ChevronDown } from "lucide-react";
+import { Send, ChevronDown, Lightbulb } from "lucide-react";
 import { SUPPORTED_MODELS, type ModelOption } from "@/lib/ai/model-list";
 import {
   ModelSelector,
@@ -29,6 +29,8 @@ interface ChatInputProps {
   setIsModelSelectorOpen: (open: boolean) => void;
   onSendMessage: () => void;
   setOnboardingOpen: (open: boolean) => void;
+  hintMode: boolean;
+  onToggleHintMode: (val: boolean) => void;
 }
 
 export function ChatInput({
@@ -46,6 +48,8 @@ export function ChatInput({
   setIsModelSelectorOpen,
   onSendMessage,
   setOnboardingOpen,
+  hintMode,
+  onToggleHintMode,
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -87,53 +91,82 @@ export function ChatInput({
         className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <div className="flex items-center justify-between border-t border-zinc-850/50 mt-1 pt-2 px-2">
-        <ModelSelector
-          open={isModelSelectorOpen}
-          onOpenChange={
-            chatLoading || sessionPending ? () => {} : setIsModelSelectorOpen
-          }
-        >
-          <ModelSelectorTrigger
-            render={
-              <button
-                disabled={!mounted || chatLoading || loading || sessionPending}
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ModelSelectorLogo
-                  provider={selectedModel.logoProvider}
-                  className="size-3.5"
-                />
-                <span className="font-medium">{selectedModel.name}</span>
-                <ChevronDown size={12} className="text-zinc-500" />
-              </button>
+        <div className="flex items-center gap-2">
+          <ModelSelector
+            open={isModelSelectorOpen}
+            onOpenChange={
+              chatLoading || sessionPending ? () => {} : setIsModelSelectorOpen
             }
-          />
-          <ModelSelectorContent className="w-[300px]">
-            <ModelSelectorInput placeholder="Search models..." />
-            <ModelSelectorList>
-              <ModelSelectorEmpty>No model found.</ModelSelectorEmpty>
-              <ModelSelectorGroup heading="Available Models">
-                {SUPPORTED_MODELS.map((model) => (
-                  <ModelSelectorItem
-                    key={model.id}
-                    value={model.name}
-                    onSelect={() => {
-                      setSelectedModel(model);
-                      setIsModelSelectorOpen(false);
-                    }}
-                    className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md hover:bg-zinc-900/60 transition-colors text-zinc-300 hover:text-white data-[selected=true]:bg-zinc-900/80 data-[selected=true]:text-white"
-                  >
-                    <ModelSelectorLogo
-                      provider={model.logoProvider}
-                      className="size-3.5"
-                    />
-                    <ModelSelectorName>{model.name}</ModelSelectorName>
-                  </ModelSelectorItem>
-                ))}
-              </ModelSelectorGroup>
-            </ModelSelectorList>
-          </ModelSelectorContent>
-        </ModelSelector>
+          >
+            <ModelSelectorTrigger
+              render={
+                <button
+                  disabled={
+                    !mounted || chatLoading || loading || sessionPending
+                  }
+                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ModelSelectorLogo
+                    provider={selectedModel.logoProvider}
+                    className="size-3.5"
+                  />
+                  <span className="font-medium">{selectedModel.name}</span>
+                  <ChevronDown size={12} className="text-zinc-500" />
+                </button>
+              }
+            />
+            <ModelSelectorContent className="w-[300px]">
+              <ModelSelectorInput placeholder="Search models..." />
+              <ModelSelectorList>
+                <ModelSelectorEmpty>No model found.</ModelSelectorEmpty>
+                <ModelSelectorGroup heading="Available Models">
+                  {SUPPORTED_MODELS.map((model) => (
+                    <ModelSelectorItem
+                      key={model.id}
+                      value={model.name}
+                      onSelect={() => {
+                        setSelectedModel(model);
+                        setIsModelSelectorOpen(false);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md hover:bg-zinc-900/60 transition-colors text-zinc-300 hover:text-white data-[selected=true]:bg-zinc-900/80 data-[selected=true]:text-white"
+                    >
+                      <ModelSelectorLogo
+                        provider={model.logoProvider}
+                        className="size-3.5"
+                      />
+                      <ModelSelectorName>{model.name}</ModelSelectorName>
+                    </ModelSelectorItem>
+                  ))}
+                </ModelSelectorGroup>
+              </ModelSelectorList>
+            </ModelSelectorContent>
+          </ModelSelector>
+
+          {mounted && !isLanguageUnset && (
+            <button
+              disabled={loading || chatLoading || sessionPending}
+              onClick={() => onToggleHintMode(!hintMode)}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${
+                hintMode
+                  ? "bg-orange-500/10 border-orange-500/30 text-orange-400 hover:bg-orange-500/15 hover:border-orange-500/40 shadow-sm shadow-orange-500/5 scale-102 hover:scale-105"
+                  : "bg-zinc-950 border-zinc-850 hover:border-zinc-700 text-zinc-550 hover:text-zinc-300 hover:scale-[1.01]"
+              }`}
+              title="Progressive Hint Mode: Unlocks clues step-by-step instead of showing code solutions immediately."
+            >
+              <Lightbulb
+                size={13.5}
+                className={
+                  hintMode
+                    ? "fill-orange-500/20 text-orange-400 animate-pulse"
+                    : "text-zinc-550"
+                }
+              />
+              <span className="hidden sm:inline font-semibold">
+                Hint Mode: {hintMode ? "ON" : "OFF"}
+              </span>
+            </button>
+          )}
+        </div>
 
         {isLanguageUnset ? (
           <button

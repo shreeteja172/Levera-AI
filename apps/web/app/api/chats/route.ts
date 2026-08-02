@@ -53,6 +53,7 @@ export async function POST(req: Request) {
       message,
       provider = "groq",
       model = "openai/gpt-oss-120b",
+      hintMode = false,
     } = await req.json();
 
     if (!title?.trim()) {
@@ -84,15 +85,38 @@ export async function POST(req: Request) {
 
     if (message) {
       try {
-        const userPref = (session.user as { preferredLanguage?: string }).preferredLanguage;
-        const systemPromptContent =
-          LEVERA_SYSTEM_PROMPT +
-          (userPref
-            ? `\n\nThe user's preferred programming language is ${
-                PROGRAMMING_LANGUAGES.find((l) => l.value === userPref)
-                  ?.label || userPref
-              }. Unless the user explicitly requests another programming language in their current message, generate all code examples using this language.`
-            : "");
+        const userPref = (session.user as { preferredLanguage?: string })
+          .preferredLanguage;
+        let systemPromptContent = LEVERA_SYSTEM_PROMPT;
+
+        if (hintMode) {
+          systemPromptContent += `\n\n=== PROGRESSIVE HINT MODE ACTIVE ===
+You are in Progressive Hint Mode. When responding to a new problem (Mode A), you MUST include a <hints> block BEFORE the <solutions> block.
+The <hints> block must contain exactly these tags, in this order:
+<hints>
+<hint1>
+Give only a subtle nudge to guide the user's direction. Do NOT mention data structures, classes, or specific algorithms.
+</hint1>
+<hint2>
+Reveal the important key observation or complexity target.
+</hint2>
+<pattern>
+Mention the algorithmic technique or family only. Examples: Sliding Window, Binary Search, Hash Map, DP, Graph, Two Pointers.
+</pattern>
+<pseudocode>
+High-level logic only. No programming syntax. No variable names. No language-specific keywords.
+</pseudocode>
+</hints>
+
+Do not skip any tags. Ensure the <hints> block is placed before the <solutions> block.`;
+        }
+
+        systemPromptContent += userPref
+          ? `\n\nThe user's preferred programming language is ${
+              PROGRAMMING_LANGUAGES.find((l) => l.value === userPref)?.label ||
+              userPref
+            }. Unless the user explicitly requests another programming language in their current message, generate all code examples using this language.`
+          : "";
 
         const result = await streamText({
           model: aiModel,

@@ -59,6 +59,7 @@ export const ModelName = {
   Problem: 'Problem',
   SolveHistory: 'SolveHistory',
   SavedProblem: 'SavedProblem',
+  HintProgress: 'HintProgress',
   ChatSession: 'ChatSession',
   ChatMessage: 'ChatMessage'
 } as const
@@ -192,6 +193,7 @@ export const SavedProblemScalarFieldEnum = {
   brute: 'brute',
   better: 'better',
   optimal: 'optimal',
+  hints: 'hints',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   nextReviewAt: 'nextReviewAt',
@@ -200,6 +202,18 @@ export const SavedProblemScalarFieldEnum = {
 } as const
 
 export type SavedProblemScalarFieldEnum = (typeof SavedProblemScalarFieldEnum)[keyof typeof SavedProblemScalarFieldEnum]
+
+
+export const HintProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  problemSlug: 'problemSlug',
+  unlockedLevel: 'unlockedLevel',
+  revealedLevel: 'revealedLevel',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HintProgressScalarFieldEnum = (typeof HintProgressScalarFieldEnum)[keyof typeof HintProgressScalarFieldEnum]
 
 
 export const ChatSessionScalarFieldEnum = {

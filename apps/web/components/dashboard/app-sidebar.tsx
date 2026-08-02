@@ -263,23 +263,23 @@ export function AppSidebar() {
               Recents
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu className="mt-1 space-y-0.5">
+              <SidebarMenu className="mt-1.5 space-y-1.5">
                 {recentChats.map((chat) => (
                   <SidebarMenuItem key={chat.id}>
                     <SidebarMenuButton
                       render={<Link href={`/dashboard/chat/${chat.id}`} />}
                       className={cn(
-                        "w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs transition-colors truncate",
+                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-colors truncate",
                         pathname === `/dashboard/chat/${chat.id}`
-                          ? "bg-zinc-900/80 text-white font-medium"
+                          ? "bg-zinc-900/80 text-white font-medium shadow-sm"
                           : "text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200",
                       )}
                     >
                       <MessageSquare
-                        size={13}
-                        className="shrink-0 text-zinc-500"
+                        size={14}
+                        className="shrink-0 text-zinc-500 group-hover:text-zinc-400 transition-colors"
                       />
-                      <span className="truncate max-w-[160px]">
+                      <span className="truncate max-w-[170px] tracking-wide">
                         {chat.title}
                       </span>
                     </SidebarMenuButton>
