@@ -95,15 +95,30 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { notes, language, bruteNotes, betterNotes, optimalNotes } =
-      await req.json();
+    const {
+      notes,
+      language,
+      bruteNotes,
+      betterNotes,
+      optimalNotes,
+      nextReviewAt,
+      lastReviewedAt,
+      reviewCount,
+    } = await req.json();
 
-    const updateData: Record<string, string | undefined> = {};
+    const updateData: Record<string, any> = {};
     if (notes !== undefined) updateData.notes = notes;
     if (language !== undefined) updateData.language = language;
     if (bruteNotes !== undefined) updateData.bruteNotes = bruteNotes;
     if (betterNotes !== undefined) updateData.betterNotes = betterNotes;
     if (optimalNotes !== undefined) updateData.optimalNotes = optimalNotes;
+    if (nextReviewAt !== undefined)
+      updateData.nextReviewAt = nextReviewAt ? new Date(nextReviewAt) : null;
+    if (lastReviewedAt !== undefined)
+      updateData.lastReviewedAt = lastReviewedAt
+        ? new Date(lastReviewedAt)
+        : null;
+    if (reviewCount !== undefined) updateData.reviewCount = reviewCount;
 
     const updated = await prisma.savedProblem.update({
       where: {

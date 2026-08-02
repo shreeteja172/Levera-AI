@@ -1319,7 +1319,10 @@ export const SavedProblemScalarFieldEnum = {
   better: 'better',
   optimal: 'optimal',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  nextReviewAt: 'nextReviewAt',
+  lastReviewedAt: 'lastReviewedAt',
+  reviewCount: 'reviewCount'
 } as const
 
 export type SavedProblemScalarFieldEnum = (typeof SavedProblemScalarFieldEnum)[keyof typeof SavedProblemScalarFieldEnum]
@@ -1468,6 +1471,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**

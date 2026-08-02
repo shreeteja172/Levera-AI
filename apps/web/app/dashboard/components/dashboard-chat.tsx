@@ -102,7 +102,9 @@ interface ParsedContent {
 }
 
 function parseMessageContent(content: string): ParsedContent[] {
-  const cleanContent = content.replace(/<problem>([\s\S]*?)<\/problem>/g, "").trim();
+  const cleanContent = content
+    .replace(/<problem>([\s\S]*?)<\/problem>/g, "")
+    .trim();
   const parts: ParsedContent[] = [];
   const regex = /<solutions>([\s\S]*?)<\/solutions>/g;
 
@@ -153,17 +155,36 @@ interface SolutionsBlockProps {
 
 function SolutionsBlock({ part, markdownComponents }: SolutionsBlockProps) {
   const tabs = [];
-  if (part.brute) tabs.push({ id: "brute", label: "Brute Force", icon: Cpu, color: "red" });
-  if (part.better) tabs.push({ id: "better", label: "Better Approach", icon: Zap, color: "orange" });
-  if (part.optimal) tabs.push({ id: "optimal", label: "Optimal Solution", icon: Trophy, color: "green" });
+  if (part.brute)
+    tabs.push({ id: "brute", label: "Brute Force", icon: Cpu, color: "red" });
+  if (part.better)
+    tabs.push({
+      id: "better",
+      label: "Better Approach",
+      icon: Zap,
+      color: "orange",
+    });
+  if (part.optimal)
+    tabs.push({
+      id: "optimal",
+      label: "Optimal Solution",
+      icon: Trophy,
+      color: "green",
+    });
 
-  const defaultTab = part.optimal ? "optimal" : part.better ? "better" : "brute";
+  const defaultTab = part.optimal
+    ? "optimal"
+    : part.better
+      ? "better"
+      : "brute";
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   if (tabs.length === 0) return null;
 
-  const activeTabDetails = tabs.find(t => t.id === activeTab) || tabs[0]!;
-  const activeContent = part[activeTabDetails.id as keyof ParsedContent] as string;
+  const activeTabDetails = tabs.find((t) => t.id === activeTab) || tabs[0]!;
+  const activeContent = part[
+    activeTabDetails.id as keyof ParsedContent
+  ] as string;
 
   const colorMap = {
     red: {
@@ -174,7 +195,7 @@ function SolutionsBlock({ part, markdownComponents }: SolutionsBlockProps) {
       activeBg: "bg-red-500/15",
       activeText: "text-red-300",
       badgeText: "text-red-400 bg-red-500/10 border-red-500/10",
-      gradient: "from-red-500/5 via-transparent to-transparent"
+      gradient: "from-red-500/5 via-transparent to-transparent",
     },
     orange: {
       text: "text-orange-400",
@@ -184,7 +205,7 @@ function SolutionsBlock({ part, markdownComponents }: SolutionsBlockProps) {
       activeBg: "bg-orange-500/15",
       activeText: "text-orange-300",
       badgeText: "text-orange-400 bg-orange-500/10 border-orange-500/10",
-      gradient: "from-orange-500/5 via-transparent to-transparent"
+      gradient: "from-orange-500/5 via-transparent to-transparent",
     },
     green: {
       text: "text-green-400",
@@ -194,21 +215,23 @@ function SolutionsBlock({ part, markdownComponents }: SolutionsBlockProps) {
       activeBg: "bg-emerald-500/15",
       activeText: "text-emerald-300",
       badgeText: "text-green-400 bg-green-500/10 border-green-500/10",
-      gradient: "from-emerald-500/5 via-transparent to-transparent"
-    }
+      gradient: "from-emerald-500/5 via-transparent to-transparent",
+    },
   };
 
   const colors = colorMap[activeTabDetails.color as keyof typeof colorMap];
 
   return (
-    <div className={`w-full my-6 bg-zinc-950/40 border ${colors.border} ${colors.hoverBorder} rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm transition-all duration-300`}>
+    <div
+      className={`w-full my-6 bg-zinc-950/40 border ${colors.border} ${colors.hoverBorder} rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm transition-all duration-300`}
+    >
       {/* Tab Selector */}
       <div className="flex border-b border-zinc-900 bg-zinc-950/80 p-2 gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none]">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           const tabColors = colorMap[tab.color as keyof typeof colorMap];
-          
+
           return (
             <button
               key={tab.id}
@@ -227,7 +250,9 @@ function SolutionsBlock({ part, markdownComponents }: SolutionsBlockProps) {
       </div>
 
       {/* Tab Content */}
-      <div className={`p-5 md:p-6 bg-gradient-to-b ${colors.gradient} space-y-4`}>
+      <div
+        className={`p-5 md:p-6 bg-gradient-to-b ${colors.gradient} space-y-4`}
+      >
         <div className="text-sm prose prose-invert prose-sm max-w-none prose-pre:my-0">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -258,7 +283,8 @@ function extractProblemData(content: string) {
   );
 
   let language = "cpp";
-  const solutionText = solutions?.optimal || solutions?.better || solutions?.brute;
+  const solutionText =
+    solutions?.optimal || solutions?.better || solutions?.brute;
   if (solutionText) {
     const langMatch = /```(\w+)/.exec(solutionText);
     if (langMatch?.[1]) {
@@ -295,12 +321,21 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [chatTitle, setChatTitle] = useState<string | null>(null);
   const [savedProblemSlugs, setSavedProblemSlugs] = useState<string[]>([]);
+  const [reviewStats, setReviewStats] = useState<{
+    due: number;
+    completed: number;
+    nextDueProblemId: string | null;
+    streak: number;
+    totalReviewed: number;
+  } | null>(null);
 
   const fetchSavedProblems = useCallback(async () => {
     try {
       const res = await axios.get("/api/saved-problems");
       if (Array.isArray(res.data)) {
-        const slugs = res.data.map((sp: { problem?: { slug?: string } }) => sp.problem?.slug).filter(Boolean) as string[];
+        const slugs = res.data
+          .map((sp: { problem?: { slug?: string } }) => sp.problem?.slug)
+          .filter(Boolean) as string[];
         setSavedProblemSlugs(slugs);
       }
     } catch (e) {
@@ -308,10 +343,19 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     }
   }, []);
 
+  const fetchReviewStats = useCallback(async () => {
+    try {
+      const res = await axios.get("/api/reviews/today");
+      setReviewStats(res.data);
+    } catch (e) {
+      console.error("Failed to fetch review stats:", e);
+    }
+  }, []);
+
   useEffect(() => {
     fetchSavedProblems();
-  }, [fetchSavedProblems]);
-
+    fetchReviewStats();
+  }, [fetchSavedProblems, fetchReviewStats]);
 
   const [selectedModel, setSelectedModel] = useState<ModelOption>(
     SUPPORTED_MODELS[0]!,
@@ -323,11 +367,19 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     setMounted(true);
   }, []);
 
-  const { data: session, isPending: sessionPending, refetch: refetchSession } = useSession();
+  const {
+    data: session,
+    isPending: sessionPending,
+    refetch: refetchSession,
+  } = useSession();
   const [onboardingOpen, setOnboardingOpen] = useState(false);
 
   useEffect(() => {
-    if (!sessionPending && session?.user && !(session.user as { preferredLanguage?: string }).preferredLanguage) {
+    if (
+      !sessionPending &&
+      session?.user &&
+      !(session.user as { preferredLanguage?: string }).preferredLanguage
+    ) {
       setOnboardingOpen(true);
     }
   }, [session, sessionPending]);
@@ -349,8 +401,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
   const isThinking =
     loading &&
-    (messages.length === 0 ||
-      messages[messages.length - 1]?.content === "");
+    (messages.length === 0 || messages[messages.length - 1]?.content === "");
 
   const [thinkingWord, setThinkingWord] = useState("thinking");
 
@@ -403,7 +454,8 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
     const threshold = 150; // px
     const isNearBottom =
-      container.scrollHeight - container.scrollTop - container.clientHeight <= threshold;
+      container.scrollHeight - container.scrollTop - container.clientHeight <=
+      threshold;
 
     if (force || isNearBottom) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -482,8 +534,6 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
       }
     };
   }, []);
-
-
 
   useEffect(() => {
     scrollToBottom(false);
@@ -689,7 +739,10 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   }
 
   function renderChatInput(className = "max-w-5xl") {
-    const isLanguageUnset = !sessionPending && session?.user && !(session.user as { preferredLanguage?: string }).preferredLanguage;
+    const isLanguageUnset =
+      !sessionPending &&
+      session?.user &&
+      !(session.user as { preferredLanguage?: string }).preferredLanguage;
 
     return (
       <div
@@ -705,8 +758,18 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
               sendMessage();
             }
           }}
-          disabled={!mounted || loading || chatLoading || sessionPending || isLanguageUnset}
-          placeholder={isLanguageUnset ? "Select a preferred programming language to start chatting..." : "Type a message or paste a DSA problem description..."}
+          disabled={
+            !mounted ||
+            loading ||
+            chatLoading ||
+            sessionPending ||
+            isLanguageUnset
+          }
+          placeholder={
+            isLanguageUnset
+              ? "Select a preferred programming language to start chatting..."
+              : "Type a message or paste a DSA problem description..."
+          }
           rows={1}
           className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
         />
@@ -720,7 +783,9 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             <ModelSelectorTrigger
               render={
                 <button
-                  disabled={!mounted || chatLoading || loading || sessionPending}
+                  disabled={
+                    !mounted || chatLoading || loading || sessionPending
+                  }
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ModelSelectorLogo
@@ -770,7 +835,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             <button
               onClick={() => sendMessage()}
               disabled={
-                !mounted || loading || chatLoading || sessionPending || !inputMessage.trim()
+                !mounted ||
+                loading ||
+                chatLoading ||
+                sessionPending ||
+                !inputMessage.trim()
               }
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10"
             >
@@ -786,7 +855,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     pre({ children }: React.ComponentPropsWithoutRef<"pre">) {
       return <PreBlock>{children}</PreBlock>;
     },
-    code({ className, children, ...props }: React.ComponentPropsWithoutRef<"code">) {
+    code({
+      className,
+      children,
+      ...props
+    }: React.ComponentPropsWithoutRef<"code">) {
       const inline = !className;
       if (inline) {
         return (
@@ -1021,6 +1094,62 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
             <div className="w-full">{renderChatInput("max-w-3xl")}</div>
 
+            {reviewStats && (
+              <div className="w-full max-w-xl bg-zinc-900/40 border border-zinc-900 rounded-2xl p-5 text-left space-y-4 shadow-lg backdrop-blur-sm animate-in fade-in duration-300">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-bold text-zinc-200 flex items-center gap-1.5">
+                      Today's Reviews
+                    </h3>
+                    <p className="text-xs text-zinc-500">
+                      {reviewStats.due > 0
+                        ? `${reviewStats.due} ${reviewStats.due === 1 ? "problem" : "problems"} due`
+                        : "All caught up for today!"}
+                      {reviewStats.streak > 0 &&
+                        ` • ${reviewStats.streak} day streak`}
+                    </p>
+                  </div>
+
+                  {reviewStats.due > 0 && reviewStats.nextDueProblemId && (
+                    <button
+                      onClick={() =>
+                        router.push(`/problems/${reviewStats.nextDueProblemId}`)
+                      }
+                      className="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-xs transition-all shadow-md cursor-pointer flex items-center gap-1"
+                    >
+                      Start Review <ArrowRight size={12} />
+                    </button>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden border border-zinc-900">
+                    <div
+                      className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full transition-all duration-500"
+                      style={{
+                        width: `${
+                          reviewStats.due + reviewStats.completed > 0
+                            ? (reviewStats.completed /
+                                (reviewStats.due + reviewStats.completed)) *
+                              100
+                            : 100
+                        }%`,
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] text-zinc-500 font-mono font-semibold">
+                    <span>
+                      {reviewStats.completed} /{" "}
+                      {reviewStats.due + reviewStats.completed} completed today
+                    </span>
+                    {reviewStats.totalReviewed > 0 && (
+                      <span>{reviewStats.totalReviewed} total reviews</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl pt-2">
               {[
                 "Explain the intuition behind Binary Search",
@@ -1090,32 +1219,37 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
                   )}
                 </div>
 
-                {msg.role === "assistant" && msg.content.includes("</solutions>") && (() => {
-                  const problemData = extractProblemData(msg.content);
-                  const title = problemData.title === "Unknown Problem" && chatTitle ? chatTitle : problemData.title;
-                  const slug = createSlug(title);
-                  const isSaved = savedProblemSlugs.includes(slug);
-                  return (
-                    <button
-                      onClick={() => !isSaved && saveProblem(msg.content)}
-                      disabled={isSaved}
-                      className={`mt-2.5 text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
-                        isSaved
-                          ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 cursor-default font-medium"
-                          : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-850 cursor-pointer"
-                      }`}
-                    >
-                      {isSaved ? (
-                        <>
-                          <Check size={12} className="text-emerald-400" />
-                          <span>Saved to Problems</span>
-                        </>
-                      ) : (
-                        <span>Save as Problem</span>
-                      )}
-                    </button>
-                  );
-                })()}
+                {msg.role === "assistant" &&
+                  msg.content.includes("</solutions>") &&
+                  (() => {
+                    const problemData = extractProblemData(msg.content);
+                    const title =
+                      problemData.title === "Unknown Problem" && chatTitle
+                        ? chatTitle
+                        : problemData.title;
+                    const slug = createSlug(title);
+                    const isSaved = savedProblemSlugs.includes(slug);
+                    return (
+                      <button
+                        onClick={() => !isSaved && saveProblem(msg.content)}
+                        disabled={isSaved}
+                        className={`mt-2.5 text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                          isSaved
+                            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 cursor-default font-medium"
+                            : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-850 cursor-pointer"
+                        }`}
+                      >
+                        {isSaved ? (
+                          <>
+                            <Check size={12} className="text-emerald-400" />
+                            <span>Saved to Problems</span>
+                          </>
+                        ) : (
+                          <span>Save as Problem</span>
+                        )}
+                      </button>
+                    );
+                  })()}
 
                 <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
                   {msg.role === "user" ? "You" : "Levera AI"}

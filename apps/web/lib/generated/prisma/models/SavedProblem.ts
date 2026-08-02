@@ -20,8 +20,18 @@ export type SavedProblemModel = runtime.Types.Result.DefaultSelection<Prisma.$Sa
 
 export type AggregateSavedProblem = {
   _count: SavedProblemCountAggregateOutputType | null
+  _avg: SavedProblemAvgAggregateOutputType | null
+  _sum: SavedProblemSumAggregateOutputType | null
   _min: SavedProblemMinAggregateOutputType | null
   _max: SavedProblemMaxAggregateOutputType | null
+}
+
+export type SavedProblemAvgAggregateOutputType = {
+  reviewCount: number | null
+}
+
+export type SavedProblemSumAggregateOutputType = {
+  reviewCount: number | null
 }
 
 export type SavedProblemMinAggregateOutputType = {
@@ -35,6 +45,9 @@ export type SavedProblemMinAggregateOutputType = {
   optimalNotes: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  nextReviewAt: Date | null
+  lastReviewedAt: Date | null
+  reviewCount: number | null
 }
 
 export type SavedProblemMaxAggregateOutputType = {
@@ -48,6 +61,9 @@ export type SavedProblemMaxAggregateOutputType = {
   optimalNotes: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  nextReviewAt: Date | null
+  lastReviewedAt: Date | null
+  reviewCount: number | null
 }
 
 export type SavedProblemCountAggregateOutputType = {
@@ -64,9 +80,20 @@ export type SavedProblemCountAggregateOutputType = {
   optimal: number
   createdAt: number
   updatedAt: number
+  nextReviewAt: number
+  lastReviewedAt: number
+  reviewCount: number
   _all: number
 }
 
+
+export type SavedProblemAvgAggregateInputType = {
+  reviewCount?: true
+}
+
+export type SavedProblemSumAggregateInputType = {
+  reviewCount?: true
+}
 
 export type SavedProblemMinAggregateInputType = {
   id?: true
@@ -79,6 +106,9 @@ export type SavedProblemMinAggregateInputType = {
   optimalNotes?: true
   createdAt?: true
   updatedAt?: true
+  nextReviewAt?: true
+  lastReviewedAt?: true
+  reviewCount?: true
 }
 
 export type SavedProblemMaxAggregateInputType = {
@@ -92,6 +122,9 @@ export type SavedProblemMaxAggregateInputType = {
   optimalNotes?: true
   createdAt?: true
   updatedAt?: true
+  nextReviewAt?: true
+  lastReviewedAt?: true
+  reviewCount?: true
 }
 
 export type SavedProblemCountAggregateInputType = {
@@ -108,6 +141,9 @@ export type SavedProblemCountAggregateInputType = {
   optimal?: true
   createdAt?: true
   updatedAt?: true
+  nextReviewAt?: true
+  lastReviewedAt?: true
+  reviewCount?: true
   _all?: true
 }
 
@@ -149,6 +185,18 @@ export type SavedProblemAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SavedProblemAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SavedProblemSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SavedProblemMinAggregateInputType
@@ -179,6 +227,8 @@ export type SavedProblemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: SavedProblemCountAggregateInputType | true
+  _avg?: SavedProblemAvgAggregateInputType
+  _sum?: SavedProblemSumAggregateInputType
   _min?: SavedProblemMinAggregateInputType
   _max?: SavedProblemMaxAggregateInputType
 }
@@ -197,7 +247,12 @@ export type SavedProblemGroupByOutputType = {
   optimal: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
+  nextReviewAt: Date
+  lastReviewedAt: Date | null
+  reviewCount: number
   _count: SavedProblemCountAggregateOutputType | null
+  _avg: SavedProblemAvgAggregateOutputType | null
+  _sum: SavedProblemSumAggregateOutputType | null
   _min: SavedProblemMinAggregateOutputType | null
   _max: SavedProblemMaxAggregateOutputType | null
 }
@@ -234,6 +289,9 @@ export type SavedProblemWhereInput = {
   optimal?: Prisma.JsonNullableFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  nextReviewAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  lastReviewedAt?: Prisma.DateTimeNullableFilter<"SavedProblem"> | Date | string | null
+  reviewCount?: Prisma.IntFilter<"SavedProblem"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   problem?: Prisma.XOR<Prisma.ProblemScalarRelationFilter, Prisma.ProblemWhereInput>
 }
@@ -252,6 +310,9 @@ export type SavedProblemOrderByWithRelationInput = {
   optimal?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nextReviewAt?: Prisma.SortOrder
+  lastReviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   problem?: Prisma.ProblemOrderByWithRelationInput
 }
@@ -274,6 +335,9 @@ export type SavedProblemWhereUniqueInput = Prisma.AtLeast<{
   optimal?: Prisma.JsonNullableFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  nextReviewAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  lastReviewedAt?: Prisma.DateTimeNullableFilter<"SavedProblem"> | Date | string | null
+  reviewCount?: Prisma.IntFilter<"SavedProblem"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   problem?: Prisma.XOR<Prisma.ProblemScalarRelationFilter, Prisma.ProblemWhereInput>
 }, "id" | "userId_problemId">
@@ -292,9 +356,14 @@ export type SavedProblemOrderByWithAggregationInput = {
   optimal?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nextReviewAt?: Prisma.SortOrder
+  lastReviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
   _count?: Prisma.SavedProblemCountOrderByAggregateInput
+  _avg?: Prisma.SavedProblemAvgOrderByAggregateInput
   _max?: Prisma.SavedProblemMaxOrderByAggregateInput
   _min?: Prisma.SavedProblemMinOrderByAggregateInput
+  _sum?: Prisma.SavedProblemSumOrderByAggregateInput
 }
 
 export type SavedProblemScalarWhereWithAggregatesInput = {
@@ -314,6 +383,9 @@ export type SavedProblemScalarWhereWithAggregatesInput = {
   optimal?: Prisma.JsonNullableWithAggregatesFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SavedProblem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SavedProblem"> | Date | string
+  nextReviewAt?: Prisma.DateTimeWithAggregatesFilter<"SavedProblem"> | Date | string
+  lastReviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SavedProblem"> | Date | string | null
+  reviewCount?: Prisma.IntWithAggregatesFilter<"SavedProblem"> | number
 }
 
 export type SavedProblemCreateInput = {
@@ -328,6 +400,9 @@ export type SavedProblemCreateInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
   user: Prisma.UserCreateNestedOneWithoutSavedProblemsInput
   problem: Prisma.ProblemCreateNestedOneWithoutSavesInput
 }
@@ -346,6 +421,9 @@ export type SavedProblemUncheckedCreateInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
 }
 
 export type SavedProblemUpdateInput = {
@@ -360,6 +438,9 @@ export type SavedProblemUpdateInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutSavedProblemsNestedInput
   problem?: Prisma.ProblemUpdateOneRequiredWithoutSavesNestedInput
 }
@@ -378,6 +459,9 @@ export type SavedProblemUncheckedUpdateInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type SavedProblemCreateManyInput = {
@@ -394,6 +478,9 @@ export type SavedProblemCreateManyInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
 }
 
 export type SavedProblemUpdateManyMutationInput = {
@@ -408,6 +495,9 @@ export type SavedProblemUpdateManyMutationInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type SavedProblemUncheckedUpdateManyInput = {
@@ -424,6 +514,9 @@ export type SavedProblemUncheckedUpdateManyInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type SavedProblemListRelationFilter = {
@@ -455,6 +548,13 @@ export type SavedProblemCountOrderByAggregateInput = {
   optimal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nextReviewAt?: Prisma.SortOrder
+  lastReviewedAt?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+}
+
+export type SavedProblemAvgOrderByAggregateInput = {
+  reviewCount?: Prisma.SortOrder
 }
 
 export type SavedProblemMaxOrderByAggregateInput = {
@@ -468,6 +568,9 @@ export type SavedProblemMaxOrderByAggregateInput = {
   optimalNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nextReviewAt?: Prisma.SortOrder
+  lastReviewedAt?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
 }
 
 export type SavedProblemMinOrderByAggregateInput = {
@@ -481,6 +584,13 @@ export type SavedProblemMinOrderByAggregateInput = {
   optimalNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nextReviewAt?: Prisma.SortOrder
+  lastReviewedAt?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+}
+
+export type SavedProblemSumOrderByAggregateInput = {
+  reviewCount?: Prisma.SortOrder
 }
 
 export type SavedProblemCreateNestedManyWithoutUserInput = {
@@ -567,6 +677,14 @@ export type SavedProblemUncheckedUpdateManyWithoutProblemNestedInput = {
   deleteMany?: Prisma.SavedProblemScalarWhereInput | Prisma.SavedProblemScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type SavedProblemCreateWithoutUserInput = {
   id?: string
   language: string
@@ -579,6 +697,9 @@ export type SavedProblemCreateWithoutUserInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
   problem: Prisma.ProblemCreateNestedOneWithoutSavesInput
 }
 
@@ -595,6 +716,9 @@ export type SavedProblemUncheckedCreateWithoutUserInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
 }
 
 export type SavedProblemCreateOrConnectWithoutUserInput = {
@@ -640,6 +764,9 @@ export type SavedProblemScalarWhereInput = {
   optimal?: Prisma.JsonNullableFilter<"SavedProblem">
   createdAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  nextReviewAt?: Prisma.DateTimeFilter<"SavedProblem"> | Date | string
+  lastReviewedAt?: Prisma.DateTimeNullableFilter<"SavedProblem"> | Date | string | null
+  reviewCount?: Prisma.IntFilter<"SavedProblem"> | number
 }
 
 export type SavedProblemCreateWithoutProblemInput = {
@@ -654,6 +781,9 @@ export type SavedProblemCreateWithoutProblemInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
   user: Prisma.UserCreateNestedOneWithoutSavedProblemsInput
 }
 
@@ -670,6 +800,9 @@ export type SavedProblemUncheckedCreateWithoutProblemInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
 }
 
 export type SavedProblemCreateOrConnectWithoutProblemInput = {
@@ -711,6 +844,9 @@ export type SavedProblemCreateManyUserInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
 }
 
 export type SavedProblemUpdateWithoutUserInput = {
@@ -725,6 +861,9 @@ export type SavedProblemUpdateWithoutUserInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   problem?: Prisma.ProblemUpdateOneRequiredWithoutSavesNestedInput
 }
 
@@ -741,6 +880,9 @@ export type SavedProblemUncheckedUpdateWithoutUserInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type SavedProblemUncheckedUpdateManyWithoutUserInput = {
@@ -756,6 +898,9 @@ export type SavedProblemUncheckedUpdateManyWithoutUserInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type SavedProblemCreateManyProblemInput = {
@@ -771,6 +916,9 @@ export type SavedProblemCreateManyProblemInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  nextReviewAt?: Date | string
+  lastReviewedAt?: Date | string | null
+  reviewCount?: number
 }
 
 export type SavedProblemUpdateWithoutProblemInput = {
@@ -785,6 +933,9 @@ export type SavedProblemUpdateWithoutProblemInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutSavedProblemsNestedInput
 }
 
@@ -801,6 +952,9 @@ export type SavedProblemUncheckedUpdateWithoutProblemInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type SavedProblemUncheckedUpdateManyWithoutProblemInput = {
@@ -816,6 +970,9 @@ export type SavedProblemUncheckedUpdateManyWithoutProblemInput = {
   optimal?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nextReviewAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -834,6 +991,9 @@ export type SavedProblemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   optimal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nextReviewAt?: boolean
+  lastReviewedAt?: boolean
+  reviewCount?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedProblem"]>
@@ -852,6 +1012,9 @@ export type SavedProblemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   optimal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nextReviewAt?: boolean
+  lastReviewedAt?: boolean
+  reviewCount?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedProblem"]>
@@ -870,6 +1033,9 @@ export type SavedProblemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   optimal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nextReviewAt?: boolean
+  lastReviewedAt?: boolean
+  reviewCount?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedProblem"]>
@@ -888,9 +1054,12 @@ export type SavedProblemSelectScalar = {
   optimal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nextReviewAt?: boolean
+  lastReviewedAt?: boolean
+  reviewCount?: boolean
 }
 
-export type SavedProblemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "problemId" | "language" | "notes" | "bruteNotes" | "betterNotes" | "optimalNotes" | "brute" | "better" | "optimal" | "createdAt" | "updatedAt", ExtArgs["result"]["savedProblem"]>
+export type SavedProblemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "problemId" | "language" | "notes" | "bruteNotes" | "betterNotes" | "optimalNotes" | "brute" | "better" | "optimal" | "createdAt" | "updatedAt" | "nextReviewAt" | "lastReviewedAt" | "reviewCount", ExtArgs["result"]["savedProblem"]>
 export type SavedProblemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   problem?: boolean | Prisma.ProblemDefaultArgs<ExtArgs>
@@ -924,6 +1093,9 @@ export type $SavedProblemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     optimal: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
+    nextReviewAt: Date
+    lastReviewedAt: Date | null
+    reviewCount: number
   }, ExtArgs["result"]["savedProblem"]>
   composites: {}
 }
@@ -1362,6 +1534,9 @@ export interface SavedProblemFieldRefs {
   readonly optimal: Prisma.FieldRef<"SavedProblem", 'Json'>
   readonly createdAt: Prisma.FieldRef<"SavedProblem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SavedProblem", 'DateTime'>
+  readonly nextReviewAt: Prisma.FieldRef<"SavedProblem", 'DateTime'>
+  readonly lastReviewedAt: Prisma.FieldRef<"SavedProblem", 'DateTime'>
+  readonly reviewCount: Prisma.FieldRef<"SavedProblem", 'Int'>
 }
     
 

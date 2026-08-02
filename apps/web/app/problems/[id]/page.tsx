@@ -14,6 +14,9 @@ interface SavedProblem {
   better: string | null;
   optimal: string | null;
   createdAt: string;
+  nextReviewAt: string;
+  lastReviewedAt: string | null;
+  reviewCount: number;
   notes: string | null;
   bruteNotes: string | null;
   betterNotes: string | null;
@@ -50,7 +53,9 @@ export default function ProblemPage() {
 
   const handleDelete = async () => {
     if (!problem) return;
-    const confirmDelete = window.confirm(`Are you sure you want to delete "${problem.problem.title}"?`);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${problem.problem.title}"?`,
+    );
     if (!confirmDelete) return;
 
     try {
