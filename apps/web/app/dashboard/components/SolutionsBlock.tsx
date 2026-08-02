@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
 import { Cpu, Zap, Trophy } from "lucide-react";
 import { type ParsedContent } from "@/lib/chat-utils";
 
@@ -115,7 +114,6 @@ export function SolutionsBlock({
         <div className="text-sm prose prose-invert prose-sm max-w-none prose-pre:my-0">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeHighlight]}
             components={markdownComponents}
           >
             {activeContent}

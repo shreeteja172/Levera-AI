@@ -15,6 +15,7 @@ import { ChatHeader } from "./ChatHeader";
 import { ChatWelcome } from "./ChatWelcome";
 import { ChatInput } from "./ChatInput";
 import { MessageList } from "./MessageList";
+import { CodeBlock } from "@/components/problem/CodeBlock";
 
 interface Message {
   id?: string;
@@ -431,6 +432,16 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
   const markdownComponents = {
     pre({ children }: React.ComponentPropsWithoutRef<"pre">) {
+      const isCodeBlock = React.Children.toArray(children).some(
+        (child: any) =>
+          child &&
+          child.type === "code" &&
+          child.props &&
+          child.props.className
+      );
+      if (isCodeBlock) {
+        return <>{children}</>;
+      }
       return <PreBlock>{children}</PreBlock>;
     },
     code({
@@ -449,13 +460,19 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           </code>
         );
       }
+
+      const match = /language-(\w+)/.exec(className || "");
+      const lang = match ? match[1]! : "text";
+      const codeString = String(children).replace(/\n$/, "");
+
       return (
-        <code
-          className={`${className} block overflow-x-auto p-4 text-xs font-mono before:content-none after:content-none`}
-          {...props}
-        >
-          {children}
-        </code>
+        <div className="my-4">
+          <CodeBlock
+            language={lang}
+            filename={lang.toUpperCase()}
+            code={codeString}
+          />
+        </div>
       );
     },
     h1: ({ children }: React.ComponentPropsWithoutRef<"h1">) => (
@@ -488,8 +505,6 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             greeting={greeting}
             displayName={displayName}
             renderChatInput={renderChatInput}
-            reviewStats={reviewStats}
-            onStartReview={(id) => router.push(`/problems/${id}`)}
             onSelectSuggestion={sendMessage}
           />
         ) : (

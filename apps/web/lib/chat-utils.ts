@@ -10,43 +10,65 @@ export function parseMessageContent(content: string): ParsedContent[] {
   const cleanContent = content
     .replace(/<problem>([\s\S]*?)<\/problem>/g, "")
     .trim();
-  const parts: ParsedContent[] = [];
-  const regex = /<solutions>([\s\S]*?)<\/solutions>/g;
 
-  let lastIndex = 0;
-  let match;
-
-  while ((match = regex.exec(cleanContent)) !== null) {
-    const textBefore = cleanContent.substring(lastIndex, match.index);
-    if (textBefore.trim()) {
-      parts.push({ type: "text", text: textBefore });
-    }
-
-    const solutionsContent = match[1] ?? "";
-
-    const bruteMatch = /<brute>([\s\S]*?)<\/brute>/.exec(solutionsContent);
-    const betterMatch = /<better>([\s\S]*?)<\/better>/.exec(solutionsContent);
-    const optimalMatch = /<optimal>([\s\S]*?)<\/optimal>/.exec(
-      solutionsContent,
-    );
-
-    parts.push({
-      type: "solutions",
-      brute: bruteMatch?.[1]?.trim(),
-      better: betterMatch?.[1]?.trim(),
-      optimal: optimalMatch?.[1]?.trim(),
-    });
-
-    lastIndex = regex.lastIndex;
+  const solutionsStartIndex = cleanContent.indexOf("<solutions>");
+  if (solutionsStartIndex === -1) {
+    return [{ type: "text", text: cleanContent }];
   }
 
-  const textAfter = cleanContent.substring(lastIndex);
+  const parts: ParsedContent[] = [];
+
+  const textBefore = cleanContent.substring(0, solutionsStartIndex);
+  if (textBefore.trim()) {
+    parts.push({ type: "text", text: textBefore });
+  }
+
+  const solutionsEndTagIndex = cleanContent.indexOf("</solutions>", solutionsStartIndex);
+  let solutionsContent = "";
+  let textAfter = "";
+
+  if (solutionsEndTagIndex !== -1) {
+    solutionsContent = cleanContent.substring(
+      solutionsStartIndex + "<solutions>".length,
+      solutionsEndTagIndex
+    );
+    textAfter = cleanContent.substring(solutionsEndTagIndex + "</solutions>".length);
+  } else {
+    solutionsContent = cleanContent.substring(solutionsStartIndex + "<solutions>".length);
+  }
+
+  const extractTagContent = (contentStr: string, tagName: string): string | undefined => {
+    const startTag = `<${tagName}>`;
+    const endTag = `</${tagName}>`;
+    const startIdx = contentStr.indexOf(startTag);
+    if (startIdx === -1) return undefined;
+
+    const endIdx = contentStr.indexOf(endTag, startIdx);
+    if (endIdx !== -1) {
+      return contentStr.substring(startIdx + startTag.length, endIdx).trim();
+    } else {
+      const remaining = contentStr.substring(startIdx + startTag.length);
+      const nextTagMatch = /<(brute|better|optimal)>/g.exec(remaining);
+      if (nextTagMatch) {
+        return remaining.substring(0, nextTagMatch.index).trim();
+      }
+      return remaining.trim();
+    }
+  };
+
+  const brute = extractTagContent(solutionsContent, "brute");
+  const better = extractTagContent(solutionsContent, "better");
+  const optimal = extractTagContent(solutionsContent, "optimal");
+
+  parts.push({
+    type: "solutions",
+    brute,
+    better,
+    optimal,
+  });
+
   if (textAfter.trim()) {
     parts.push({ type: "text", text: textAfter });
-  }
-
-  if (parts.length === 0) {
-    parts.push({ type: "text", text: cleanContent });
   }
 
   return parts;

@@ -1,7 +1,6 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
 import { Check } from "lucide-react";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
 import {
@@ -197,7 +196,6 @@ export function MessageList({
                       <ReactMarkdown
                         key={partIdx}
                         remarkPlugins={[remarkGfm]}
-                        rehypePlugins={[rehypeHighlight]}
                         components={markdownComponents}
                       >
                         {part.text}
@@ -220,7 +218,7 @@ export function MessageList({
           </div>
 
           {msg.role === "assistant" &&
-            msg.content.includes("</solutions>") &&
+            msg.content.includes("<solutions>") &&
             (() => {
               const problemData = extractProblemData(msg.content);
               const title =
