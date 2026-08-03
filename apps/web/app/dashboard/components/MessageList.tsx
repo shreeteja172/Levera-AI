@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { Check, Lock } from "lucide-react";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
 import { useSession } from "@/lib/auth-client";
@@ -269,7 +270,7 @@ export function MessageList({
             className={`rounded-2xl px-5 py-3.5 text-sm ${
               msg.role === "user"
                 ? "max-w-[85%] bg-zinc-900 border border-zinc-850 text-white rounded-br-none"
-                : "w-full max-w-none bg-zinc-900/40 border border-zinc-900 text-zinc-100 rounded-bl-none prose prose-invert prose-sm"
+                : "w-full max-w-[90%] bg-zinc-900/40 border border-zinc-900 text-zinc-100 rounded-bl-none prose prose-invert prose-sm"
             }`}
           >
             {msg.role === "assistant" ? (
@@ -304,6 +305,7 @@ export function MessageList({
                             <ReactMarkdown
                               key={partIdx}
                               remarkPlugins={[remarkGfm]}
+                              rehypePlugins={[rehypeRaw]}
                               components={markdownComponents}
                             >
                               {part.text}

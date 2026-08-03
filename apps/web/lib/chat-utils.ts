@@ -11,9 +11,14 @@ export interface ParsedContent {
 }
 
 export function parseMessageContent(content: string): ParsedContent[] {
-  const cleanContent = content
+  let cleanContent = content
     .replace(/<problem>([\s\S]*?)<\/problem>/g, "")
+    .replace(/<think>[\s\S]*?<\/think>/g, "")
     .trim();
+
+  if (cleanContent.includes("<think>")) {
+    cleanContent = cleanContent.substring(0, cleanContent.indexOf("<think>")).trim();
+  }
 
   const hintsStartIndex = cleanContent.indexOf("<hints>");
   const solutionsStartIndex = cleanContent.indexOf("<solutions>");

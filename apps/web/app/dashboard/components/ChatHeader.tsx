@@ -17,16 +17,6 @@ export function ChatHeader({ activeChatId, onDeleteChat }: ChatHeaderProps) {
           {activeChatId ? "Active Chat Session" : "New Conversation"}
         </span>
       </div>
-      {activeChatId && (
-        <button
-          onClick={() => onDeleteChat(activeChatId)}
-          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-red-400 hover:bg-red-500/10 px-2.5 py-1.5 rounded-lg border border-zinc-900 hover:border-red-500/20 transition-all cursor-pointer"
-          title="Delete this conversation"
-        >
-          <Trash2 size={13} />
-          <span className="hidden sm:inline">Delete Chat</span>
-        </button>
-      )}
     </header>
   );
 }
