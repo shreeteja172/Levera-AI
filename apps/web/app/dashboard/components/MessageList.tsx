@@ -259,13 +259,18 @@ export function MessageList({
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      {messages.map((msg, index) => (
-        <div
-          key={index}
-          className={`flex flex-col ${
-            msg.role === "user" ? "items-end" : "items-start"
-          }`}
-        >
+      {messages.map((msg, index) => {
+        if (index === messages.length - 1 && msg.role === "assistant" && isThinking) {
+          return null;
+        }
+
+        return (
+          <div
+            key={index}
+            className={`flex flex-col ${
+              msg.role === "user" ? "items-end" : "items-start"
+            }`}
+          >
           <div
             className={`rounded-2xl px-5 py-3.5 text-sm ${
               msg.role === "user"
@@ -392,7 +397,8 @@ export function MessageList({
             {msg.role === "user" ? "You" : "Levera AI"}
           </span>
         </div>
-      ))}
+      );
+    })}
 
       {isThinking && (
         <div className="flex flex-col items-start">
