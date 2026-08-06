@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
@@ -53,14 +54,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, language, brute, better, optimal, hints } = await req.json();
+    const body = await req.json();
+    const saveProblemSchema = z.object({
+      title: z.string().min(1, "Title is required"),
+      language: z.string().min(1, "Language is required"),
+      brute: z.any().optional(),
+      better: z.any().optional(),
+      optimal: z.any().optional(),
+      hints: z.any().optional(),
+    });
 
-    if (!title || !language) {
+    const parsed = saveProblemSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Title and language are required" },
-        { status: 400 },
+        { error: parsed.error.issues[0]?.message || 'Validation failed' },
+        { status: 400 }
       );
     }
+
+    const { title, language, brute, better, optimal, hints } = parsed.data;
 
     const slug = createSlug(title);
 

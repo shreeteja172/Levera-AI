@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth";
 import { REVIEW_INTERVALS, type ReviewRating } from "@/lib/review";
@@ -15,14 +16,20 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { rating } = await req.json();
+    const body = await req.json();
+    const reviewSchema = z.object({
+      rating: z.string().refine(val => Object.keys(REVIEW_INTERVALS).includes(val), "Invalid rating value"),
+    });
 
-    if (!rating || !Object.keys(REVIEW_INTERVALS).includes(rating)) {
+    const parsed = reviewSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid rating value" },
-        { status: 400 },
+        { error: parsed.error.issues[0]?.message || 'Validation failed' },
+        { status: 400 }
       );
     }
+
+    const { rating } = parsed.data;
 
     const problem = await prisma.savedProblem.findFirst({
       where: {

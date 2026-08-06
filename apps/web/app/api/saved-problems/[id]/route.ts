@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth";
 
@@ -95,6 +96,26 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const body = await req.json();
+    const updateProblemSchema = z.object({
+      notes: z.string().optional(),
+      language: z.string().optional(),
+      bruteNotes: z.string().nullable().optional(),
+      betterNotes: z.string().nullable().optional(),
+      optimalNotes: z.string().nullable().optional(),
+      nextReviewAt: z.union([z.string(), z.date(), z.null()]).optional(),
+      lastReviewedAt: z.union([z.string(), z.date(), z.null()]).optional(),
+      reviewCount: z.number().optional(),
+    });
+
+    const parsed = updateProblemSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || 'Validation failed' },
+        { status: 400 }
+      );
+    }
+
     const {
       notes,
       language,
@@ -104,7 +125,7 @@ export async function PATCH(
       nextReviewAt,
       lastReviewedAt,
       reviewCount,
-    } = await req.json();
+    } = parsed.data;
 
     const updateData: Record<string, any> = {};
     if (notes !== undefined) updateData.notes = notes;

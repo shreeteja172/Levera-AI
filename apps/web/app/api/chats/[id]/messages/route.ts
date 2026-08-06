@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { streamText } from "ai";
@@ -29,19 +30,23 @@ export async function POST(
       return NextResponse.json({ error: "Chat not found" }, { status: 404 });
     }
 
-    const {
-      content,
-      provider = "groq",
-      model = "openai/gpt-oss-120b",
-      hintMode = false,
-    } = await req.json();
+    const body = await req.json();
+    const createMessageSchema = z.object({
+      content: z.string().min(1, "Content is required"),
+      provider: z.string().default("groq"),
+      model: z.string().default("openai/gpt-oss-120b"),
+      hintMode: z.boolean().default(false),
+    });
 
-    if (!content?.trim()) {
+    const parsed = createMessageSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Content is required" },
-        { status: 400 },
+        { error: parsed.error.issues[0]?.message || 'Validation failed' },
+        { status: 400 }
       );
     }
+
+    const { content, provider, model, hintMode } = parsed.data;
 
     await prisma.chatSession.update({
       where: {

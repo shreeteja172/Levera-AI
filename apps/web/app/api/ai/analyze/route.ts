@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import Groq from "groq-sdk";
 import { validateBearerToken } from "@/lib/extension-auth";
 import prisma from "@/lib/prisma";
@@ -21,7 +22,22 @@ export async function OPTIONS() {
 
 export async function POST(req: NextRequest) {
   try {
-    const problem = await req.json();
+    const body = await req.json();
+    const analyzeSchema = z.object({
+      slug: z.string().optional(),
+      title: z.string().optional(),
+      difficulty: z.string().optional(),
+      description: z.string().optional(),
+    });
+
+    const parsed = analyzeSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || 'Validation failed' },
+        { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }
+      );
+    }
+    const problem = parsed.data;
 
     const authResult = await validateBearerToken(req);
     if (authResult && problem.slug) {

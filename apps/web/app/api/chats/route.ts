@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { streamText } from "ai";
@@ -48,17 +49,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const {
-      title,
-      message,
-      provider = "groq",
-      model = "openai/gpt-oss-120b",
-      hintMode = false,
-    } = await req.json();
+    const body = await req.json();
+    const createChatSchema = z.object({
+      title: z.string().min(1, "Title is required"),
+      message: z.string().optional(),
+      provider: z.string().default("groq"),
+      model: z.string().default("openai/gpt-oss-120b"),
+      hintMode: z.boolean().default(false),
+    });
 
-    if (!title?.trim()) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    const parsed = createChatSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || 'Validation failed' },
+        { status: 400 }
+      );
     }
+
+    const { title, message, provider, model, hintMode } = parsed.data;
     const aiModel = getModel(provider, model);
 
     const newSession = await prisma.chatSession.create({
