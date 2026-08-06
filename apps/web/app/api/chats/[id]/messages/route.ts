@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
@@ -22,7 +23,10 @@ export async function POST(
 
     const { success } = await chatRateLimit.limit(session.user.id);
     if (!success) {
-      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Please try again later." },
+        { status: 429 },
+      );
     }
 
     const chat = await prisma.chatSession.findFirst({
@@ -47,8 +51,8 @@ export async function POST(
     const parsed = createMessageSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed' },
-        { status: 400 }
+        { error: parsed.error.issues[0]?.message || "Validation failed" },
+        { status: 400 },
       );
     }
 
@@ -141,14 +145,17 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
               },
             });
           } catch (dbErr) {
-            console.error("Failed to save assistant message to DB:", dbErr);
+            logger.error(
+              { err: dbErr },
+              "Failed to save assistant message to DB:",
+            );
           }
         },
       });
 
       return result.toTextStreamResponse();
     } catch (err) {
-      console.error("AI Error in messages route:", err);
+      logger.error({ err: err }, "AI Error in messages route:");
       const errorMsg =
         (err as Error).message || "Failed to contact the AI model.";
       try {
@@ -167,12 +174,15 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
           },
         });
       } catch (dbErr) {
-        console.error("Failed to save error assistant message to DB:", dbErr);
+        logger.error(
+          { err: dbErr },
+          "Failed to save error assistant message to DB:",
+        );
       }
       return NextResponse.json({ error: errorMsg }, { status: 500 });
     }
   } catch (error) {
-    console.error("Error appending message:", error);
+    logger.error({ err: error }, "Error appending message:");
     return NextResponse.json(
       { error: "Failed to append message" },
       { status: 500 },

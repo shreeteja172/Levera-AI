@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
@@ -18,14 +19,19 @@ export async function PATCH(
 
     const body = await req.json();
     const reviewSchema = z.object({
-      rating: z.string().refine(val => Object.keys(REVIEW_INTERVALS).includes(val), "Invalid rating value"),
+      rating: z
+        .string()
+        .refine(
+          (val) => Object.keys(REVIEW_INTERVALS).includes(val),
+          "Invalid rating value",
+        ),
     });
 
     const parsed = reviewSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed' },
-        { status: 400 }
+        { error: parsed.error.issues[0]?.message || "Validation failed" },
+        { status: 400 },
       );
     }
 
@@ -61,7 +67,7 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("Failed to record review:", error);
+    logger.error({ err: error }, "Failed to record review:");
     return NextResponse.json(
       { error: "Failed to record review" },
       { status: 500 },

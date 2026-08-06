@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth";
@@ -112,7 +113,7 @@ export async function GET() {
       streak,
     });
   } catch (error) {
-    console.error("Failed to fetch review stats:", error);
+    logger.error({ err: error }, "Failed to fetch review stats:");
     return NextResponse.json(
       { error: "Failed to fetch review stats" },
       { status: 500 },

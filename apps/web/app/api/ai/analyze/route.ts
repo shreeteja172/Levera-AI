@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import Groq from "groq-sdk";
@@ -33,8 +34,8 @@ export async function POST(req: NextRequest) {
     const parsed = analyzeSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed' },
-        { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }
+        { error: parsed.error.issues[0]?.message || "Validation failed" },
+        { status: 400, headers: { "Access-Control-Allow-Origin": "*" } },
       );
     }
     const problem = parsed.data;
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest) {
           },
         });
       } catch (dbError) {
-        console.error("Failed to save solve history:", dbError);
+        logger.error({ err: dbError }, "Failed to save solve history:");
       }
     }
 
@@ -187,7 +188,7 @@ Write proper markdown only.
       },
     );
   } catch (error) {
-    console.error("Groq Error:", error);
+    logger.error({ err: error }, "Groq Error:");
 
     return NextResponse.json(
       {

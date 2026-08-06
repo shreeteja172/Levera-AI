@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
@@ -13,7 +14,10 @@ export async function GET(request: Request) {
     const slug = searchParams.get("slug");
 
     if (!slug) {
-      return NextResponse.json({ error: "Missing slug parameter" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing slug parameter" },
+        { status: 400 },
+      );
     }
 
     const progress = await prisma.hintProgress.findUnique({
@@ -30,10 +34,10 @@ export async function GET(request: Request) {
       revealedLevel: progress?.revealedLevel ?? 0,
     });
   } catch (error) {
-    console.error("Get hint progress error:", error);
+    logger.error({ err: error }, "Get hint progress error:");
     return NextResponse.json(
       { error: "Failed to fetch progress" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -49,12 +53,17 @@ export async function POST(request: Request) {
     const { problemSlug, unlockedLevel, revealedLevel } = body;
 
     if (!problemSlug) {
-      return NextResponse.json({ error: "Missing problemSlug" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing problemSlug" },
+        { status: 400 },
+      );
     }
 
     const updateData: { unlockedLevel?: number; revealedLevel?: number } = {};
-    if (typeof unlockedLevel === "number") updateData.unlockedLevel = unlockedLevel;
-    if (typeof revealedLevel === "number") updateData.revealedLevel = revealedLevel;
+    if (typeof unlockedLevel === "number")
+      updateData.unlockedLevel = unlockedLevel;
+    if (typeof revealedLevel === "number")
+      updateData.revealedLevel = revealedLevel;
 
     const progress = await prisma.hintProgress.upsert({
       where: {
@@ -77,10 +86,10 @@ export async function POST(request: Request) {
       revealedLevel: progress.revealedLevel,
     });
   } catch (error) {
-    console.error("Save hint progress error:", error);
+    logger.error({ err: error }, "Save hint progress error:");
     return NextResponse.json(
       { error: "Failed to save progress" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

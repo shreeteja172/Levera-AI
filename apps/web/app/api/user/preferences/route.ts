@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
@@ -13,17 +14,23 @@ export async function PATCH(req: Request) {
 
     const body = await req.json();
     const userPrefSchema = z.object({
-      preferredLanguage: z.string().nullable().refine(
-        (val) => val === null || PROGRAMMING_LANGUAGES.some((lang) => lang.value === val),
-        "Invalid programming language"
-      ).optional(),
+      preferredLanguage: z
+        .string()
+        .nullable()
+        .refine(
+          (val) =>
+            val === null ||
+            PROGRAMMING_LANGUAGES.some((lang) => lang.value === val),
+          "Invalid programming language",
+        )
+        .optional(),
     });
 
     const parsed = userPrefSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed' },
-        { status: 400 }
+        { error: parsed.error.issues[0]?.message || "Validation failed" },
+        { status: 400 },
       );
     }
 
@@ -36,7 +43,7 @@ export async function PATCH(req: Request) {
 
     return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error("Failed to update user preferences:", error);
+    logger.error({ err: error }, "Failed to update user preferences:");
     return NextResponse.json(
       { error: "Failed to update preferences" },
       { status: 500 },

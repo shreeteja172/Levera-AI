@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
@@ -34,7 +35,7 @@ export async function GET() {
 
     return NextResponse.json(chats);
   } catch (error) {
-    console.error("Error fetching chats:", error);
+    logger.error({ err: error }, "Error fetching chats:");
     return NextResponse.json(
       { error: "Failed to fetch chats" },
       { status: 500 },
@@ -52,7 +53,10 @@ export async function POST(req: Request) {
 
     const { success } = await chatRateLimit.limit(session.user.id);
     if (!success) {
-      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Please try again later." },
+        { status: 429 },
+      );
     }
 
     const body = await req.json();
@@ -67,8 +71,8 @@ export async function POST(req: Request) {
     const parsed = createChatSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed' },
-        { status: 400 }
+        { error: parsed.error.issues[0]?.message || "Validation failed" },
+        { status: 400 },
       );
     }
 
@@ -155,7 +159,10 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
                 },
               });
             } catch (dbErr) {
-              console.error("Failed to save assistant message to DB:", dbErr);
+              logger.error(
+                { err: dbErr },
+                "Failed to save assistant message to DB:",
+              );
             }
           },
         });
@@ -167,7 +174,7 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
           },
         });
       } catch (err) {
-        console.error("AI generation error:", err);
+        logger.error({ err: err }, "AI generation error:");
         const errorMsg =
           (err as Error).message || "Failed to contact the AI model.";
         try {
@@ -185,7 +192,10 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
             },
           });
         } catch (dbErr) {
-          console.error("Failed to save error assistant message to DB:", dbErr);
+          logger.error(
+            { err: dbErr },
+            "Failed to save error assistant message to DB:",
+          );
         }
         return NextResponse.json({ error: errorMsg }, { status: 500 });
       }
@@ -193,7 +203,7 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
 
     return NextResponse.json(newSession);
   } catch (error) {
-    console.error("Error creating chat:", error);
+    logger.error({ err: error }, "Error creating chat:");
     return NextResponse.json(
       { error: "Failed to create chat" },
       { status: 500 },
@@ -217,7 +227,7 @@ export async function DELETE() {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting all chats:", error);
+    logger.error({ err: error }, "Error deleting all chats:");
     return NextResponse.json(
       { error: "Failed to delete all chats" },
       { status: 500 },

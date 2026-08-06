@@ -1,10 +1,11 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -34,17 +35,17 @@ export async function GET(
 
     return NextResponse.json(chat);
   } catch (error) {
-    console.error("Error fetching chat:", error);
+    logger.error({ err: error }, "Error fetching chat:");
     return NextResponse.json(
       { error: "Failed to fetch chat" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -73,10 +74,10 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting chat:", error);
+    logger.error({ err: error }, "Error deleting chat:");
     return NextResponse.json(
       { error: "Failed to delete chat" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

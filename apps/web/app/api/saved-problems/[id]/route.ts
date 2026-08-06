@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
@@ -37,7 +38,7 @@ export async function GET(
 
     return NextResponse.json(problem);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
 
     return NextResponse.json(
       {
@@ -71,7 +72,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Delete saved problem error:", error);
+    logger.error({ err: error }, "Delete saved problem error:");
 
     return NextResponse.json(
       {
@@ -111,8 +112,8 @@ export async function PATCH(
     const parsed = updateProblemSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed' },
-        { status: 400 }
+        { error: parsed.error.issues[0]?.message || "Validation failed" },
+        { status: 400 },
       );
     }
 
@@ -151,7 +152,7 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("Patch saved problem error:", error);
+    logger.error({ err: error }, "Patch saved problem error:");
 
     return NextResponse.json(
       {

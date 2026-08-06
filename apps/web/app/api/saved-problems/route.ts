@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
@@ -33,7 +34,7 @@ export async function GET() {
 
     return NextResponse.json(savedProblems);
   } catch (error) {
-    console.error("Fetch saved problems error:", error);
+    logger.error({ err: error }, "Fetch saved problems error:");
 
     return NextResponse.json(
       {
@@ -67,8 +68,8 @@ export async function POST(req: Request) {
     const parsed = saveProblemSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed' },
-        { status: 400 }
+        { error: parsed.error.issues[0]?.message || "Validation failed" },
+        { status: 400 },
       );
     }
 
@@ -117,7 +118,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(savedProblem);
   } catch (error) {
-    console.error("Save problem error:", error);
+    logger.error({ err: error }, "Save problem error:");
 
     return NextResponse.json(
       {
