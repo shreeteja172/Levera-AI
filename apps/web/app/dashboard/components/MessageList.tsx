@@ -277,10 +277,7 @@ export function MessageList({
               <div className="space-y-4 w-full">
                 {(() => {
                   const problemData = extractProblemData(msg.content);
-                  const title =
-                    problemData.title === "Unknown Problem" && chatTitle
-                      ? chatTitle
-                      : problemData.title;
+                  const title = problemData.title;
                   const slug = createSlug(title);
                   
                   const hasHints =
@@ -365,10 +362,8 @@ export function MessageList({
             msg.content.includes("<solutions>") &&
             (() => {
               const problemData = extractProblemData(msg.content);
-              const title =
-                problemData.title === "Unknown Problem" && chatTitle
-                  ? chatTitle
-                  : problemData.title;
+              if (problemData.title === "Unknown Problem") return null;
+              const title = problemData.title;
               const slug = createSlug(title);
               const isSaved = savedProblemSlugs.includes(slug);
               return (

@@ -129,7 +129,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
   const isThinking =
     loading &&
-    (messages.length === 0 || messages[messages.length - 1]?.content === "");
+    (messages.length === 0 ||
+      messages[messages.length - 1]?.content === "" ||
+      (messages[messages.length - 1]?.role === "assistant" &&
+        messages[messages.length - 1]?.content.includes("<think>") &&
+        !messages[messages.length - 1]?.content.includes("</think>")));
 
   const thinkingWord = useThinkingWord(loading);
 
@@ -234,10 +238,6 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const saveProblem = async (content: string) => {
     try {
       const problem = extractProblemData(content);
-
-      if (problem.title === "Unknown Problem" && chatTitle) {
-        problem.title = chatTitle;
-      }
 
       const savePromise = axios.post("/api/saved-problems", problem);
 
@@ -457,7 +457,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           child &&
           child.type === "code" &&
           child.props &&
-          child.props.className
+          child.props.className,
       );
       if (isCodeBlock) {
         return <>{children}</>;
@@ -536,7 +536,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
             sessionPending={sessionPending}
             mounted={mounted}
             chatId={chatId}
-            isThinking={isThinking}
+            isThinking={Boolean(isThinking)}
             thinkingWord={thinkingWord}
             chatTitle={chatTitle}
             savedProblemSlugs={savedProblemSlugs}

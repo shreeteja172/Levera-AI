@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import {
   Search,
-  Trash2,
   BookOpen,
   MessageSquare,
   Code2,
@@ -50,24 +49,6 @@ export default function ProblemsPage() {
   useEffect(() => {
     fetchProblems();
   }, []);
-
-  const handleDelete = async (
-    e: React.MouseEvent,
-    id: string,
-    title: string,
-  ) => {
-    e.stopPropagation();
-
-    const deletePromise = axios.delete(`/api/saved-problems/${id}`);
-
-    await toast.promise(deletePromise, {
-      loading: `Deleting "${title}"...`,
-      success: `Deleted "${title}" successfully`,
-      error: "Failed to delete problem",
-    });
-
-    fetchProblems();
-  };
 
   const filteredProblems = problems.filter((item) => {
     const matchesSearch =
@@ -185,15 +166,6 @@ export default function ProblemsPage() {
                       <h2 className="text-lg font-semibold text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
                         {sp.problem?.title || "Unknown Problem"}
                       </h2>
-                      <button
-                        onClick={(e) =>
-                          handleDelete(e, sp.id, sp.problem?.title || "Problem")
-                        }
-                        className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
-                        title="Delete problem"
-                      >
-                        <Trash2 size={15} />
-                      </button>
                     </div>
 
                     <div className="flex items-center justify-between gap-2">
