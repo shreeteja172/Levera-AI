@@ -385,8 +385,6 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
         scrollToBottom(false);
       }
-
-      window.dispatchEvent(new CustomEvent("levera_chats_updated"));
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         return;
