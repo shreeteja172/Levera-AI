@@ -163,7 +163,7 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
   } catch (error) {
     console.error("Error appending message:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to append message" },
+      { error: "Failed to append message" },
       { status: 500 },
     );
   }

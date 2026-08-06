@@ -32,7 +32,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Get hint progress error:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to fetch progress" },
+      { error: "Failed to fetch progress" },
       { status: 500 }
     );
   }
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Save hint progress error:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to save progress" },
+      { error: "Failed to save progress" },
       { status: 500 }
     );
   }

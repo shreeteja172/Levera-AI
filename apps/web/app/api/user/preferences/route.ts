@@ -33,7 +33,7 @@ export async function PATCH(req: Request) {
   } catch (error) {
     console.error("Failed to update user preferences:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to update preferences" },
+      { error: "Failed to update preferences" },
       { status: 500 },
     );
   }

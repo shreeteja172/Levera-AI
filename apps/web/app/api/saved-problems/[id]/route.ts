@@ -74,7 +74,7 @@ export async function DELETE(
 
     return NextResponse.json(
       {
-        error: (error as Error).message || "Failed to delete saved problem",
+        error: "Failed to delete saved problem",
       },
       {
         status: 500,
@@ -134,7 +134,7 @@ export async function PATCH(
 
     return NextResponse.json(
       {
-        error: (error as Error).message || "Failed to update saved problem",
+        error: "Failed to update saved problem",
       },
       {
         status: 500,

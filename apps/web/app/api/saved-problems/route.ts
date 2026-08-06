@@ -36,7 +36,7 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        error: (error as Error).message || "Failed to fetch saved problems",
+        error: "Failed to fetch saved problems",
       },
       {
         status: 500,
@@ -109,7 +109,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
-        error: (error as Error).message || "Failed to save problem",
+        error: "Failed to save problem",
       },
       {
         status: 500,

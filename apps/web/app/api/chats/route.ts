@@ -34,7 +34,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching chats:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to fetch chats" },
+      { error: "Failed to fetch chats" },
       { status: 500 },
     );
   }
@@ -181,7 +181,7 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
   } catch (error) {
     console.error("Error creating chat:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to create chat" },
+      { error: "Failed to create chat" },
       { status: 500 },
     );
   }
@@ -205,7 +205,7 @@ export async function DELETE() {
   } catch (error) {
     console.error("Error deleting all chats:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to delete all chats" },
+      { error: "Failed to delete all chats" },
       { status: 500 },
     );
   }
