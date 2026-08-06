@@ -6,6 +6,7 @@ import { streamText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
 import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
+import { chatRateLimit } from "@/lib/rateLimit";
 
 export async function GET() {
   try {
@@ -47,6 +48,11 @@ export async function POST(req: Request) {
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { success } = await chatRateLimit.limit(session.user.id);
+    if (!success) {
+      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
     }
 
     const body = await req.json();

@@ -17,3 +17,9 @@ export const generalRateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(30, "60 s"),
   prefix: "ratelimit:general",
 });
+
+export const chatRateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "60 s"), 
+  prefix: "ratelimit:chat",
+});
