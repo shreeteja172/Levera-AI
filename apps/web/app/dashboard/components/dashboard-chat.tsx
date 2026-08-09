@@ -504,6 +504,18 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     p: ({ children }: React.ComponentPropsWithoutRef<"p">) => (
       <p className="my-3 leading-relaxed text-zinc-300">{children}</p>
     ),
+    // Suppress custom XML tags that may leak through rehypeRaw during streaming
+    problem: () => null,
+    think: () => null,
+    hints: () => null,
+    solutions: () => null,
+    brute: () => null,
+    better: () => null,
+    optimal: () => null,
+    hint1: () => null,
+    hint2: () => null,
+    pattern: () => null,
+    pseudocode: () => null,
   };
 
   return (
