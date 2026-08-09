@@ -78,8 +78,8 @@ export function AppSidebar() {
       setLoading(true);
       const startTime = Date.now();
       try {
-        const res = await axios.get("/api/chats");
-        const chats = res.data;
+        const res = await axios.get("/api/chats?limit=7");
+        const chats = res.data.data || [];
         if (typeof window !== "undefined") {
           localStorage.setItem("levera:lastChatCount", String(chats.length));
         }

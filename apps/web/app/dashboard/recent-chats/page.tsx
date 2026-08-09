@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
-import { MessageSquare, Trash2, ExternalLink, Calendar, Search, Trash } from "lucide-react";
+import {
+  MessageSquare,
+  Trash2,
+  ExternalLink,
+  Calendar,
+  Search,
+  Trash,
+} from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
 
@@ -25,17 +32,23 @@ export default function RecentChatsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+
   const loadChats = async () => {
     setError(null);
     setLoading(true);
     const startTime = Date.now();
     try {
-      const res = await axios.get("/api/chats");
+      const res = await axios.get("/api/chats?limit=20");
       const elapsedTime = Date.now() - startTime;
       if (elapsedTime < 200) {
         await new Promise((resolve) => setTimeout(resolve, 200 - elapsedTime));
       }
-      setChats(res.data);
+      setChats(res.data.data || []);
+      setNextCursor(res.data.pagination?.nextCursor || null);
+      setHasMore(res.data.pagination?.hasMore || false);
     } catch (e) {
       const elapsedTime = Date.now() - startTime;
       if (elapsedTime < 200) {
@@ -55,6 +68,21 @@ export default function RecentChatsPage() {
     loadChats();
   }, []);
 
+  const loadMore = async () => {
+    if (!nextCursor || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const res = await axios.get(`/api/chats?limit=20&cursor=${nextCursor}`);
+      setChats((prev) => [...prev, ...(res.data.data || [])]);
+      setNextCursor(res.data.pagination?.nextCursor || null);
+      setHasMore(res.data.pagination?.hasMore || false);
+    } catch (e) {
+      console.error("Failed to load more chats:", e);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`/api/chats/${id}`);
@@ -66,7 +94,11 @@ export default function RecentChatsPage() {
   };
 
   const handleClearAll = async () => {
-    if (confirm("Are you sure you want to delete all chat history? This action cannot be undone.")) {
+    if (
+      confirm(
+        "Are you sure you want to delete all chat history? This action cannot be undone.",
+      )
+    ) {
       try {
         await axios.delete("/api/chats");
         setChats([]);
@@ -77,9 +109,12 @@ export default function RecentChatsPage() {
     }
   };
 
-  const filteredChats = chats.filter((c) =>
-    c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    c.messages.some((m) => m.content.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredChats = chats.filter(
+    (c) =>
+      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.messages.some((m) =>
+        m.content.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
   );
 
   return (
@@ -109,13 +144,17 @@ export default function RecentChatsPage() {
             Conversation History
           </h1>
           <p className="text-sm text-zinc-400">
-            Search, manage, or reload your past Levera AI troubleshooting sessions.
+            Search, manage, or reload your past Levera AI troubleshooting
+            sessions.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 bg-zinc-900/40 border border-zinc-900 p-4 rounded-2xl">
           <div className="relative w-full sm:flex-1">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Search
+              size={15}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500"
+            />
             <input
               type="text"
               placeholder="Search chat titles or contents..."
@@ -125,7 +164,8 @@ export default function RecentChatsPage() {
             />
           </div>
           <div className="text-xs text-zinc-500 shrink-0 font-medium self-end sm:self-center">
-            Total Sessions: <span className="text-zinc-300 font-medium">{chats.length}</span>
+            Total Sessions:{" "}
+            <span className="text-zinc-300 font-medium">{chats.length}</span>
           </div>
         </div>
 
@@ -140,17 +180,37 @@ export default function RecentChatsPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2 w-full">
                       <div className="p-1.5 rounded-lg bg-zinc-800 shrink-0 border border-zinc-800 w-7 h-7" />
-                      <SkeletonBlock width="45%" height="16px" rounded="rounded-md" />
+                      <SkeletonBlock
+                        width="45%"
+                        height="16px"
+                        rounded="rounded-md"
+                      />
                     </div>
-                    <SkeletonBlock width="48px" height="18px" rounded="rounded" />
+                    <SkeletonBlock
+                      width="48px"
+                      height="18px"
+                      rounded="rounded"
+                    />
                   </div>
                   <div className="space-y-2">
-                    <SkeletonBlock width="100%" height="12px" rounded="rounded-md" />
-                    <SkeletonBlock width="75%" height="12px" rounded="rounded-md" />
+                    <SkeletonBlock
+                      width="100%"
+                      height="12px"
+                      rounded="rounded-md"
+                    />
+                    <SkeletonBlock
+                      width="75%"
+                      height="12px"
+                      rounded="rounded-md"
+                    />
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-5 pt-3 border-t border-zinc-900/60">
-                  <SkeletonBlock width="70px" height="14px" rounded="rounded-md" />
+                  <SkeletonBlock
+                    width="70px"
+                    height="14px"
+                    rounded="rounded-md"
+                  />
                   <div className="flex items-center gap-1.5">
                     <div className="w-8 h-8 rounded-lg bg-zinc-800" />
                     <div className="w-16 h-8 rounded-lg bg-zinc-800" />
@@ -162,13 +222,22 @@ export default function RecentChatsPage() {
         ) : error ? (
           <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-red-500/20 bg-red-500/5 min-h-[300px]">
             <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 mb-4">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
                 <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" />
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-white mb-2">Failed to load conversations</h3>
+            <h3 className="text-lg font-medium text-white mb-2">
+              Failed to load conversations
+            </h3>
             <p className="text-xs text-zinc-500 max-w-sm mb-6">{error}</p>
             <button
               onClick={loadChats}
@@ -200,61 +269,82 @@ export default function RecentChatsPage() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredChats.map((chat) => (
-              <div
-                key={chat.id}
-                className="group relative flex flex-col justify-between p-5 rounded-2xl border border-zinc-900 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-zinc-800 transition-all duration-200"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <div className="p-1.5 rounded-lg bg-orange-600/10 text-orange-500 shrink-0 border border-orange-500/10">
-                        <MessageSquare size={14} />
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredChats.map((chat) => (
+                <div
+                  key={chat.id}
+                  className="group relative flex flex-col justify-between p-5 rounded-2xl border border-zinc-900 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-zinc-800 transition-all duration-200"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1.5 rounded-lg bg-orange-600/10 text-orange-500 shrink-0 border border-orange-500/10">
+                          <MessageSquare size={14} />
+                        </div>
+                        <h3 className="font-medium text-sm text-zinc-200 line-clamp-1 group-hover:text-white transition-colors">
+                          {chat.title}
+                        </h3>
                       </div>
-                      <h3 className="font-medium text-sm text-zinc-200 line-clamp-1 group-hover:text-white transition-colors">
-                        {chat.title}
-                      </h3>
+                      <span className="text-[10px] bg-zinc-900 text-zinc-500 border border-zinc-800/80 px-2 py-0.5 rounded font-mono">
+                        {chat.messages.length} msgs
+                      </span>
                     </div>
-                    <span className="text-[10px] bg-zinc-900 text-zinc-500 border border-zinc-800/80 px-2 py-0.5 rounded font-mono">
-                      {chat.messages.length} msgs
+
+                    <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed h-8">
+                      {chat.messages[0]?.content || "Empty conversation."}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-5 pt-3 border-t border-zinc-900/60">
+                    <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-medium">
+                      <Calendar size={11} />
+                      {new Date(chat.createdAt).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </span>
-                  </div>
 
-                  <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed h-8">
-                    {chat.messages[0]?.content || "Empty conversation."}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between mt-5 pt-3 border-t border-zinc-900/60">
-                  <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-medium">
-                    <Calendar size={11} />
-                    {new Date(chat.createdAt).toLocaleDateString(undefined, {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => handleDelete(chat.id)}
-                      className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 border border-zinc-900 hover:border-red-500/25 transition-all"
-                      title="Delete chat"
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                    <Link
-                      href={`/dashboard/chat/${chat.id}`}
-                      className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white px-3 py-2 rounded-lg border border-zinc-700/30 transition-all font-medium"
-                    >
-                      <span>Open</span>
-                      <ExternalLink size={11} />
-                    </Link>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleDelete(chat.id)}
+                        className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 border border-zinc-900 hover:border-red-500/25 transition-all"
+                        title="Delete chat"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                      <Link
+                        href={`/dashboard/chat/${chat.id}`}
+                        className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white px-3 py-2 rounded-lg border border-zinc-700/30 transition-all font-medium"
+                      >
+                        <span>Open</span>
+                        <ExternalLink size={11} />
+                      </Link>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+
+            {hasMore && !searchQuery && (
+              <div className="flex justify-center pt-4">
+                <button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="px-6 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 hover:border-zinc-700 text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {loadingMore ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-zinc-500 border-t-zinc-200 rounded-full animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    "Load More"
+                  )}
+                </button>
               </div>
-            ))}
+            )}
           </div>
         )}
       </main>

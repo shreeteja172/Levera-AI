@@ -1,15 +1,17 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { streamText } from "ai";
+import { withRetry } from "@/lib/retry";
 import { getModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
 import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
 import { chatRateLimit } from "@/lib/rateLimit";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await getServerSession();
 
@@ -17,13 +19,21 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const limit = Math.min(Number(searchParams.get("limit") ?? 20), 100);
+    const cursor = searchParams.get("cursor");
+
     const chats = await prisma.chatSession.findMany({
+      take: limit + 1,
+      ...(cursor && {
+        cursor: {
+          id: cursor,
+        },
+      }),
       where: {
         userId: session.user.id,
       },
-      orderBy: {
-        updatedAt: "desc",
-      },
+      orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
       include: {
         messages: {
           orderBy: {
@@ -33,7 +43,22 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(chats);
+    let nextCursor: string | undefined = undefined;
+    let hasMore = false;
+
+    if (chats.length > limit) {
+      hasMore = true;
+      const nextItem = chats.pop();
+      nextCursor = nextItem?.id;
+    }
+
+    return NextResponse.json({
+      data: chats,
+      pagination: {
+        nextCursor,
+        hasMore,
+      },
+    });
   } catch (error) {
     logger.error({ err: error }, "Error fetching chats:");
     return NextResponse.json(
@@ -143,27 +168,31 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
           temperature: 0.7,
           maxOutputTokens: 2048,
           onFinish: async ({ text }) => {
-            try {
-              await prisma.chatSession.update({
-                where: {
-                  id: newSession.id,
-                },
-                data: {
-                  updatedAt: new Date(),
-                  messages: {
-                    create: {
-                      role: "assistant",
-                      content: text,
+            after(async () => {
+              try {
+                await withRetry(() =>
+                  prisma.chatSession.update({
+                    where: {
+                      id: newSession.id,
                     },
-                  },
-                },
-              });
-            } catch (dbErr) {
-              logger.error(
-                { err: dbErr },
-                "Failed to save assistant message to DB:",
-              );
-            }
+                    data: {
+                      updatedAt: new Date(),
+                      messages: {
+                        create: {
+                          role: "assistant",
+                          content: text,
+                        },
+                      },
+                    },
+                  }),
+                );
+              } catch (dbErr) {
+                logger.error(
+                  { err: dbErr },
+                  "Failed to save assistant message to DB:",
+                );
+              }
+            });
           },
         });
 
@@ -178,19 +207,21 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
         const errorMsg =
           (err as Error).message || "Failed to contact the AI model.";
         try {
-          await prisma.chatSession.update({
-            where: {
-              id: newSession.id,
-            },
-            data: {
-              messages: {
-                create: {
-                  role: "assistant",
-                  content: `Error: ${errorMsg}`,
+          await withRetry(() =>
+            prisma.chatSession.update({
+              where: {
+                id: newSession.id,
+              },
+              data: {
+                messages: {
+                  create: {
+                    role: "assistant",
+                    content: `Error: ${errorMsg}`,
+                  },
                 },
               },
-            },
-          });
+            }),
+          );
         } catch (dbErr) {
           logger.error(
             { err: dbErr },

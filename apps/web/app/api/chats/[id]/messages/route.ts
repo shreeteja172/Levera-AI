@@ -1,9 +1,11 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { streamText } from "ai";
+import { withRetry } from "@/lib/retry";
 import { getModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
 import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
@@ -129,27 +131,31 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
         temperature: 0.7,
         maxOutputTokens: 2048,
         onFinish: async ({ text }) => {
-          try {
-            await prisma.chatSession.update({
-              where: {
-                id: sessionId,
-              },
-              data: {
-                updatedAt: new Date(),
-                messages: {
-                  create: {
-                    role: "assistant",
-                    content: text,
+          after(async () => {
+            try {
+              await withRetry(() =>
+                prisma.chatSession.update({
+                  where: {
+                    id: sessionId,
                   },
-                },
-              },
-            });
-          } catch (dbErr) {
-            logger.error(
-              { err: dbErr },
-              "Failed to save assistant message to DB:",
-            );
-          }
+                  data: {
+                    updatedAt: new Date(),
+                    messages: {
+                      create: {
+                        role: "assistant",
+                        content: text,
+                      },
+                    },
+                  },
+                }),
+              );
+            } catch (dbErr) {
+              logger.error(
+                { err: dbErr },
+                "Failed to save assistant message to DB:",
+              );
+            }
+          });
         },
       });
 
@@ -159,20 +165,22 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
       const errorMsg =
         (err as Error).message || "Failed to contact the AI model.";
       try {
-        await prisma.chatSession.update({
-          where: {
-            id: sessionId,
-          },
-          data: {
-            updatedAt: new Date(),
-            messages: {
-              create: {
-                role: "assistant",
-                content: `Error: ${errorMsg}`,
+        await withRetry(() =>
+          prisma.chatSession.update({
+            where: {
+              id: sessionId,
+            },
+            data: {
+              updatedAt: new Date(),
+              messages: {
+                create: {
+                  role: "assistant",
+                  content: `Error: ${errorMsg}`,
+                },
               },
             },
-          },
-        });
+          }),
+        );
       } catch (dbErr) {
         logger.error(
           { err: dbErr },
