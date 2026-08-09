@@ -14,7 +14,7 @@ export const authRateLimit = new Ratelimit({
 
 export const generalRateLimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(30, "60 s"),
+  limiter: Ratelimit.slidingWindow(120, "60 s"),
   prefix: "ratelimit:general",
 });
 
