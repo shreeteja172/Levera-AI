@@ -16,6 +16,11 @@ export function parseMessageContent(content: string): ParsedContent[] {
     .replace(/<think>[\s\S]*?<\/think>/g, "")
     .trim();
 
+  // Strip unclosed <problem> tag (happens during streaming before </problem> arrives)
+  if (cleanContent.includes("<problem>")) {
+    cleanContent = cleanContent.replace(/<problem>[\s\S]*$/, "").trim();
+  }
+
   if (cleanContent.includes("<think>")) {
     cleanContent = cleanContent.substring(0, cleanContent.indexOf("<think>")).trim();
   }
