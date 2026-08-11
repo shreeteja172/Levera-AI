@@ -6,7 +6,7 @@
   align-items: center;
   background: #EAE7DF;
   padding: 24px;
-  font-family: 'Tiempos Text', Georgia, Cambria, "Times New Roman", Times, serif;
+  font-family: var(--font-tiempos), Georgia, Cambria, "Times New Roman", Times, serif;
   min-height: 100vh;
   box-sizing: border-box;
 }

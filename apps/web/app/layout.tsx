@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
+import localFont from "next/font/local";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Toaster } from "react-hot-toast";
@@ -10,6 +11,15 @@ import { cn } from "@/lib/utils";
 const exo2 = Exo_2({
   subsets: ["latin"],
   variable: "--font-exo2",
+});
+
+const tiemposText = localFont({
+  src: [
+    { path: "./fonts/tiempos-text-regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/tiempos-text-regular-italic.woff2", weight: "400", style: "italic" },
+  ],
+  variable: "--font-tiempos",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,8 +34,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("dark font-sans", exo2.variable)}>
-      <body className={`${GeistSans.variable} ${GeistMono.variable} ${exo2.variable} font-sans`}>
+    <html
+      lang="en"
+      className={cn("dark font-sans", exo2.variable, tiemposText.variable)}
+    >
+      <body
+        className={`${GeistSans.variable} ${GeistMono.variable} ${exo2.variable} ${tiemposText.variable} font-sans`}
+      >
         <Providers>
           {children}
         </Providers>
@@ -37,7 +52,7 @@ export default function RootLayout({
               background: "#141414",
               color: "#ededed",
               border: "1px solid #2a2a2a",
-              fontFamily: '"Tiempos Text", Georgia, Cambria, "Times New Roman", Times, serif',
+              fontFamily: "var(--font-tiempos), Georgia, Cambria, \"Times New Roman\", Times, serif",
               fontSize: "0.875rem",
               borderRadius: "8px",
               padding: "12px 16px",

@@ -145,9 +145,6 @@ export function HintsBlock({
   return (
     <div className="w-full my-6 flex flex-col gap-3 font-sans hint-block-ui">
       <style dangerouslySetInnerHTML={{ __html: `
-        .hint-block-ui, .hint-block-ui * {
-          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-        }
         .hint-block-ui code, .hint-block-ui pre, .hint-block-ui kbd, .hint-block-ui code *, .hint-block-ui pre *, .hint-block-ui kbd * {
           font-family: var(--font-geist-mono), ui-monospace, monospace !important;
         }
