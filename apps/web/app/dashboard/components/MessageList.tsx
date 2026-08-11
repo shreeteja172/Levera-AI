@@ -56,7 +56,9 @@ export function MessageList({
   const { data: session } = useSession();
   const userId = session?.user?.id || "guest";
 
-  const [hintProgressMap, setHintProgressMap] = useState<Record<string, { unlockedLevel: number, revealedLevel: number }>>({});
+  const [hintProgressMap, setHintProgressMap] = useState<
+    Record<string, { unlockedLevel: number; revealedLevel: number }>
+  >({});
 
   useEffect(() => {
     if (!userId || userId === "guest") return;
@@ -76,7 +78,7 @@ export function MessageList({
       });
 
       const slugsToFetch = foundSlugs.filter(
-        (slug) => hintProgressMap[slug] === undefined
+        (slug) => hintProgressMap[slug] === undefined,
       );
 
       if (slugsToFetch.length === 0) return;
@@ -89,7 +91,10 @@ export function MessageList({
         return next;
       });
 
-      const updates: Record<string, { unlockedLevel: number, revealedLevel: number }> = {};
+      const updates: Record<
+        string,
+        { unlockedLevel: number; revealedLevel: number }
+      > = {};
       await Promise.all(
         slugsToFetch.map(async (slug) => {
           try {
@@ -101,7 +106,7 @@ export function MessageList({
           } catch (e) {
             console.error("Failed to load progress for slug", slug, e);
           }
-        })
+        }),
       );
 
       if (Object.keys(updates).length > 0) {
@@ -112,7 +117,11 @@ export function MessageList({
     fetchProgress();
   }, [messages, userId]);
 
-  const handleUpdateProgress = async (slug: string, unlockedLevel: number, revealedLevel: number) => {
+  const handleUpdateProgress = async (
+    slug: string,
+    unlockedLevel: number,
+    revealedLevel: number,
+  ) => {
     setHintProgressMap((prev) => ({
       ...prev,
       [slug]: { unlockedLevel, revealedLevel },
@@ -260,7 +269,11 @@ export function MessageList({
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {messages.map((msg, index) => {
-        if (index === messages.length - 1 && msg.role === "assistant" && isThinking) {
+        if (
+          index === messages.length - 1 &&
+          msg.role === "assistant" &&
+          isThinking
+        ) {
           return null;
         }
 
@@ -271,134 +284,153 @@ export function MessageList({
               msg.role === "user" ? "items-end" : "items-start"
             }`}
           >
-          <div
-            className={`rounded-2xl px-5 py-3.5 text-sm ${
-              msg.role === "user"
-                ? "max-w-[85%] bg-zinc-900 border border-zinc-850 text-white rounded-br-none"
-                : "w-full max-w-[90%] bg-zinc-900/40 border border-zinc-900 text-zinc-100 rounded-bl-none prose prose-invert prose-sm"
-            }`}
-          >
-            {msg.role === "assistant" ? (
-              <div className="space-y-4 w-full">
-                {(() => {
-                  const problemData = extractProblemData(msg.content);
-                  const title = problemData.title;
-                  const slug = createSlug(title);
-                  
-                  const hasHints =
-                    !!problemData.hints &&
-                    (!!problemData.hints.hint1 ||
-                      !!problemData.hints.hint2 ||
-                      !!problemData.hints.pattern ||
-                      !!problemData.hints.pseudocode);
-                  const progress = hintProgressMap[slug] || { unlockedLevel: 0, revealedLevel: 0 };
-                  const parts = parseMessageContent(msg.content);
-                  const solutionsStarted = msg.content.includes("<solutions>") || 
-                                           msg.content.includes("<brute>") || 
-                                           msg.content.includes("<better>") || 
-                                           msg.content.includes("<optimal>");
-                  const isLastMessage = index === messages.length - 1;
+            <div
+              className={`rounded-2xl px-5 py-3.5 text-sm ${
+                msg.role === "user"
+                  ? "max-w-[85%] bg-zinc-900 border border-zinc-850 text-white rounded-br-none"
+                  : "w-full max-w-[90%] bg-zinc-900/40 border border-zinc-900 text-zinc-100 rounded-bl-none prose prose-invert prose-sm"
+              }`}
+            >
+              {msg.role === "assistant" ? (
+                <div className="space-y-4 w-full">
+                  {(() => {
+                    const problemData = extractProblemData(msg.content);
+                    const title = problemData.title;
 
-                  return (
-                    <div className="space-y-2">
-                      {parts.map((part, partIdx) => {
-                        if (part.type === "text") {
-                          return (
-                            <ReactMarkdown
-                              key={partIdx}
-                              remarkPlugins={[remarkGfm]}
-                              rehypePlugins={[rehypeRaw]}
-                              components={markdownComponents}
-                            >
-                              {part.text}
-                            </ReactMarkdown>
-                          );
-                        } else if (part.type === "hints") {
-                          return (
-                            <HintsBlock
-                              key={partIdx}
-                              hints={problemData.hints}
-                              markdownComponents={markdownComponents}
-                              unlockedLevel={progress.unlockedLevel}
-                              onUpdateUnlockedLevel={(lvl) =>
-                                handleUpdateProgress(slug, lvl, progress.revealedLevel)
-                              }
-                            />
-                          );
-                        } else {
-                          return (
-                            <SolutionsBlock
-                              key={partIdx}
-                              part={part}
-                              markdownComponents={markdownComponents}
-                              hasHints={hasHints}
-                              revealedLevel={progress.revealedLevel}
-                              onUpdateRevealedLevel={(lvl) =>
-                                handleUpdateProgress(slug, progress.unlockedLevel, lvl)
-                              }
-                            />
-                          );
-                        }
-                      })}
+                    const slug =
+                      title === "Unknown Problem"
+                        ? `unmatched-${chatId ?? "local"}-${index}`
+                        : createSlug(title);
 
-                      {hasHints && !solutionsStarted && isLastMessage && chatLoading && (
-                        <div className="w-full my-6 bg-[#001524]/20 border border-[#15616d]/20 rounded-2xl p-5 space-y-4 animate-pulse">
-                          <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 bg-zinc-800 rounded-full" />
-                            <div className="h-3 w-32 bg-zinc-800 rounded" />
-                          </div>
-                          <div className="h-24 bg-zinc-900/40 rounded-xl flex items-center justify-center">
-                            <span className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase font-mono animate-pulse">
-                              AI is formulating solutions approaches...
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })()}
-              </div>
-            ) : (
-              <div className="whitespace-pre-wrap">{msg.content}</div>
-            )}
+                    const hasHints =
+                      !!problemData.hints &&
+                      (!!problemData.hints.hint1 ||
+                        !!problemData.hints.hint2 ||
+                        !!problemData.hints.pattern ||
+                        !!problemData.hints.pseudocode);
+                    const progress = hintProgressMap[slug] || {
+                      unlockedLevel: 0,
+                      revealedLevel: 0,
+                    };
+                    const parts = parseMessageContent(msg.content);
+                    const solutionsStarted =
+                      msg.content.includes("<solutions>") ||
+                      msg.content.includes("<brute>") ||
+                      msg.content.includes("<better>") ||
+                      msg.content.includes("<optimal>");
+                    const isLastMessage = index === messages.length - 1;
+
+                    return (
+                      <div className="space-y-2">
+                        {parts.map((part, partIdx) => {
+                          if (part.type === "text") {
+                            return (
+                              <ReactMarkdown
+                                key={partIdx}
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw]}
+                                components={markdownComponents}
+                              >
+                                {part.text}
+                              </ReactMarkdown>
+                            );
+                          } else if (part.type === "hints") {
+                            return (
+                              <HintsBlock
+                                key={partIdx}
+                                hints={problemData.hints}
+                                markdownComponents={markdownComponents}
+                                unlockedLevel={progress.unlockedLevel}
+                                onUpdateUnlockedLevel={(lvl) =>
+                                  handleUpdateProgress(
+                                    slug,
+                                    lvl,
+                                    progress.revealedLevel,
+                                  )
+                                }
+                              />
+                            );
+                          } else {
+                            return (
+                              <SolutionsBlock
+                                key={partIdx}
+                                part={part}
+                                markdownComponents={markdownComponents}
+                                hasHints={hasHints}
+                                revealedLevel={progress.revealedLevel}
+                                onUpdateRevealedLevel={(lvl) =>
+                                  handleUpdateProgress(
+                                    slug,
+                                    progress.unlockedLevel,
+                                    lvl,
+                                  )
+                                }
+                              />
+                            );
+                          }
+                        })}
+
+                        {hasHints &&
+                          !solutionsStarted &&
+                          isLastMessage &&
+                          chatLoading && (
+                            <div className="w-full my-6 bg-[#001524]/20 border border-[#15616d]/20 rounded-2xl p-5 space-y-4 animate-pulse">
+                              <div className="flex items-center gap-2">
+                                <div className="h-4 w-4 bg-zinc-800 rounded-full" />
+                                <div className="h-3 w-32 bg-zinc-800 rounded" />
+                              </div>
+                              <div className="h-24 bg-zinc-900/40 rounded-xl flex items-center justify-center">
+                                <span className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase font-mono animate-pulse">
+                                  AI is formulating solutions approaches...
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              ) : (
+                <div className="whitespace-pre-wrap">{msg.content}</div>
+              )}
+            </div>
+
+            {msg.role === "assistant" &&
+              msg.content.includes("<solutions>") &&
+              (() => {
+                const problemData = extractProblemData(msg.content);
+                if (problemData.title === "Unknown Problem") return null;
+                const title = problemData.title;
+                const slug = createSlug(title);
+                const isSaved = savedProblemSlugs.includes(slug);
+                return (
+                  <button
+                    onClick={() => !isSaved && onSaveProblem(msg.content)}
+                    disabled={isSaved}
+                    className={`mt-2.5 text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                      isSaved
+                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 cursor-default font-medium"
+                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-850 cursor-pointer"
+                    }`}
+                  >
+                    {isSaved ? (
+                      <>
+                        <Check size={12} className="text-emerald-400" />
+                        <span>Saved to Problems</span>
+                      </>
+                    ) : (
+                      <span>Save as Problem</span>
+                    )}
+                  </button>
+                );
+              })()}
+
+            <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
+              {msg.role === "user" ? "You" : "Levera AI"}
+            </span>
           </div>
-
-          {msg.role === "assistant" &&
-            msg.content.includes("<solutions>") &&
-            (() => {
-              const problemData = extractProblemData(msg.content);
-              if (problemData.title === "Unknown Problem") return null;
-              const title = problemData.title;
-              const slug = createSlug(title);
-              const isSaved = savedProblemSlugs.includes(slug);
-              return (
-                <button
-                  onClick={() => !isSaved && onSaveProblem(msg.content)}
-                  disabled={isSaved}
-                  className={`mt-2.5 text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
-                    isSaved
-                      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 cursor-default font-medium"
-                      : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-850 cursor-pointer"
-                  }`}
-                >
-                  {isSaved ? (
-                    <>
-                      <Check size={12} className="text-emerald-400" />
-                      <span>Saved to Problems</span>
-                    </>
-                  ) : (
-                    <span>Save as Problem</span>
-                  )}
-                </button>
-              );
-            })()}
-
-          <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
-            {msg.role === "user" ? "You" : "Levera AI"}
-          </span>
-        </div>
-      );
-    })}
+        );
+      })}
 
       {isThinking && (
         <div className="flex flex-col items-start">

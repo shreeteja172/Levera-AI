@@ -31,19 +31,22 @@ function isTransientError(error: any): boolean {
 
 export async function withRetry<T>(
   operation: () => Promise<T>,
-  options = { maxRetries: 3, baseDelay: 1000 },
+  options: { maxRetries?: number; baseDelay?: number } = {},
 ): Promise<T> {
+  const maxRetries = options.maxRetries ?? 3;
+  const baseDelay = options.baseDelay ?? 1000;
+
   let attempt = 0;
   while (true) {
     try {
       return await operation();
     } catch (error) {
       attempt++;
-      if (attempt > options.maxRetries || !isTransientError(error)) {
+      if (attempt > maxRetries || !isTransientError(error)) {
         throw error;
       }
 
-      const delay = options.baseDelay * Math.pow(2, attempt - 1);
+      const delay = baseDelay * Math.pow(2, attempt - 1);
       logger.warn(
         { err: error, attempt, nextRetryDelay: delay },
         "Transient database error encountered. Retrying...",
