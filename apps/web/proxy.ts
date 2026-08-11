@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { authRateLimit, generalRateLimit } from "@/lib/rateLimit";
 
+const SENSITIVE_AUTH_API_PREFIXES = [
+  "/api/auth/sign-in",
+  "/api/auth/sign-up",
+  "/api/auth/email-otp",
+  "/api/auth/forget-password",
+  "/api/auth/reset-password",
+  "/api/auth/change-password",
+];
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip =
@@ -16,7 +25,11 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/auth/sign-up") ||
     pathname.startsWith("/auth/verify-otp");
 
-  if (isSensitiveAuthPage) {
+  const isSensitiveAuthApiCall =
+    request.method === "POST" &&
+    SENSITIVE_AUTH_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+
+  if (isSensitiveAuthPage || isSensitiveAuthApiCall) {
     const { success } = await authRateLimit.limit(ip);
     if (!success) {
       return NextResponse.json(
@@ -24,11 +37,15 @@ export async function proxy(request: NextRequest) {
         { status: 429 },
       );
     }
-  } else {
+  } else if (!pathname.startsWith("/api/")) {
     const { success } = await generalRateLimit.limit(ip);
     if (!success) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
+  }
+
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
   }
 
   if (pathname === "/home" || pathname.startsWith("/home/")) {
@@ -69,5 +86,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/api/auth/:path*",
   ],
 };

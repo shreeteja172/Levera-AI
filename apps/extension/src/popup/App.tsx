@@ -16,6 +16,21 @@ interface ProblemData {
   url: string;
 }
 
+interface PendingLogin {
+  deviceCode: string;
+  userCode: string;
+  verifyUrl: string;
+  expiresIn: number;
+  expiresAt: number;
+}
+
+interface LocalAuthStorage {
+  token?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user?: any;
+  pendingLogin?: PendingLogin;
+}
+
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 function getSlugFromUrl(url?: string): string | null {
@@ -45,20 +60,20 @@ export default function App() {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<any | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [deviceCodeInfo, setDeviceCodeInfo] = useState<{
-    deviceCode: string;
-    userCode: string;
-    verifyUrl: string;
-    expiresIn: number;
-    expiresAt?: number;
-  } | null>(null);
+  const [deviceCodeInfo, setDeviceCodeInfo] = useState<PendingLogin | null>(
+    null,
+  );
   const [authError, setAuthError] = useState("");
 
   useEffect(() => {
     async function init() {
       try {
         setAuthLoading(true);
-        const stored = await chrome.storage.local.get(["token", "user", "pendingLogin"]);
+        const stored = await chrome.storage.local.get<LocalAuthStorage>([
+          "token",
+          "user",
+          "pendingLogin",
+        ]);
         
         if (stored.token) {
           const res = await fetch(`${apiUrl}/api/extension/me`, {
@@ -136,13 +151,16 @@ export default function App() {
     ) {
       if (areaName === "local") {
         if (changes.token) {
-          setToken(changes.token.newValue);
+          setToken((changes.token.newValue as string | undefined) ?? null);
         }
         if (changes.user) {
           setUser(changes.user.newValue);
         }
         if (changes.pendingLogin) {
-          setDeviceCodeInfo(changes.pendingLogin.newValue);
+          setDeviceCodeInfo(
+            (changes.pendingLogin.newValue as PendingLogin | undefined) ??
+              null,
+          );
         }
       }
     }

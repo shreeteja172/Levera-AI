@@ -8,6 +8,14 @@ interface ProblemData {
   url: string;
 }
 
+interface PendingLogin {
+  deviceCode: string;
+  userCode: string;
+  verifyUrl: string;
+  expiresIn: number;
+  expiresAt: number;
+}
+
 const EXPIRY_MS = 24 * 60 * 60 * 1000;
 const activeControllers = new Map<string, AbortController>();
 
@@ -62,7 +70,10 @@ async function startPollingToken() {
   }
 
   const checkPoll = async () => {
-    const stored = await chrome.storage.local.get("pendingLogin");
+    const stored =
+      await chrome.storage.local.get<{ pendingLogin?: PendingLogin }>(
+        "pendingLogin",
+      );
     const pendingLogin = stored.pendingLogin;
 
     if (!pendingLogin) {
@@ -120,11 +131,13 @@ async function startPollingToken() {
   activePollInterval = setInterval(checkPoll, 3000);
 }
 
-chrome.storage.local.get("pendingLogin").then((stored) => {
-  if (stored.pendingLogin) {
-    startPollingToken();
-  }
-});
+chrome.storage.local
+  .get<{ pendingLogin?: PendingLogin }>("pendingLogin")
+  .then((stored) => {
+    if (stored.pendingLogin) {
+      startPollingToken();
+    }
+  });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "START_ANALYSIS") {
