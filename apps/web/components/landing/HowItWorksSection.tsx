@@ -5,24 +5,30 @@ import { motion } from "framer-motion";
 const steps = [
   {
     title: "Ask a DSA Problem",
-    description: "Paste a problem statement or describe the algorithmic challenge you're working on.",
+    description:
+      "Paste a problem statement or describe the algorithmic challenge you're working on.",
     color: "#FF5A1F",
   },
   {
     title: "Explore Solutions",
-    description: "Walk through brute force to optimal with detailed explanations, complexity analysis, and dry runs.",
+    description:
+      "Walk through brute force to optimal with detailed explanations, complexity analysis, and dry runs.",
     color: "#0ea5e9",
   },
   {
     title: "Master the Pattern",
-    description: "Understand the underlying pattern, get related problems, and apply it confidently in interviews.",
+    description:
+      "Understand the underlying pattern, get related problems, and apply it confidently in interviews.",
     color: "#10B981",
   },
 ];
 
 export default function HowItWorksSection() {
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-900 font-sans relative overflow-hidden border-y border-zinc-800">
+    <section
+      id="how-it-works"
+      className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-900 font-sans relative overflow-hidden border-y border-zinc-800"
+    >
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-800/20 to-transparent pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-800/20 to-transparent pointer-events-none" />
 
@@ -56,16 +62,28 @@ export default function HowItWorksSection() {
                   isEven ? "md:flex-row" : "md:flex-row-reverse"
                 } group`}
               >
-                <div className={`md:w-[45%] pl-24 md:pl-0 ${isEven ? "md:text-right md:pr-16" : "md:text-left md:pl-16"} w-full relative`}>
-                  <div className="md:hidden shrink-0 absolute left-4 top-0 w-12 h-12 rounded-full bg-zinc-950 border-2 flex items-center justify-center font-bold text-lg shadow-lg transition-transform duration-300 group-hover:scale-110" style={{ borderColor: step.color, color: step.color }}>
+                <div
+                  className={`md:w-[45%] pl-24 md:pl-0 ${isEven ? "md:text-right md:pr-16" : "md:text-left md:pl-16"} w-full relative`}
+                >
+                  <div
+                    className="md:hidden shrink-0 absolute left-4 top-0 w-12 h-12 rounded-full bg-zinc-950 border-2 flex items-center justify-center font-bold text-lg shadow-lg transition-transform duration-300 group-hover:scale-110"
+                    style={{ borderColor: step.color, color: step.color }}
+                  >
                     {i + 1}
                   </div>
-                  
-                  <h3 className="text-2xl md:text-3xl font-bold text-zinc-100 mb-4 group-hover:text-white transition-colors">{step.title}</h3>
-                  <p className="text-zinc-400 text-lg leading-relaxed font-light">{step.description}</p>
+
+                  <h3 className="text-2xl md:text-3xl font-bold text-zinc-100 mb-4 group-hover:text-white transition-colors">
+                    {step.title}
+                  </h3>
+                  <p className="text-zinc-400 text-lg leading-relaxed font-light">
+                    {step.description}
+                  </p>
                 </div>
 
-                <div className="hidden md:flex shrink-0 absolute left-1/2 -ml-8 w-16 h-16 rounded-full bg-zinc-950 border-4 border-solid items-center justify-center font-bold text-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 transition-transform duration-300 group-hover:scale-110" style={{ borderColor: step.color, color: step.color }}>
+                <div
+                  className="hidden md:flex shrink-0 absolute left-1/2 -ml-8 w-16 h-16 rounded-full bg-zinc-950 border-4 border-solid items-center justify-center font-bold text-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 transition-transform duration-300 group-hover:scale-110"
+                  style={{ borderColor: step.color, color: step.color }}
+                >
                   {i + 1}
                 </div>
 

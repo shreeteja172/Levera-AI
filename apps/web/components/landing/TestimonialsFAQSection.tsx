@@ -6,24 +6,29 @@ import { motion, AnimatePresence } from "framer-motion";
 const faqs = [
   {
     question: "Is Levera suitable for absolute beginners?",
-    answer: "Yes, Levera breaks down problems into manageable hints and visualizes every step, making it perfect for beginners learning DSA patterns."
+    answer:
+      "Yes, Levera breaks down problems into manageable hints and visualizes every step, making it perfect for beginners learning DSA patterns.",
   },
   {
     question: "Do you support languages other than JavaScript/Python?",
-    answer: "Currently, our explanations are language-agnostic using clean pseudo-code, but we provide concrete solutions in Python, JavaScript, Java, and C++."
+    answer:
+      "Currently, our explanations are language-agnostic using clean pseudo-code, but we provide concrete solutions in Python, JavaScript, Java, and C++.",
   },
   {
     question: "How does the AI Interviewer work?",
-    answer: "It simulates a real interview environment by asking follow-up questions, edge cases, and asking you to optimize your solution step-by-step."
-  }
+    answer:
+      "It simulates a real interview environment by asking follow-up questions, edge cases, and asking you to optimize your solution step-by-step.",
+  },
 ];
 
 export default function TestimonialsFAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 font-sans relative overflow-hidden">
-
+    <section
+      id="faq"
+      className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 font-sans relative overflow-hidden"
+    >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-zinc-900/50 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
@@ -40,20 +45,34 @@ export default function TestimonialsFAQSection() {
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div 
-                key={index} 
-                className={`bg-zinc-900/40 backdrop-blur-sm border ${isOpen ? 'border-zinc-700' : 'border-zinc-800/50'} rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:border-zinc-700 group`}
+              <div
+                key={index}
+                className={`bg-zinc-900/40 backdrop-blur-sm border ${isOpen ? "border-zinc-700" : "border-zinc-800/50"} rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:border-zinc-700 group`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none"
                 >
-                  <span className={`font-semibold text-lg md:text-xl transition-colors ${isOpen ? 'text-white' : 'text-zinc-300 group-hover:text-zinc-100'}`}>
+                  <span
+                    className={`font-semibold text-lg md:text-xl transition-colors ${isOpen ? "text-white" : "text-zinc-300 group-hover:text-zinc-100"}`}
+                  >
                     {faq.question}
                   </span>
-                  <span className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-[#FF5A1F] border-[#FF5A1F] text-white rotate-45' : 'border-zinc-700 text-zinc-400 group-hover:border-zinc-500 group-hover:text-zinc-300'}`}>
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  <span
+                    className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? "bg-[#FF5A1F] border-[#FF5A1F] text-white rotate-45" : "border-zinc-700 text-zinc-400 group-hover:border-zinc-500 group-hover:text-zinc-300"}`}
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
                     </svg>
                   </span>
                 </button>
