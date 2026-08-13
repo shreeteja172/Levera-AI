@@ -29,8 +29,6 @@ export default function TestimonialsFAQSection() {
       id="faq"
       className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 font-sans relative overflow-hidden"
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-zinc-900/50 rounded-full blur-[120px] pointer-events-none" />
-
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-6xl font-instrument text-white tracking-tight mb-6">
@@ -47,7 +45,7 @@ export default function TestimonialsFAQSection() {
             return (
               <div
                 key={index}
-                className={`bg-zinc-900/40 backdrop-blur-sm border ${isOpen ? "border-zinc-700" : "border-zinc-800/50"} rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:border-zinc-700 group`}
+                className={`bg-zinc-900/40 border ${isOpen ? "border-zinc-700" : "border-zinc-800/50"} rounded-2xl overflow-hidden transition-all duration-300 hover:border-zinc-700 group`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}

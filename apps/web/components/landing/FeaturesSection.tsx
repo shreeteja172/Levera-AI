@@ -89,8 +89,6 @@ export default function FeaturesSection() {
       id="features"
       className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 font-sans relative overflow-hidden"
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-zinc-900/50 rounded-full blur-[120px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20">
           <motion.h2
@@ -126,7 +124,7 @@ export default function FeaturesSection() {
               key={feature.title}
               variants={itemVariants}
               whileHover={{ y: -8, scale: 1.02 }}
-              className="bg-zinc-900/40 backdrop-blur-sm border border-zinc-800/50 rounded-3xl p-8 shadow-lg hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out flex flex-col gap-5 group"
+              className="bg-zinc-900/40 border border-zinc-800/50 hover:border-zinc-700 rounded-3xl p-8 transition-all duration-300 ease-out flex flex-col gap-5 group"
             >
               <div
                 className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${feature.bg} ${feature.border} border transition-colors duration-300`}

@@ -129,9 +129,6 @@ export default function NotFound() {
 
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-950 text-zinc-200 font-instrument px-6 py-24">
-      <div className="absolute -top-[10%] -left-[10%] w-[45%] h-[45%] bg-[#FF5A1F]/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[50%] bg-[#0ea5e9]/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
-
       <div className="relative z-10 w-full max-w-4xl flex flex-col md:flex-row items-center gap-12 md:gap-16">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -143,7 +140,7 @@ export default function NotFound() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="flex items-center gap-2 mb-6 px-3 py-1.5 rounded-lg bg-zinc-900/70 border border-zinc-800 font-mono text-xs text-zinc-400"
+            className="flex items-center gap-2 mb-6 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 font-mono text-xs text-zinc-400"
           >
             <Terminal size={13} className="text-zinc-500 shrink-0" />
             <span className="truncate max-w-[220px] sm:max-w-none">
@@ -206,7 +203,7 @@ export default function NotFound() {
           >
             <Link
               href="/"
-              className="group flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-100 hover:bg-white text-black rounded-xl transition-all duration-300 ease-out shadow-[0_0_40px_rgba(255,255,255,0.08)] hover:shadow-[0_0_60px_rgba(255,255,255,0.16)] hover:-translate-y-1"
+              className="group flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-100 hover:bg-white text-black rounded-xl transition-all duration-300 ease-out hover:-translate-y-0.5"
               style={{ color: "#09090b" }}
             >
               <House size={17} />
@@ -216,7 +213,7 @@ export default function NotFound() {
             {!isPending && session?.user ? (
               <Link
                 href="/dashboard"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl transition-all duration-300 ease-out backdrop-blur-sm"
+                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl transition-all duration-300 ease-out"
               >
                 <LayoutDashboard size={17} />
                 Go to Dashboard
@@ -224,7 +221,7 @@ export default function NotFound() {
             ) : (
               <Link
                 href="/auth/sign-in"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl transition-all duration-300 ease-out backdrop-blur-sm"
+                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl transition-all duration-300 ease-out"
               >
                 Sign In
               </Link>
@@ -236,7 +233,7 @@ export default function NotFound() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="shrink-0 w-full max-w-[300px] bg-zinc-900/40 backdrop-blur-sm border border-zinc-800/50 rounded-3xl p-6"
+          className="shrink-0 w-full max-w-[300px] bg-zinc-900/40 border border-zinc-800/50 rounded-3xl p-6"
         >
           <BinarySearchVisual />
         </motion.div>

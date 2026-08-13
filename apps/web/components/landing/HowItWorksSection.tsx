@@ -29,9 +29,6 @@ export default function HowItWorksSection() {
       id="how-it-works"
       className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-900 font-sans relative overflow-hidden border-y border-zinc-800"
     >
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-800/20 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-800/20 to-transparent pointer-events-none" />
-
       <div className="max-w-5xl mx-auto relative z-10">
         <div className="text-center mb-24">
           <motion.h2
@@ -81,7 +78,7 @@ export default function HowItWorksSection() {
                 </div>
 
                 <div
-                  className="hidden md:flex shrink-0 absolute left-1/2 -ml-8 w-16 h-16 rounded-full bg-zinc-950 border-4 border-solid items-center justify-center font-bold text-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 transition-transform duration-300 group-hover:scale-110"
+                  className="hidden md:flex shrink-0 absolute left-1/2 -ml-8 w-16 h-16 rounded-full bg-zinc-950 border-4 border-solid items-center justify-center font-bold text-xl z-10 transition-transform duration-300 group-hover:scale-110"
                   style={{ borderColor: step.color, color: step.color }}
                 >
                   {i + 1}
