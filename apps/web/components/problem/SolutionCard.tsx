@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import { CodeBlock } from "./CodeBlock";
 import { ComplexityBadge } from "./ComplexityBadge";
 import { ApproachEditor } from "./ApproachEditor";
-import { Code2, BookOpen, Lightbulb } from "lucide-react";
+import { Code2, BookOpen, Lightbulb, Terminal } from "lucide-react";
 
 interface SolutionCardProps {
   title: string;
@@ -69,20 +69,25 @@ export function SolutionCard({
       className={`rounded-xl border-l-4 ${borderColor} bg-zinc-900 border border-t-zinc-800/80 border-r-zinc-800/80 border-b-zinc-800/80 transition-all duration-300 w-full lg:min-w-[28rem] lg:max-w-[32rem] flex flex-col shrink-0 snap-center`}
     >
       <div className="p-5 flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-zinc-950/80 border border-zinc-800 rounded-xl">
-            {icon}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="p-2.5 bg-zinc-950/80 border border-zinc-800 rounded-xl shrink-0">
+              {icon}
+            </div>
+            <div className="min-w-0">
+              <h3 className="text-lg font-bold text-zinc-100">{type}</h3>
+              <p className="text-xs text-zinc-500 font-medium">Approach Solution</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-lg font-bold text-zinc-100">{type}</h3>
-            <p className="text-xs text-zinc-500 font-medium">Approach Solution</p>
-          </div>
+          <span className="flex items-center gap-1.5 px-2.5 py-1 shrink-0 bg-zinc-950/80 text-zinc-300 border border-zinc-800 rounded-lg font-mono text-xs font-semibold tracking-wide uppercase">
+            <Terminal className="w-3.5 h-3.5 shrink-0 opacity-80" />
+            <span>{language}</span>
+          </span>
         </div>
 
         <ComplexityBadge
           time={timeComplexity}
           space={spaceComplexity}
-          language={language}
           variant={getVariant()}
         />
       </div>

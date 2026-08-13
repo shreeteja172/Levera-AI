@@ -11,6 +11,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   PROGRAMMING_LANGUAGES,
   type ProgrammingLanguage,
 } from "@/lib/constants/programming-languages";
@@ -74,34 +81,22 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
               Preferred Programming Language
             </label>
-            <div className="relative">
-              <select
-                value={selectedLang}
-                onChange={(e) => setSelectedLang(e.target.value)}
-                disabled={loading}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-200 outline-none focus:border-orange-500/50 appearance-none cursor-pointer"
-              >
-                <option value="" disabled>
-                  Select language...
-                </option>
+            <Select
+              value={selectedLang}
+              onValueChange={(value) => setSelectedLang(value ?? "")}
+              disabled={loading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select language..." />
+              </SelectTrigger>
+              <SelectContent>
                 {PROGRAMMING_LANGUAGES.map((lang) => (
-                  <option key={lang.value} value={lang.value}>
+                  <SelectItem key={lang.value} value={lang.value}>
                     {lang.label}
-                  </option>
+                  </SelectItem>
                 ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-zinc-500">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                >
-                  <path d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </div>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
