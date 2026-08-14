@@ -23,7 +23,7 @@ const tiemposText = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Levera — AI-Powered DSA Mentor",
+  title: "Levera | AI-Powered DSA Mentor",
   description:
     "From Brute Force to Optimal, Instantly. Learn Data Structures & Algorithms with AI that teaches you how to think.",
 };

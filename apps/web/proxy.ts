@@ -20,16 +20,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isSensitiveAuthPage =
-    pathname.startsWith("/auth/sign-in") ||
-    pathname.startsWith("/auth/sign-up") ||
-    pathname.startsWith("/auth/verify-otp");
-
   const isSensitiveAuthApiCall =
     request.method === "POST" &&
     SENSITIVE_AUTH_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
-  if (isSensitiveAuthPage || isSensitiveAuthApiCall) {
+  if (isSensitiveAuthApiCall) {
     const { success } = await authRateLimit.limit(ip);
     if (!success) {
       return NextResponse.json(

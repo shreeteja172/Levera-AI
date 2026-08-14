@@ -87,7 +87,7 @@ export default function FeaturesSection() {
   return (
     <section
       id="features"
-      className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 font-sans relative overflow-hidden"
+      className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 landing-light:bg-[#EAE7DF] font-sans relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20">
@@ -96,7 +96,7 @@ export default function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="text-4xl md:text-6xl font-instrument text-white tracking-tight mb-6"
+            className="text-4xl md:text-6xl font-instrument text-white landing-light:text-zinc-900 tracking-tight mb-6"
           >
             Everything You Need to Master DSA
           </motion.h2>
@@ -105,7 +105,7 @@ export default function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-            className="text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto font-light leading-relaxed"
+            className="text-lg md:text-xl text-zinc-400 landing-light:text-zinc-600 max-w-3xl mx-auto font-light leading-relaxed"
           >
             Build your intuition for algorithms with tools designed specifically
             for technical interview preparation.
@@ -124,17 +124,17 @@ export default function FeaturesSection() {
               key={feature.title}
               variants={itemVariants}
               whileHover={{ y: -8, scale: 1.02 }}
-              className="bg-zinc-900/40 border border-zinc-800/50 hover:border-zinc-700 rounded-3xl p-8 transition-all duration-300 ease-out flex flex-col gap-5 group"
+              className="bg-zinc-900/40 landing-light:bg-white border border-zinc-800/50 landing-light:border-black/10 hover:border-zinc-700 landing-light:hover:border-black/20 rounded-3xl p-8 transition-all duration-300 ease-out flex flex-col gap-5 group"
             >
               <div
                 className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${feature.bg} ${feature.border} border transition-colors duration-300`}
               >
                 {feature.icon}
               </div>
-              <h3 className="text-2xl font-bold text-zinc-100 group-hover:text-white transition-colors">
+              <h3 className="text-2xl font-bold text-zinc-100 landing-light:text-zinc-900 group-hover:text-white landing-light:group-hover:text-black transition-colors">
                 {feature.title}
               </h3>
-              <p className="text-zinc-400 text-base leading-relaxed group-hover:text-zinc-300 transition-colors">
+              <p className="text-zinc-400 landing-light:text-zinc-600 text-base leading-relaxed group-hover:text-zinc-300 landing-light:group-hover:text-zinc-700 transition-colors">
                 {feature.description}
               </p>
             </motion.div>

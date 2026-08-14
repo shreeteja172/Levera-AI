@@ -5,30 +5,30 @@ import Link from "next/link";
 
 export default function WhyChooseUsSection() {
   return (
-    <section className="relative py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 text-zinc-200 overflow-hidden font-sans border-b border-zinc-900">
+    <section className="relative py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 landing-light:bg-[#EAE7DF] text-zinc-200 landing-light:text-zinc-800 overflow-hidden font-sans border-b border-zinc-900 landing-light:border-black/10">
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-16">
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="flex-1 w-full"
           >
-            <h2 className="text-4xl md:text-6xl font-instrument tracking-tight mb-8 text-white">
+            <h2 className="text-4xl md:text-6xl font-instrument tracking-tight mb-8 text-white landing-light:text-zinc-900">
               Why Choose <span className="bg-gradient-to-r from-[#FF5A1F] to-orange-400 bg-clip-text text-transparent">Levera?</span>
             </h2>
-            <p className="text-zinc-400 text-lg md:text-xl leading-relaxed mb-10 font-light">
-              We focus on building intuition, not just giving you the final answer. 
-              Our interactive terminal environment and visual workspace make abstract 
+            <p className="text-zinc-400 landing-light:text-zinc-600 text-lg md:text-xl leading-relaxed mb-10 font-light">
+              We focus on building intuition, not just giving you the final answer.
+              Our interactive terminal environment and visual workspace make abstract
               data structures tangible and easy to understand.
             </p>
-            
+
             <ul className="space-y-5 mb-12">
               {["Visual Dry Runs for every algorithm", "Instant Complexity Analysis", "Pattern Matching & Concept Linking"].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-4 text-zinc-300">
+                <li key={idx} className="flex items-center gap-4 text-zinc-300 landing-light:text-zinc-700">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#10B981]/10 flex items-center justify-center border border-[#10B981]/20">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12"></polyline>
@@ -41,8 +41,7 @@ export default function WhyChooseUsSection() {
 
             <Link
               href="/auth/sign-up"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-black hover:bg-zinc-100 rounded-xl transition-all duration-300 hover:-translate-y-0.5"
-              style={{ color: "#09090b" }}
+              className="inline-flex items-center justify-center px-8 py-4 bg-white hover:bg-zinc-100 landing-light:bg-zinc-900 landing-light:hover:bg-zinc-800 text-black! landing-light:text-white! rounded-xl transition-all duration-300 hover:-translate-y-0.5"
             >
               Start Free Trial
             </Link>
