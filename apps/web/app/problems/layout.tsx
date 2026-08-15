@@ -7,7 +7,7 @@ export default function ProblemsLayout({
 }) {
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-zinc-950 text-zinc-200">
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200">
         {children}
       </div>
     </TooltipProvider>

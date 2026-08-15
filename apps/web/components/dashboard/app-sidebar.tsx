@@ -29,6 +29,7 @@ import {
   Settings,
 } from "lucide-react";
 import { SettingsDialog } from "@/components/dashboard/SettingsDialog";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
@@ -122,11 +123,11 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="border-r border-zinc-900 bg-zinc-950 text-zinc-200">
-      <SidebarHeader className="p-4 flex flex-row items-center justify-between border-b border-zinc-900/60 bg-zinc-950">
+    <Sidebar className="border-r border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-200">
+      <SidebarHeader className="p-4 flex flex-row items-center justify-between border-b border-zinc-200 dark:border-zinc-900/60 bg-white dark:bg-zinc-950">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 font-medium text-lg text-white"
+          className="flex items-center gap-2 font-medium text-lg text-zinc-900! dark:text-white!"
         >
           <svg
             width="20"
@@ -143,19 +144,22 @@ export function AppSidebar() {
           </svg>
           <span className="tracking-tight">Levera</span>
         </Link>
-        <button
-          onClick={toggleSidebar}
-          className="text-zinc-500 hover:text-zinc-300 md:hidden p-1 rounded hover:bg-zinc-900"
-        >
-          <PanelLeft size={18} />
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            onClick={toggleSidebar}
+            className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 md:hidden p-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-900"
+          >
+            <PanelLeft size={18} />
+          </button>
+        </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-2 py-4 bg-zinc-950 space-y-6">
+      <SidebarContent className="px-2 py-4 bg-white dark:bg-zinc-950 space-y-6">
         <div className="px-2">
           <button
             onClick={handleNewChat}
-            className="w-full flex items-center justify-center gap-2 bg-orange-600/10 hover:bg-orange-600/20 text-orange-500 border border-orange-500/20 font-medium py-2 px-4 rounded-xl transition-all duration-200"
+            className="w-full flex items-center justify-center gap-2 bg-orange-600/10 hover:bg-orange-600/20 text-orange-600 dark:text-orange-500 border border-orange-500/20 font-medium py-2 px-4 rounded-xl transition-all duration-200"
           >
             <Plus size={16} />
             <span>New Chat</span>
@@ -179,8 +183,8 @@ export function AppSidebar() {
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                     pathname === "/dashboard" ||
                       pathname.startsWith("/dashboard/chat/")
-                      ? "bg-zinc-900 text-white font-medium"
-                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
+                      ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900! dark:text-white! font-medium"
+                      : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/50 hover:text-zinc-800! dark:hover:text-zinc-200!",
                   )}
                 >
                   <MessageSquare size={16} />
@@ -195,8 +199,8 @@ export function AppSidebar() {
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                     pathname === "/problems"
-                      ? "bg-zinc-900 text-white font-medium"
-                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
+                      ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900! dark:text-white! font-medium"
+                      : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/50 hover:text-zinc-800! dark:hover:text-zinc-200!",
                   )}
                 >
                   <BookOpen size={16} />
@@ -211,8 +215,8 @@ export function AppSidebar() {
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                     pathname === "/dashboard/recent-chats"
-                      ? "bg-zinc-900 text-white font-medium"
-                      : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200",
+                      ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900! dark:text-white! font-medium"
+                      : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/50 hover:text-zinc-800! dark:hover:text-zinc-200!",
                   )}
                 >
                   <History size={16} />
@@ -236,7 +240,7 @@ export function AppSidebar() {
                       width="13px"
                       height="13px"
                       rounded="rounded"
-                      className="shrink-0 bg-zinc-800"
+                      className="shrink-0 bg-zinc-200 dark:bg-zinc-800"
                     />
                     <SkeletonBlock
                       width={
@@ -250,7 +254,7 @@ export function AppSidebar() {
                       }
                       height="12px"
                       rounded="rounded"
-                      className="bg-zinc-800/50"
+                      className="bg-zinc-200/50 dark:bg-zinc-800/50"
                     />
                   </div>
                 ))}
@@ -271,13 +275,13 @@ export function AppSidebar() {
                       className={cn(
                         "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-colors truncate",
                         pathname === `/dashboard/chat/${chat.id}`
-                          ? "bg-zinc-900/80 text-white font-medium shadow-sm"
-                          : "text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200",
+                          ? "bg-zinc-100 dark:bg-zinc-900/80 text-zinc-900! dark:text-white! font-medium shadow-sm"
+                          : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/40 hover:text-zinc-800! dark:hover:text-zinc-200!",
                       )}
                     >
                       <MessageSquare
                         size={14}
-                        className="shrink-0 text-zinc-500 group-hover:text-zinc-400 transition-colors"
+                        className="shrink-0 text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 transition-colors"
                       />
                       <span className="truncate max-w-[170px] tracking-wide">
                         {chat.title}
@@ -291,7 +295,7 @@ export function AppSidebar() {
         ) : null}
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-zinc-900/60 bg-zinc-950">
+      <SidebarFooter className="p-4 border-t border-zinc-200 dark:border-zinc-900/60 bg-white dark:bg-zinc-950">
         {!mounted || sessionPending ? (
           <div className="flex flex-col gap-3 animate-pulse">
             <div className="flex items-center gap-3">
@@ -299,18 +303,18 @@ export function AppSidebar() {
                 width="32px"
                 height="32px"
                 rounded="rounded-full"
-                className="bg-zinc-800 shrink-0"
+                className="bg-zinc-200 dark:bg-zinc-800 shrink-0"
               />
               <div className="flex-1 min-w-0 space-y-1.5">
                 <SkeletonBlock
                   width="60%"
                   height="14px"
-                  className="bg-zinc-800"
+                  className="bg-zinc-200 dark:bg-zinc-800"
                 />
                 <SkeletonBlock
                   width="85%"
                   height="10px"
-                  className="bg-zinc-800/60"
+                  className="bg-zinc-200/60 dark:bg-zinc-800/60"
                 />
               </div>
             </div>
@@ -318,7 +322,7 @@ export function AppSidebar() {
               width="100%"
               height="32px"
               rounded="rounded-xl"
-              className="bg-zinc-900"
+              className="bg-zinc-100 dark:bg-zinc-900"
             />
           </div>
         ) : user ? (
@@ -331,7 +335,7 @@ export function AppSidebar() {
                   height={32}
                   alt={user.name || "Profile"}
                   referrerPolicy="no-referrer"
-                  className="w-8 h-8 rounded-full object-cover border border-zinc-800"
+                  className="w-8 h-8 rounded-full object-cover border border-zinc-200 dark:border-zinc-800"
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-medium text-xs text-white">
@@ -339,7 +343,7 @@ export function AppSidebar() {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">
+                <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">
                   {user.name}
                 </p>
                 <p className="text-xs text-zinc-500 truncate">{user.email}</p>
@@ -348,14 +352,14 @@ export function AppSidebar() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setSettingsOpen(true)}
-                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900/50 hover:bg-zinc-900 border border-zinc-800 hover:border-zinc-700 py-2 rounded-xl transition-all cursor-pointer"
+                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-100/60 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 py-2 rounded-xl transition-all cursor-pointer"
               >
                 <Settings size={13} />
                 <span>Settings</span>
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-red-400 bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all cursor-pointer"
+                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-400 bg-zinc-100/60 dark:bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-200 dark:border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all cursor-pointer"
               >
                 <LogOut size={13} />
                 <span>Log Out</span>
@@ -365,7 +369,7 @@ export function AppSidebar() {
         ) : (
           <Link
             href="/auth/sign-in"
-            className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-850 text-white font-medium py-2.5 px-4 rounded-xl border border-zinc-800 text-sm transition-all"
+            className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-850 text-white! font-medium py-2.5 px-4 rounded-xl border border-zinc-800 text-sm transition-all"
           >
             <User size={15} />
             <span>Sign In</span>

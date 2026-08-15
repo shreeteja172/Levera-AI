@@ -5,13 +5,13 @@ import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full flex flex-col md:flex-row items-center justify-between py-32 px-6 md:px-12 lg:px-24 min-h-[90vh] bg-zinc-950 landing-light:bg-[#EAE7DF] overflow-hidden font-sans">
+    <section className="relative w-full flex flex-col md:flex-row items-center justify-between py-32 px-6 md:px-12 lg:px-24 min-h-[90vh] bg-[#EAE7DF] dark:bg-zinc-950 overflow-hidden font-sans">
       <div className="z-10 flex flex-col items-start max-w-3xl mt-12 md:mt-0 relative">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="text-5xl md:text-7xl font-instrument text-white landing-light:text-zinc-900 leading-[1.1] tracking-tight mb-8"
+          className="text-5xl md:text-7xl font-instrument text-zinc-900 dark:text-white leading-[1.1] tracking-tight mb-8"
         >
           From{" "}
           <span className="bg-gradient-to-r from-[#FF5A1F] to-orange-400 bg-clip-text text-transparent">
@@ -28,7 +28,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          className="text-lg md:text-xl text-zinc-400 landing-light:text-zinc-600 mb-12 max-w-2xl leading-relaxed font-light"
+          className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl leading-relaxed font-light"
         >
           Levera teaches you how to think about algorithms. Get multiple
           solutions, visual dry runs, pattern detection, and interview
@@ -43,7 +43,7 @@ export default function HeroSection() {
         >
           <Link
             href="/auth/sign-up"
-            className="group flex items-center justify-center px-8 py-4 bg-zinc-100 hover:bg-white landing-light:bg-zinc-900 landing-light:hover:bg-zinc-800 text-black! landing-light:text-white! rounded-xl transition-all duration-300 ease-out hover:-translate-y-0.5"
+            className="group flex items-center justify-center px-8 py-4 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white! dark:text-black! rounded-xl transition-all duration-300 ease-out hover:-translate-y-0.5"
           >
             Start Learning Free
             <svg
@@ -62,7 +62,7 @@ export default function HeroSection() {
           </Link>
           <Link
             href="#features"
-            className="flex items-center justify-center px-8 py-4 bg-zinc-900 landing-light:bg-white border border-zinc-800 landing-light:border-black/10 hover:bg-zinc-800 landing-light:hover:bg-black/5 hover:border-zinc-700 landing-light:hover:border-black/20 text-zinc-300! landing-light:text-zinc-700! rounded-xl transition-all duration-300 ease-out"
+            className="flex items-center justify-center px-8 py-4 bg-white dark:bg-zinc-900 border border-black/10 dark:border-zinc-800 hover:bg-black/5 dark:hover:bg-zinc-800 hover:border-black/20 dark:hover:border-zinc-700 text-zinc-700! dark:text-zinc-300! rounded-xl transition-all duration-300 ease-out"
           >
             Explore Features
           </Link>
@@ -74,12 +74,12 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          className="relative z-30 bg-zinc-900 landing-light:bg-white border border-zinc-800 landing-light:border-black/10 rounded-2xl p-6 w-[360px]"
+          className="relative z-30 bg-white dark:bg-zinc-900 border border-black/10 dark:border-zinc-800 rounded-2xl p-6 w-[360px]"
         >
-          <div className="flex items-center justify-between border-b border-zinc-800 landing-light:border-black/10 pb-4 mb-5">
+          <div className="flex items-center justify-between border-b border-black/10 dark:border-zinc-800 pb-4 mb-5">
             <div className="flex items-center gap-2.5">
               <span className="inline-flex rounded-full h-2 w-2 bg-[#FF5A1F]" />
-              <span className="font-bold text-xs uppercase tracking-widest text-zinc-300 landing-light:text-zinc-700">
+              <span className="font-bold text-xs uppercase tracking-widest text-zinc-700 dark:text-zinc-300">
                 Complexity Analysis
               </span>
             </div>
@@ -94,7 +94,7 @@ export default function HeroSection() {
               y1="150"
               x2="290"
               y2="150"
-              className="stroke-zinc-700 landing-light:stroke-zinc-300"
+              className="stroke-zinc-300 dark:stroke-zinc-700"
               strokeWidth="1"
             />
             <line
@@ -102,7 +102,7 @@ export default function HeroSection() {
               y1="150"
               x2="28"
               y2="15"
-              className="stroke-zinc-700 landing-light:stroke-zinc-300"
+              className="stroke-zinc-300 dark:stroke-zinc-700"
               strokeWidth="1"
             />
 
@@ -151,17 +151,17 @@ export default function HeroSection() {
             />
           </svg>
 
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-zinc-800 landing-light:border-black/10">
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-black/10 dark:border-zinc-800">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#FF5A1F] shrink-0" />
-              <span className="text-xs text-zinc-400 landing-light:text-zinc-600">Brute Force</span>
+              <span className="text-xs text-zinc-600 dark:text-zinc-400">Brute Force</span>
               <span className="font-mono text-xs text-[#FF5A1F] font-semibold">
                 O(n&#178;)
               </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#0ea5e9] shrink-0" />
-              <span className="text-xs text-zinc-400 landing-light:text-zinc-600">Optimal</span>
+              <span className="text-xs text-zinc-600 dark:text-zinc-400">Optimal</span>
               <span className="font-mono text-xs text-[#0ea5e9] font-semibold">
                 O(n log n)
               </span>
@@ -173,10 +173,10 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.8, ease: "easeOut" }}
-          className="absolute z-40 bottom-6 -right-2 md:right-0 bg-zinc-950 landing-light:bg-white border border-zinc-800 landing-light:border-black/10 rounded-xl px-4 py-2.5 flex items-center gap-2"
+          className="absolute z-40 bottom-6 -right-2 md:right-0 bg-white dark:bg-zinc-950 border border-black/10 dark:border-zinc-800 rounded-xl px-4 py-2.5 flex items-center gap-2"
         >
           <svg
-            className="w-4 h-4 text-emerald-400 landing-light:text-emerald-500 shrink-0"
+            className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -188,7 +188,7 @@ export default function HeroSection() {
               d="M5 13l4 4L19 7"
             />
           </svg>
-          <span className="text-xs font-medium text-zinc-200 landing-light:text-zinc-700 whitespace-nowrap">
+          <span className="text-xs font-medium text-zinc-700 dark:text-zinc-200 whitespace-nowrap">
             1000x faster at scale
           </span>
         </motion.div>

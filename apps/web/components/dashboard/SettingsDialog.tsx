@@ -66,12 +66,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-zinc-950 border border-zinc-900 text-zinc-100 p-6 rounded-2xl">
+      <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 text-zinc-900 dark:text-zinc-100 p-6 rounded-2xl">
         <DialogHeader className="space-y-2">
-          <DialogTitle className="text-xl font-semibold text-white tracking-tight">
+          <DialogTitle className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight">
             Settings
           </DialogTitle>
-          <DialogDescription className="text-sm text-zinc-400">
+          <DialogDescription className="text-sm text-zinc-500 dark:text-zinc-400">
             Customize your experience on Levera.
           </DialogDescription>
         </DialogHeader>
@@ -104,7 +104,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           <button
             onClick={() => onOpenChange(false)}
             disabled={loading}
-            className="px-4 py-2.5 rounded-xl border border-zinc-850 hover:border-zinc-800 text-zinc-400 hover:text-zinc-200 text-sm font-medium transition cursor-pointer"
+            className="px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 text-sm font-medium transition cursor-pointer"
           >
             Cancel
           </button>

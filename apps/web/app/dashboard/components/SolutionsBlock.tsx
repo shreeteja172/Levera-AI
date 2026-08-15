@@ -108,9 +108,9 @@ export function SolutionsBlock({
 
   return (
     <div
-      className={`w-full my-6 bg-zinc-950/40 border ${colors.border} ${colors.hoverBorder} rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm transition-all duration-300`}
+      className={`w-full my-6 bg-zinc-50 dark:bg-zinc-950/40 border ${colors.border} ${colors.hoverBorder} rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm transition-all duration-300`}
     >
-      <div className="flex border-b border-zinc-900 bg-zinc-950/80 p-2 gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none]">
+      <div className="flex border-b border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950/80 p-2 gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none]">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -129,7 +129,7 @@ export function SolutionsBlock({
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 border cursor-pointer select-none ${
                 isActive
                   ? `${tabColors.activeBg} ${tabColors.text} ${tabColors.border} shadow-lg shadow-black/10 scale-[1.02]`
-                  : "border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/60"
+                  : "border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900/60"
               }`}
             >
               <Icon size={14} />
@@ -146,12 +146,12 @@ export function SolutionsBlock({
         {isCurrentTabLocked ? (
           <div className="relative min-h-[180px] flex items-center justify-center p-6 text-center">
             {showConfirmUnlock ? (
-              <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-5 max-w-sm w-full space-y-4 animate-in zoom-in-95 duration-200">
+              <div className="bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 max-w-sm w-full space-y-4 animate-in zoom-in-95 duration-200">
                 <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 mx-auto">
                   <Lock className="w-4 h-4" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-zinc-200 uppercase tracking-wide">
+                  <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wide">
                     Have you attempted the problem?
                   </p>
                   <p className="text-[10px] text-zinc-500">
@@ -170,7 +170,7 @@ export function SolutionsBlock({
                   </button>
                   <button
                     onClick={() => setShowConfirmUnlock(false)}
-                    className="px-4 py-2 bg-zinc-950 border border-zinc-850 hover:border-zinc-850 text-zinc-450 hover:text-zinc-200 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                    className="px-4 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-850 text-zinc-500 dark:text-zinc-450 hover:text-zinc-800 dark:hover:text-zinc-200 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
                   >
                     Not yet
                   </button>
@@ -178,11 +178,11 @@ export function SolutionsBlock({
               </div>
             ) : (
               <div className="space-y-3 max-w-xs">
-                <div className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-850 flex items-center justify-center text-zinc-550 shadow-lg mx-auto">
+                <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 flex items-center justify-center text-zinc-500 shadow-lg mx-auto">
                   <Lock className="w-4 h-4 text-orange-500" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-zinc-200 uppercase tracking-wider">
+                  <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
                     {activeTabDetails.label} Locked
                   </p>
                   <p className="text-[10px] text-zinc-500 leading-relaxed">
@@ -203,7 +203,7 @@ export function SolutionsBlock({
             )}
           </div>
         ) : (
-          <div className="text-sm prose prose-invert prose-sm max-w-none prose-pre:my-0">
+          <div className="text-sm prose prose-sm dark:prose-invert max-w-none prose-pre:my-0">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={markdownComponents}

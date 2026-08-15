@@ -17,10 +17,10 @@ export function ChatWelcome({
   return (
     <div className="max-w-2xl mx-auto h-full flex flex-col justify-center items-center text-center space-y-6 py-12 animate-in fade-in duration-300">
       <div className="space-y-3">
-        <h1 className="text-4xl md:text-5xl font-medium tracking-tight text-zinc-100">
+        <h1 className="text-4xl md:text-5xl font-medium tracking-tight text-zinc-900 dark:text-zinc-100">
           {greeting}, {displayName}.
         </h1>
-        <p className="text-sm text-zinc-400 max-w-md mx-auto">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
           How can Levera AI help you today? Ask about DSA concepts, code solutions, or complexity analysis.
         </p>
       </div>
@@ -37,12 +37,12 @@ export function ChatWelcome({
           <button
             key={suggestion}
             onClick={() => onSelectSuggestion(suggestion)}
-            className="flex items-center justify-between p-4 rounded-xl border border-zinc-900 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-zinc-800 text-left text-xs text-zinc-300 transition-all duration-200 cursor-pointer"
+            className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-900 bg-zinc-100/50 dark:bg-zinc-900/30 hover:bg-zinc-100 dark:hover:bg-zinc-900/60 hover:border-zinc-300 dark:hover:border-zinc-800 text-left text-xs text-zinc-700 dark:text-zinc-300 transition-all duration-200 cursor-pointer"
           >
             <span>{suggestion}</span>
             <ArrowRight
               size={14}
-              className="text-zinc-600 group-hover:text-zinc-400 shrink-0 ml-2"
+              className="text-zinc-500 dark:text-zinc-600 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 shrink-0 ml-2"
             />
           </button>
         ))}

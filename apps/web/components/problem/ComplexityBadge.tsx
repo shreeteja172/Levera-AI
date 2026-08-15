@@ -13,23 +13,23 @@ export function ComplexityBadge({ time, space, language, variant }: ComplexityBa
     switch (variant) {
       case "brute":
         return {
-          timeBg: "bg-red-950/30 text-red-400 border-red-900/30",
-          spaceBg: "bg-zinc-900/50 text-zinc-400 border-zinc-800",
+          timeBg: "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900/30",
+          spaceBg: "bg-zinc-100/60 dark:bg-zinc-900/50 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
         };
       case "better":
         return {
-          timeBg: "bg-amber-950/30 text-amber-400 border-amber-900/30",
-          spaceBg: "bg-zinc-900/50 text-zinc-400 border-zinc-800",
+          timeBg: "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
+          spaceBg: "bg-zinc-100/60 dark:bg-zinc-900/50 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
         };
       case "optimal":
         return {
-          timeBg: "bg-emerald-950/30 text-emerald-400 border-emerald-900/30",
-          spaceBg: "bg-zinc-900/50 text-zinc-400 border-zinc-800",
+          timeBg: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30",
+          spaceBg: "bg-zinc-100/60 dark:bg-zinc-900/50 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
         };
       default:
         return {
-          timeBg: "bg-zinc-900/50 text-zinc-300 border-zinc-800",
-          spaceBg: "bg-zinc-900/50 text-zinc-300 border-zinc-800",
+          timeBg: "bg-zinc-100/60 dark:bg-zinc-900/50 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800",
+          spaceBg: "bg-zinc-100/60 dark:bg-zinc-900/50 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800",
         };
     }
   };
@@ -51,7 +51,7 @@ export function ComplexityBadge({ time, space, language, variant }: ComplexityBa
         </span>
       )}
       {language && (
-        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 text-zinc-300 border border-zinc-800 rounded-lg font-mono font-semibold tracking-wide uppercase">
+        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-lg font-mono font-semibold tracking-wide uppercase">
           <Terminal className="w-3.5 h-3.5 shrink-0 opacity-80" />
           <span>{language}</span>
         </span>

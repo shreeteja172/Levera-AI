@@ -5,6 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Toaster } from "react-hot-toast";
 import Providers from "./providers";
+import { ThemeProvider } from "@/components/theme-context";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -37,13 +38,16 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn("dark font-sans", exo2.variable, tiemposText.variable)}
+      suppressHydrationWarning
     >
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} ${exo2.variable} ${tiemposText.variable} font-sans`}
       >
-        <Providers>
-          {children}
-        </Providers>
+        <ThemeProvider>
+          <Providers>
+            {children}
+          </Providers>
+        </ThemeProvider>
         <Toaster
           position="top-right"
           toastOptions={{

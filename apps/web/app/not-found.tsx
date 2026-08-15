@@ -213,7 +213,7 @@ export default function NotFound() {
             {!isPending && session?.user ? (
               <Link
                 href="/dashboard"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl transition-all duration-300 ease-out"
+                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300! rounded-xl transition-all duration-300 ease-out"
               >
                 <LayoutDashboard size={17} />
                 Go to Dashboard
@@ -221,7 +221,7 @@ export default function NotFound() {
             ) : (
               <Link
                 href="/auth/sign-in"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 rounded-xl transition-all duration-300 ease-out"
+                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300! rounded-xl transition-all duration-300 ease-out"
               >
                 Sign In
               </Link>

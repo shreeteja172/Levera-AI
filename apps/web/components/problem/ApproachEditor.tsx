@@ -70,15 +70,15 @@ export function ApproachEditor({ problemId, initialValue, noteType = "notes" }: 
   };
 
   return (
-    <div className="w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden shadow-2xl flex flex-col min-h-[14rem]">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-900 bg-zinc-950/80 select-none">
+    <div className="w-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-xl overflow-hidden shadow-2xl flex flex-col min-h-[14rem]">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-200 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-950/80 select-none">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab("write")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer ${
               activeTab === "write"
-                ? "bg-zinc-900 border border-zinc-800 text-white"
-                : "text-zinc-500 hover:text-zinc-300"
+                ? "bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
+                : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
             }`}
           >
             <Edit3 size={13} />
@@ -88,8 +88,8 @@ export function ApproachEditor({ problemId, initialValue, noteType = "notes" }: 
             onClick={() => setActiveTab("preview")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer ${
               activeTab === "preview"
-                ? "bg-zinc-900 border border-zinc-800 text-white"
-                : "text-zinc-500 hover:text-zinc-300"
+                ? "bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
+                : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
             }`}
           >
             <Eye size={13} />
@@ -131,14 +131,14 @@ export function ApproachEditor({ problemId, initialValue, noteType = "notes" }: 
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder={getPlaceholder()}
-            className="flex-1 w-full bg-zinc-950/40 text-zinc-300 placeholder-zinc-600 p-4 border-none outline-none focus:ring-0 text-sm font-sans resize-y min-h-[10rem] custom-scrollbar focus:outline-none"
+            className="flex-1 w-full bg-white dark:bg-zinc-950/40 text-zinc-800 dark:text-zinc-300 placeholder-zinc-400 dark:placeholder-zinc-600 p-4 border-none outline-none focus:ring-0 text-sm font-sans resize-y min-h-[10rem] custom-scrollbar focus:outline-none"
           />
         ) : (
-          <div className="flex-1 p-4 bg-zinc-950/20 prose prose-invert max-w-none text-zinc-300 text-sm overflow-y-auto min-h-[10rem]">
+          <div className="flex-1 p-4 bg-zinc-50 dark:bg-zinc-950/20 prose prose-sm dark:prose-invert max-w-none text-zinc-700 dark:text-zinc-300 text-sm overflow-y-auto min-h-[10rem]">
             {value.trim() ? (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
             ) : (
-              <p className="text-zinc-600 italic select-none">Nothing to preview yet.</p>
+              <p className="text-zinc-400 dark:text-zinc-600 italic select-none">Nothing to preview yet.</p>
             )}
           </div>
         )}

@@ -63,7 +63,7 @@ export function ChatInput({
 
   return (
     <div
-      className={`w-full ${className} mx-auto relative flex flex-col bg-zinc-900 border border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl`}
+      className={`w-full ${className} mx-auto relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-300 dark:focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl`}
     >
       <textarea
         ref={textareaRef}
@@ -88,9 +88,9 @@ export function ChatInput({
             : "Type a message or paste a DSA problem description..."
         }
         rows={1}
-        className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-200 placeholder-zinc-500 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-500 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
       />
-      <div className="flex items-center justify-between border-t border-zinc-850/50 mt-1 pt-2 px-2">
+      <div className="flex items-center justify-between border-t border-zinc-200/70 dark:border-zinc-850/50 mt-1 pt-2 px-2">
         <div className="flex items-center gap-2">
           <ModelSelector
             open={isModelSelectorOpen}
@@ -104,7 +104,7 @@ export function ChatInput({
                   disabled={
                     !mounted || chatLoading || loading || sessionPending
                   }
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-850 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white text-xs transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-700 bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white text-xs transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ModelSelectorLogo
                     provider={selectedModel.logoProvider}
@@ -128,7 +128,7 @@ export function ChatInput({
                         setSelectedModel(model);
                         setIsModelSelectorOpen(false);
                       }}
-                      className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md hover:bg-zinc-900/60 transition-colors text-zinc-300 hover:text-white data-[selected=true]:bg-zinc-900/80 data-[selected=true]:text-white"
+                      className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900/60 transition-colors text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white data-[selected=true]:bg-zinc-100 dark:data-[selected=true]:bg-zinc-900/80 data-[selected=true]:text-zinc-900 dark:data-[selected=true]:text-white"
                     >
                       <ModelSelectorLogo
                         provider={model.logoProvider}
@@ -148,8 +148,8 @@ export function ChatInput({
               onClick={() => onToggleHintMode(!hintMode)}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${
                 hintMode
-                  ? "bg-orange-500/10 border-orange-500/30 text-orange-400 hover:bg-orange-500/15 hover:border-orange-500/40 shadow-sm shadow-orange-500/5 scale-102 hover:scale-105"
-                  : "bg-zinc-950 border-zinc-850 hover:border-zinc-700 text-zinc-550 hover:text-zinc-300 hover:scale-[1.01]"
+                  ? "bg-orange-500/10 border-orange-500/30 text-orange-600 dark:text-orange-400 hover:bg-orange-500/15 hover:border-orange-500/40 shadow-sm shadow-orange-500/5 scale-102 hover:scale-105"
+                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-700 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:scale-[1.01]"
               }`}
               title="Progressive Hint Mode: Unlocks clues step-by-step instead of showing code solutions immediately."
             >
@@ -157,8 +157,8 @@ export function ChatInput({
                 size={13.5}
                 className={
                   hintMode
-                    ? "fill-orange-500/20 text-orange-400 animate-pulse"
-                    : "text-zinc-550"
+                    ? "fill-orange-500/20 text-orange-600 dark:text-orange-400 animate-pulse"
+                    : "text-zinc-500"
                 }
               />
               <span className="hidden sm:inline font-semibold">

@@ -45,12 +45,12 @@ export function OnboardingLanguageModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-zinc-950 border border-zinc-900 text-zinc-100 p-6 rounded-2xl">
+      <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 text-zinc-900 dark:text-zinc-100 p-6 rounded-2xl">
         <DialogHeader className="space-y-2">
-          <DialogTitle className="text-xl font-semibold text-white tracking-tight">
+          <DialogTitle className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight">
             Choose Preferred Language
           </DialogTitle>
-          <DialogDescription className="text-sm text-zinc-400">
+          <DialogDescription className="text-sm text-zinc-500 dark:text-zinc-400">
             Select your programming language. Levera AI will generate code
             examples in this language.
           </DialogDescription>
@@ -62,7 +62,7 @@ export function OnboardingLanguageModal({
               key={lang.value}
               disabled={loading}
               onClick={() => handleSelectLanguage(lang.value)}
-              className="flex items-center justify-center p-3 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-orange-500/10 hover:border-orange-500/30 text-zinc-300 hover:text-white transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex items-center justify-center p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 hover:bg-orange-500/10 hover:border-orange-500/30 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {lang.label}
             </button>

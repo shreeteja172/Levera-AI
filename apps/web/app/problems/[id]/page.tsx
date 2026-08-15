@@ -72,18 +72,18 @@ export default function ProblemPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
-        <div className="h-16 border-b border-zinc-900 flex items-center px-6 bg-zinc-950/50">
-          <div className="h-6 w-32 bg-zinc-900 rounded animate-pulse" />
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col">
+        <div className="h-16 border-b border-zinc-200 dark:border-zinc-900 flex items-center px-6 bg-white/50 dark:bg-zinc-950/50">
+          <div className="h-6 w-32 bg-zinc-200 dark:bg-zinc-900 rounded animate-pulse" />
         </div>
         <div className="flex-1 max-w-4xl w-full mx-auto p-6 md:p-8 space-y-8 animate-pulse">
-          <div className="h-4 w-16 bg-zinc-900 rounded" />
+          <div className="h-4 w-16 bg-zinc-200 dark:bg-zinc-900 rounded" />
           <div className="space-y-3">
-            <div className="h-10 w-2/3 bg-zinc-900 rounded-lg" />
-            <div className="h-5 w-1/3 bg-zinc-900 rounded" />
+            <div className="h-10 w-2/3 bg-zinc-200 dark:bg-zinc-900 rounded-lg" />
+            <div className="h-5 w-1/3 bg-zinc-200 dark:bg-zinc-900 rounded" />
           </div>
-          <div className="h-12 w-full bg-zinc-900 rounded-xl" />
-          <div className="h-64 w-full bg-zinc-900 rounded-2xl" />
+          <div className="h-12 w-full bg-zinc-200 dark:bg-zinc-900 rounded-xl" />
+          <div className="h-64 w-full bg-zinc-200 dark:bg-zinc-900 rounded-2xl" />
         </div>
       </div>
     );
@@ -91,11 +91,11 @@ export default function ProblemPage() {
 
   if (!problem) {
     return (
-      <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center flex-col gap-4">
-        <p className="text-zinc-400">Problem not found.</p>
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center flex-col gap-4">
+        <p className="text-zinc-500 dark:text-zinc-400">Problem not found.</p>
         <button
           onClick={() => router.push("/problems")}
-          className="flex items-center gap-2 bg-zinc-900 hover:bg-zinc-850 px-4 py-2 border border-zinc-800 rounded-xl transition-all cursor-pointer"
+          className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-850 px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl transition-all cursor-pointer"
         >
           <ArrowLeft size={16} /> Back to Problems
         </button>

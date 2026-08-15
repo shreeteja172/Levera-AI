@@ -27,14 +27,14 @@ export default function TestimonialsFAQSection() {
   return (
     <section
       id="faq"
-      className="py-32 px-6 md:px-12 lg:px-24 bg-zinc-950 landing-light:bg-[#EAE7DF] font-sans relative overflow-hidden"
+      className="py-32 px-6 md:px-12 lg:px-24 bg-[#EAE7DF] dark:bg-zinc-950 font-sans relative overflow-hidden"
     >
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-instrument text-white landing-light:text-zinc-900 tracking-tight mb-6">
+          <h2 className="text-4xl md:text-6xl font-instrument text-zinc-900 dark:text-white tracking-tight mb-6">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg md:text-xl text-zinc-400 landing-light:text-zinc-600 font-light">
+          <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 font-light">
             Everything you need to know about Levera.
           </p>
         </div>
@@ -45,19 +45,19 @@ export default function TestimonialsFAQSection() {
             return (
               <div
                 key={index}
-                className={`bg-zinc-900/40 landing-light:bg-white border ${isOpen ? "border-zinc-700 landing-light:border-black/20" : "border-zinc-800/50 landing-light:border-black/10"} rounded-2xl overflow-hidden transition-all duration-300 hover:border-zinc-700 landing-light:hover:border-black/20 group`}
+                className={`bg-white dark:bg-zinc-900/40 border ${isOpen ? "border-black/20 dark:border-zinc-700" : "border-black/10 dark:border-zinc-800/50"} rounded-2xl overflow-hidden transition-all duration-300 hover:border-black/20 dark:hover:border-zinc-700 group`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none"
                 >
                   <span
-                    className={`font-semibold text-lg md:text-xl transition-colors ${isOpen ? "text-white! landing-light:text-black!" : "text-zinc-300! landing-light:text-zinc-700! group-hover:text-zinc-100! landing-light:group-hover:text-zinc-900!"}`}
+                    className={`font-semibold text-lg md:text-xl transition-colors ${isOpen ? "text-black! dark:text-white!" : "text-zinc-700! dark:text-zinc-300! group-hover:text-zinc-900! dark:group-hover:text-zinc-100!"}`}
                   >
                     {faq.question}
                   </span>
                   <span
-                    className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? "bg-[#FF5A1F] border-[#FF5A1F] text-white! rotate-45" : "border-zinc-700 landing-light:border-black/20 text-zinc-400! landing-light:text-zinc-500! group-hover:border-zinc-500 landing-light:group-hover:border-black/30 group-hover:text-zinc-300! landing-light:group-hover:text-zinc-700!"}`}
+                    className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? "bg-[#FF5A1F] border-[#FF5A1F] text-white! rotate-45" : "border-black/20 dark:border-zinc-700 text-zinc-500! dark:text-zinc-400! group-hover:border-black/30 dark:group-hover:border-zinc-500 group-hover:text-zinc-700! dark:group-hover:text-zinc-300!"}`}
                   >
                     <svg
                       className="w-4 h-4"
@@ -82,7 +82,7 @@ export default function TestimonialsFAQSection() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                      <div className="px-8 pb-8 text-zinc-400 landing-light:text-zinc-600 text-lg leading-relaxed font-light">
+                      <div className="px-8 pb-8 text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed font-light">
                         {faq.answer}
                       </div>
                     </motion.div>

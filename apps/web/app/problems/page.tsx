@@ -66,17 +66,17 @@ export default function ProblemsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
-      <header className="h-16 border-b border-zinc-900 flex items-center justify-between px-6 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col">
+      <header className="h-16 border-b border-zinc-200 dark:border-zinc-900 flex items-center justify-between px-6 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-zinc-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-zinc-900 border border-zinc-900 hover:border-zinc-800 text-xs font-semibold tracking-wide transition-all cursor-pointer"
+            className="flex items-center gap-2 text-zinc-500! dark:text-zinc-400! hover:text-zinc-900! dark:hover:text-white! px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-800 text-xs font-semibold tracking-wide transition-all cursor-pointer"
           >
             <MessageSquare size={13} className="text-orange-500" />
             <span>Go to Chatbot</span>
           </Link>
-          <div className="h-4 w-px bg-zinc-800" />
+          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800" />
           <div className="flex items-center gap-2">
             <BookOpen size={18} className="text-orange-500" />
             <span className="font-semibold text-sm tracking-wide">
@@ -89,10 +89,10 @@ export default function ProblemsPage() {
       <main className="flex-1 max-w-5xl w-full mx-auto p-6 md:p-8 space-y-8 animate-in fade-in duration-300">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold font-sans tracking-tight text-white flex items-center gap-2">
+            <h1 className="text-3xl font-bold font-sans tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
               Saved Problems
             </h1>
-            <p className="text-sm text-zinc-400 mt-1">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
               Your personalized, AI-curated DSA notebook. Learn from your
               mistakes and track optimal solutions.
             </p>
@@ -110,19 +110,19 @@ export default function ProblemsPage() {
               placeholder="Search problems by title or language..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-zinc-900/60 border border-zinc-850 hover:border-zinc-800 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20 rounded-xl py-2.5 pl-10 pr-4 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-500"
+              className="w-full bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-800 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20 rounded-xl py-2.5 pl-10 pr-4 text-sm text-zinc-900 dark:text-zinc-200 outline-none transition-all placeholder:text-zinc-500"
             />
           </div>
 
-          <div className="flex items-center gap-1 bg-zinc-900/30 p-1 border border-zinc-900 rounded-xl w-full sm:w-auto">
+          <div className="flex items-center gap-1 bg-zinc-100/60 dark:bg-zinc-900/30 p-1 border border-zinc-200 dark:border-zinc-900 rounded-xl w-full sm:w-auto">
             {(["all", "due", "upcoming"] as const).map((opt) => (
               <button
                 key={opt}
                 onClick={() => setFilter(opt)}
                 className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer text-center ${
                   filter === opt
-                    ? "bg-zinc-900 text-white border border-zinc-800"
-                    : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                    ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-800"
+                    : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 border border-transparent"
                 }`}
               >
                 {opt === "all"
@@ -140,14 +140,14 @@ export default function ProblemsPage() {
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="border border-zinc-900 bg-zinc-900/10 rounded-2xl p-5 space-y-4 animate-pulse"
+                className="border border-zinc-200 dark:border-zinc-900 bg-zinc-100/40 dark:bg-zinc-900/10 rounded-2xl p-5 space-y-4 animate-pulse"
               >
-                <div className="h-6 w-2/3 bg-zinc-900 rounded-lg" />
-                <div className="h-4 w-1/4 bg-zinc-900 rounded" />
+                <div className="h-6 w-2/3 bg-zinc-200 dark:bg-zinc-900 rounded-lg" />
+                <div className="h-4 w-1/4 bg-zinc-200 dark:bg-zinc-900 rounded" />
                 <div className="flex gap-2">
-                  <div className="h-6 w-14 bg-zinc-900 rounded-full" />
-                  <div className="h-6 w-14 bg-zinc-900 rounded-full" />
-                  <div className="h-6 w-14 bg-zinc-900 rounded-full" />
+                  <div className="h-6 w-14 bg-zinc-200 dark:bg-zinc-900 rounded-full" />
+                  <div className="h-6 w-14 bg-zinc-200 dark:bg-zinc-900 rounded-full" />
+                  <div className="h-6 w-14 bg-zinc-200 dark:bg-zinc-900 rounded-full" />
                 </div>
               </div>
             ))}
@@ -160,19 +160,19 @@ export default function ProblemsPage() {
                 href={`/problems/${sp.id}`}
                 className="group block"
               >
-                <div className="h-full bg-zinc-900/20 hover:bg-zinc-900/40 border border-zinc-900 hover:border-zinc-800/80 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 shadow-lg hover:shadow-black/20 hover:-translate-y-[2px]">
+                <div className="h-full bg-zinc-50/60 dark:bg-zinc-900/20 hover:bg-zinc-100 dark:hover:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-800/80 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 shadow-lg hover:shadow-black/20 hover:-translate-y-[2px]">
                   <div className="space-y-3.5">
                     <div className="flex items-start justify-between gap-4">
-                      <h2 className="text-lg font-semibold text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
+                      <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors line-clamp-1">
                         {sp.problem?.title || "Unknown Problem"}
                       </h2>
                     </div>
 
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+                      <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                         <Code2 size={13} className="text-zinc-500" />
                         <span>Language:</span>
-                        <span className="font-mono bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800 text-zinc-300">
+                        <span className="font-mono bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
                           {sp.language?.toUpperCase()}
                         </span>
                       </div>
@@ -205,7 +205,7 @@ export default function ProblemsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-zinc-900/50">
+                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-zinc-200/70 dark:border-zinc-900/50">
                     <div className="flex items-center gap-3">
                       <div className="flex gap-2">
                         {!!sp.brute && (
@@ -232,7 +232,7 @@ export default function ProblemsPage() {
                       )}
                     </div>
 
-                    <span className="text-xs text-zinc-500 group-hover:text-zinc-300 flex items-center gap-0.5 transition-colors font-medium">
+                    <span className="text-xs text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 flex items-center gap-0.5 transition-colors font-medium">
                       View details
                       <ChevronRight
                         size={14}
@@ -245,11 +245,11 @@ export default function ProblemsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center border border-dashed border-zinc-800 bg-zinc-900/5 rounded-3xl p-12 text-center max-w-lg mx-auto mt-8">
-            <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 mb-4">
+          <div className="flex flex-col items-center justify-center border border-dashed border-zinc-300 dark:border-zinc-800 bg-zinc-100/30 dark:bg-zinc-900/5 rounded-3xl p-12 text-center max-w-lg mx-auto mt-8">
+            <div className="w-12 h-12 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 mb-4">
               <BookOpen size={22} />
             </div>
-            <h3 className="text-lg font-semibold text-zinc-200">
+            <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
               {searchQuery
                 ? "No problems match your search"
                 : "No saved problems yet"}
@@ -262,7 +262,7 @@ export default function ProblemsPage() {
             {!searchQuery && (
               <Link
                 href="/dashboard"
-                className="mt-6 inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-medium text-sm px-4.5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-orange-500/20"
+                className="mt-6 inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white! font-medium text-sm px-4.5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-orange-500/20"
               >
                 <MessageSquare size={15} />
                 Ask Levera AI

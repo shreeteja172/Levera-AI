@@ -15,7 +15,7 @@ export function SkeletonBlock({
 }: SkeletonBlockProps) {
   return (
     <div
-      className={cn("animate-pulse bg-zinc-800/60", rounded, className)}
+      className={cn("animate-pulse bg-zinc-200/60 dark:bg-zinc-800/60", rounded, className)}
       style={{ width, height }}
     />
   );

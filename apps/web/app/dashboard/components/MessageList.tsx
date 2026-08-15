@@ -150,7 +150,7 @@ export function MessageList({
         <div className="max-w-3xl mx-auto space-y-6 animate-pulse">
           <div className="flex flex-col items-end">
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="flex flex-col items-end gap-2 bg-zinc-900 border border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-64">
+              <div className="flex flex-col items-end gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-64">
                 <SkeletonBlock
                   width="100%"
                   height="14px"
@@ -175,7 +175,7 @@ export function MessageList({
                 rounded="rounded-full"
                 className="shrink-0"
               />
-              <div className="flex-1 space-y-2.5 bg-zinc-900/20 border border-zinc-900 rounded-2xl rounded-bl-none p-5">
+              <div className="flex-1 space-y-2.5 bg-zinc-100/40 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-900 rounded-2xl rounded-bl-none p-5">
                 <SkeletonBlock width="80%" height="14px" rounded="rounded-md" />
                 <SkeletonBlock width="95%" height="14px" rounded="rounded-md" />
                 <SkeletonBlock width="45%" height="14px" rounded="rounded-md" />
@@ -185,7 +185,7 @@ export function MessageList({
 
           <div className="flex flex-col items-end">
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="flex flex-col items-end gap-2 bg-zinc-900 border border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-80">
+              <div className="flex flex-col items-end gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-80">
                 <SkeletonBlock
                   width="100%"
                   height="14px"
@@ -211,32 +211,32 @@ export function MessageList({
               width="320px"
               height="40px"
               rounded="rounded-lg"
-              className="bg-zinc-800"
+              className="bg-zinc-200 dark:bg-zinc-800"
             />
             <SkeletonBlock
               width="440px"
               height="16px"
               rounded="rounded-lg"
-              className="bg-zinc-800/60"
+              className="bg-zinc-200/60 dark:bg-zinc-800/60"
             />
           </div>
 
           <div className="w-full max-w-3xl">
-            <div className="w-full h-24 bg-zinc-900/50 border border-zinc-850 rounded-2xl p-4 flex flex-col justify-between">
+            <div className="w-full h-24 bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-850 rounded-2xl p-4 flex flex-col justify-between">
               <SkeletonBlock
                 width="40%"
                 height="14px"
                 rounded="rounded-md"
-                className="bg-zinc-800"
+                className="bg-zinc-200 dark:bg-zinc-800"
               />
-              <div className="flex justify-between items-center pt-2 border-t border-zinc-850/50">
+              <div className="flex justify-between items-center pt-2 border-t border-zinc-200/50 dark:border-zinc-850/50">
                 <SkeletonBlock
                   width="120px"
                   height="24px"
                   rounded="rounded-lg"
-                  className="bg-zinc-800"
+                  className="bg-zinc-200 dark:bg-zinc-800"
                 />
-                <div className="w-9 h-9 rounded-xl bg-zinc-850" />
+                <div className="w-9 h-9 rounded-xl bg-zinc-200 dark:bg-zinc-850" />
               </div>
             </div>
           </div>
@@ -245,15 +245,15 @@ export function MessageList({
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between p-4 rounded-xl border border-zinc-900 bg-zinc-900/10 h-12"
+                className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-900 bg-zinc-100/30 dark:bg-zinc-900/10 h-12"
               >
                 <SkeletonBlock
                   width="75%"
                   height="12px"
                   rounded="rounded-md"
-                  className="bg-zinc-800/60"
+                  className="bg-zinc-200/60 dark:bg-zinc-800/60"
                 />
-                <div className="w-3.5 h-3.5 rounded bg-zinc-800 shrink-0" />
+                <div className="w-3.5 h-3.5 rounded bg-zinc-200 dark:bg-zinc-800 shrink-0" />
               </div>
             ))}
           </div>
@@ -287,8 +287,8 @@ export function MessageList({
             <div
               className={`rounded-2xl px-5 py-3.5 text-sm ${
                 msg.role === "user"
-                  ? "max-w-[85%] bg-zinc-900 border border-zinc-850 text-white rounded-br-none"
-                  : "w-full max-w-[90%] bg-zinc-900/40 border border-zinc-900 text-zinc-100 rounded-bl-none prose prose-invert prose-sm"
+                  ? "max-w-[85%] bg-zinc-900 dark:bg-zinc-900 border border-zinc-800 dark:border-zinc-850 text-white rounded-br-none"
+                  : "w-full max-w-[90%] bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-900 text-zinc-900 dark:text-zinc-100 rounded-bl-none prose prose-sm dark:prose-invert"
               }`}
             >
               {msg.role === "assistant" ? (
@@ -374,12 +374,12 @@ export function MessageList({
                           !solutionsStarted &&
                           isLastMessage &&
                           chatLoading && (
-                            <div className="w-full my-6 bg-[#001524]/20 border border-[#15616d]/20 rounded-2xl p-5 space-y-4 animate-pulse">
+                            <div className="w-full my-6 bg-[#001524]/5 dark:bg-[#001524]/20 border border-[#15616d]/20 rounded-2xl p-5 space-y-4 animate-pulse">
                               <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 bg-zinc-800 rounded-full" />
-                                <div className="h-3 w-32 bg-zinc-800 rounded" />
+                                <div className="h-4 w-4 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+                                <div className="h-3 w-32 bg-zinc-200 dark:bg-zinc-800 rounded" />
                               </div>
-                              <div className="h-24 bg-zinc-900/40 rounded-xl flex items-center justify-center">
+                              <div className="h-24 bg-zinc-100/60 dark:bg-zinc-900/40 rounded-xl flex items-center justify-center">
                                 <span className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase font-mono animate-pulse">
                                   AI is formulating solutions approaches...
                                 </span>
@@ -409,8 +409,8 @@ export function MessageList({
                     disabled={isSaved}
                     className={`mt-2.5 text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
                       isSaved
-                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 cursor-default font-medium"
-                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-850 cursor-pointer"
+                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 cursor-default font-medium"
+                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-850 cursor-pointer"
                     }`}
                   >
                     {isSaved ? (
@@ -434,7 +434,7 @@ export function MessageList({
 
       {isThinking && (
         <div className="flex flex-col items-start">
-          <div className="rounded-2xl rounded-bl-none px-5 py-3.5 bg-zinc-900/40 border border-zinc-900 flex items-center gap-2">
+          <div className="rounded-2xl rounded-bl-none px-5 py-3.5 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-900 flex items-center gap-2">
             <div
               className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce"
               style={{ animationDelay: "0ms" }}

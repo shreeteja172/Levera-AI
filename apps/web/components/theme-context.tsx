@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "dark" | "light";
 
-const STORAGE_KEY = "levera_landing_theme";
+const STORAGE_KEY = "levera_theme";
 
 const ThemeContext = createContext<{
   theme: Theme;
@@ -16,11 +16,7 @@ const ThemeContext = createContext<{
   toggleTheme: () => {},
 });
 
-export function LandingThemeProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
@@ -29,6 +25,10 @@ export function LandingThemeProvider({
       setTheme(stored);
     }
   }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   const toggleTheme = () => {
     setTheme((prev) => {
@@ -41,25 +41,19 @@ export function LandingThemeProvider({
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <Script
-        id="landing-theme-init"
+        id="theme-init"
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: `try{var t=localStorage.getItem(${JSON.stringify(
             STORAGE_KEY,
-          )});var el=document.getElementById("landing-theme-root");if(el&&t==="light"){el.classList.add("landing-light");}}catch(e){}`,
+          )});if(t==="light"){document.documentElement.classList.remove("dark");}}catch(e){}`,
         }}
       />
-      <div
-        id="landing-theme-root"
-        className={theme === "light" ? "landing-light" : ""}
-        suppressHydrationWarning
-      >
-        {children}
-      </div>
+      {children}
     </ThemeContext.Provider>
   );
 }
 
-export function useLandingTheme() {
+export function useTheme() {
   return useContext(ThemeContext);
 }
