@@ -140,9 +140,6 @@ a {
     font-family: var(--font-sans) !important;
     font-weight: normal !important;
   }
-  :is(.text-xs, [class*="text-[9px]"], [class*="text-[10px]"], [class*="text-[11px]"], [class*="text-[12px]"]):not(code, pre, kbd, code *, pre *, kbd *) {
-    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-  }
   code, pre, kbd, samp, .font-mono, code *, pre * {
     font-family: var(--font-geist-mono), ui-monospace, monospace !important;
   }

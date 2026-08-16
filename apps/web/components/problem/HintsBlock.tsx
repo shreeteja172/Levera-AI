@@ -285,7 +285,7 @@ export function HintsBlock({
         </div>
 
         <div className="bg-zinc-50/80 dark:bg-zinc-900/40 px-5 sm:px-6 py-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
-          <div className="text-xs text-zinc-500 dark:text-zinc-400 font-medium font-mono tracking-tight">
+          <div className="text-xs text-zinc-500 dark:text-zinc-400 tracking-tight">
             Hint {viewingLevel} of {HINT_STEPS.length}
           </div>
 

@@ -286,7 +286,7 @@ export default function RecentChatsPage() {
                           {chat.title}
                         </h3>
                       </div>
-                      <span className="text-[10px] bg-zinc-100 dark:bg-zinc-900 text-zinc-500 border border-zinc-200 dark:border-zinc-800/80 px-2 py-0.5 rounded font-mono">
+                      <span className="text-[10px] bg-zinc-100 dark:bg-zinc-900 text-zinc-500 border border-zinc-200 dark:border-zinc-800/80 px-2 py-0.5 rounded">
                         {chat.messages.length} msgs
                       </span>
                     </div>

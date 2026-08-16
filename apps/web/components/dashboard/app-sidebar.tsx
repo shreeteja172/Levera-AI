@@ -28,6 +28,7 @@ import {
   PanelLeft,
   Settings,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { SettingsDialog } from "@/components/dashboard/SettingsDialog";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
@@ -45,6 +46,61 @@ interface ChatSession {
   title: string;
   messages: ChatMessage[];
   createdAt: number;
+}
+
+const GROUP_LABEL =
+  "text-[10px] tracking-[0.18em] uppercase text-zinc-400 dark:text-zinc-600 px-3";
+
+const navItems: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: "/dashboard", label: "Levera AI", icon: MessageSquare },
+  { href: "/problems", label: "Problems", icon: BookOpen },
+  { href: "/dashboard/recent-chats", label: "Recent Chats", icon: History },
+];
+
+function NavRow({
+  href,
+  label,
+  icon: Icon,
+  active,
+  compact,
+}: {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  active: boolean;
+  compact?: boolean;
+}) {
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        render={<Link href={href} />}
+        isActive={active}
+        className={cn(
+          "group relative w-full flex items-center gap-3 rounded-lg transition-colors duration-200",
+          compact ? "px-3 py-2 text-[13px]" : "px-3 py-2 text-sm",
+          active
+            ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900! dark:text-white!"
+            : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/50 hover:text-zinc-900! dark:hover:text-zinc-200!",
+        )}
+      >
+        <span
+          className={cn(
+            "absolute left-0 top-1/2 -translate-y-1/2 w-[2px] rounded-r-full bg-[#FF5A1F] transition-all duration-200",
+            active ? "h-4 opacity-100" : "h-0 opacity-0",
+          )}
+          aria-hidden="true"
+        />
+        <Icon
+          size={compact ? 14 : 16}
+          className={cn(
+            "shrink-0 transition-colors",
+            active ? "text-[#FF5A1F]" : "text-zinc-400 dark:text-zinc-600",
+          )}
+        />
+        <span className="truncate">{label}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
 }
 
 export function AppSidebar() {
@@ -122,118 +178,90 @@ export function AppSidebar() {
     router.push("/auth/sign-in");
   };
 
+  const isChatHome =
+    pathname === "/dashboard" || pathname.startsWith("/dashboard/chat/");
+
   return (
-    <Sidebar className="border-r border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-200">
-      <SidebarHeader className="p-4 flex flex-row items-center justify-between border-b border-zinc-200 dark:border-zinc-900/60 bg-white dark:bg-zinc-950">
+    <Sidebar className="border-r border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-200">
+      <SidebarHeader className="h-16 px-4 flex flex-row items-center justify-between border-b border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-950">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 font-medium text-lg text-zinc-900! dark:text-white!"
+          className="flex items-center gap-2.5 text-zinc-900! dark:text-white!"
         >
           <svg
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2.5"
-            className="text-orange-500"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-[#FF5A1F]"
+            aria-hidden="true"
           >
             <polyline points="16 18 22 12 16 6" />
             <polyline points="8 6 2 12 8 18" />
             <circle cx="12" cy="12" r="2" fill="currentColor" />
           </svg>
-          <span className="tracking-tight">Levera</span>
+          <span className="font-instrument text-lg tracking-tight">Levera</span>
         </Link>
         <div className="flex items-center gap-1">
           <ThemeToggle />
           <button
             onClick={toggleSidebar}
-            className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 md:hidden p-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-900"
+            aria-label="Collapse sidebar"
+            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white md:hidden p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
           >
-            <PanelLeft size={18} />
+            <PanelLeft size={17} />
           </button>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-2 py-4 bg-white dark:bg-zinc-950 space-y-6">
+      <SidebarContent className="px-2 py-5 bg-white dark:bg-zinc-950 space-y-7">
         <div className="px-2">
           <button
             onClick={handleNewChat}
-            className="w-full flex items-center justify-center gap-2 bg-orange-600/10 hover:bg-orange-600/20 text-orange-600 dark:text-orange-500 border border-orange-500/20 font-medium py-2 px-4 rounded-xl transition-all duration-200"
+            className="group w-full flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black py-2.5 px-4 rounded-lg text-sm transition-all duration-200 hover:bg-zinc-800 dark:hover:bg-white"
           >
-            <Plus size={16} />
+            <Plus
+              size={15}
+              className="transition-transform duration-300 group-hover:rotate-90"
+            />
             <span>New Chat</span>
           </button>
         </div>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-zinc-500 text-[10px] font-medium tracking-wider uppercase px-3">
+          <SidebarGroupLabel className={GROUP_LABEL}>
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="mt-1 space-y-1">
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  render={<Link href="/dashboard" />}
-                  isActive={
-                    pathname === "/dashboard" ||
-                    pathname.startsWith("/dashboard/chat/")
+            <SidebarMenu className="mt-2 space-y-1">
+              {navItems.map((item) => (
+                <NavRow
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  active={
+                    item.href === "/dashboard"
+                      ? isChatHome
+                      : pathname === item.href
                   }
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    pathname === "/dashboard" ||
-                      pathname.startsWith("/dashboard/chat/")
-                      ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900! dark:text-white! font-medium"
-                      : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/50 hover:text-zinc-800! dark:hover:text-zinc-200!",
-                  )}
-                >
-                  <MessageSquare size={16} />
-                  <span>Levera AI</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  render={<Link href="/problems" />}
-                  isActive={pathname === "/problems"}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    pathname === "/problems"
-                      ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900! dark:text-white! font-medium"
-                      : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/50 hover:text-zinc-800! dark:hover:text-zinc-200!",
-                  )}
-                >
-                  <BookOpen size={16} />
-                  <span>Problems</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  render={<Link href="/dashboard/recent-chats" />}
-                  isActive={pathname === "/dashboard/recent-chats"}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    pathname === "/dashboard/recent-chats"
-                      ? "bg-zinc-100 dark:bg-zinc-900 text-zinc-900! dark:text-white! font-medium"
-                      : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/50 hover:text-zinc-800! dark:hover:text-zinc-200!",
-                  )}
-                >
-                  <History size={16} />
-                  <span>Recent Chats</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+                />
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         {loading ? (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-zinc-500 text-[10px] font-medium tracking-wider uppercase px-3">
+            <SidebarGroupLabel className={GROUP_LABEL}>
               Recents
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu className="mt-1 space-y-2 px-3">
+              <SidebarMenu className="mt-2 space-y-2 px-3">
                 {[...Array(skeletonCount)].map((_, i) => (
                   <div key={i} className="flex items-center gap-2.5 py-1.5">
                     <SkeletonBlock
@@ -263,31 +291,20 @@ export function AppSidebar() {
           </SidebarGroup>
         ) : recentChats.length > 0 ? (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-zinc-500 text-[10px] font-medium tracking-wider uppercase px-3">
+            <SidebarGroupLabel className={GROUP_LABEL}>
               Recents
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu className="mt-1.5 space-y-1.5">
+              <SidebarMenu className="mt-2 space-y-1">
                 {recentChats.map((chat) => (
-                  <SidebarMenuItem key={chat.id}>
-                    <SidebarMenuButton
-                      render={<Link href={`/dashboard/chat/${chat.id}`} />}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-colors truncate",
-                        pathname === `/dashboard/chat/${chat.id}`
-                          ? "bg-zinc-100 dark:bg-zinc-900/80 text-zinc-900! dark:text-white! font-medium shadow-sm"
-                          : "text-zinc-500! dark:text-zinc-400! hover:bg-zinc-100/70 dark:hover:bg-zinc-900/40 hover:text-zinc-800! dark:hover:text-zinc-200!",
-                      )}
-                    >
-                      <MessageSquare
-                        size={14}
-                        className="shrink-0 text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 transition-colors"
-                      />
-                      <span className="truncate max-w-[170px] tracking-wide">
-                        {chat.title}
-                      </span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                  <NavRow
+                    key={chat.id}
+                    href={`/dashboard/chat/${chat.id}`}
+                    label={chat.title}
+                    icon={MessageSquare}
+                    active={pathname === `/dashboard/chat/${chat.id}`}
+                    compact
+                  />
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
@@ -295,20 +312,20 @@ export function AppSidebar() {
         ) : null}
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-zinc-200 dark:border-zinc-900/60 bg-white dark:bg-zinc-950">
+      <SidebarFooter className="p-3 border-t border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-950">
         {!mounted || sessionPending ? (
-          <div className="flex flex-col gap-3 animate-pulse">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3 px-1">
               <SkeletonBlock
-                width="32px"
-                height="32px"
+                width="30px"
+                height="30px"
                 rounded="rounded-full"
                 className="bg-zinc-200 dark:bg-zinc-800 shrink-0"
               />
               <div className="flex-1 min-w-0 space-y-1.5">
                 <SkeletonBlock
                   width="60%"
-                  height="14px"
+                  height="13px"
                   className="bg-zinc-200 dark:bg-zinc-800"
                 />
                 <SkeletonBlock
@@ -320,46 +337,53 @@ export function AppSidebar() {
             </div>
             <SkeletonBlock
               width="100%"
-              height="32px"
-              rounded="rounded-xl"
+              height="30px"
+              rounded="rounded-lg"
               className="bg-zinc-100 dark:bg-zinc-900"
             />
           </div>
         ) : user ? (
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-2.5">
+            <div className="flex items-center gap-3 px-1">
               {user.image ? (
                 <Image
                   src={user.image}
-                  width={32}
-                  height={32}
+                  width={30}
+                  height={30}
                   alt={user.name || "Profile"}
                   referrerPolicy="no-referrer"
-                  className="w-8 h-8 rounded-full object-cover border border-zinc-200 dark:border-zinc-800"
+                  className="w-[30px] h-[30px] rounded-full object-cover border border-zinc-200 dark:border-white/10"
                 />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-medium text-xs text-white">
+                <div className="w-[30px] h-[30px] rounded-full bg-[#FF5A1F] flex items-center justify-center text-xs text-white shrink-0">
                   {user.name?.[0]?.toUpperCase() || "U"}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">
+                <p className="text-[13px] text-zinc-900 dark:text-white truncate">
                   {user.name}
                 </p>
-                <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-600 truncate">
+                  {user.email}
+                </p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+
+            <div className="flex items-center gap-1">
               <button
                 onClick={() => setSettingsOpen(true)}
-                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-100/60 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 py-2 rounded-xl transition-all cursor-pointer"
+                className="flex-1 flex items-center justify-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 py-2 rounded-lg transition-colors cursor-pointer"
               >
                 <Settings size={13} />
                 <span>Settings</span>
               </button>
+              <span
+                className="w-px h-4 bg-zinc-200 dark:bg-white/10"
+                aria-hidden="true"
+              />
               <button
                 onClick={handleLogout}
-                className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-400 bg-zinc-100/60 dark:bg-zinc-900/50 hover:bg-red-500/10 border border-zinc-200 dark:border-zinc-800 hover:border-red-500/20 py-2 rounded-xl transition-all cursor-pointer"
+                className="flex-1 flex items-center justify-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 py-2 rounded-lg transition-colors cursor-pointer"
               >
                 <LogOut size={13} />
                 <span>Log Out</span>
@@ -369,7 +393,7 @@ export function AppSidebar() {
         ) : (
           <Link
             href="/auth/sign-in"
-            className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-850 text-white! font-medium py-2.5 px-4 rounded-xl border border-zinc-800 text-sm transition-all"
+            className="w-full flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white! dark:text-black! py-2.5 px-4 rounded-lg text-sm transition-colors hover:bg-zinc-800 dark:hover:bg-white"
           >
             <User size={15} />
             <span>Sign In</span>

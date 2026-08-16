@@ -79,7 +79,7 @@ export function SolutionCard({
               <p className="text-xs text-zinc-500 font-medium">Approach Solution</p>
             </div>
           </div>
-          <span className="flex items-center gap-1.5 px-2.5 py-1 shrink-0 bg-zinc-100/80 dark:bg-zinc-950/80 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-lg font-mono text-xs font-semibold tracking-wide uppercase">
+          <span className="flex items-center gap-1.5 px-2.5 py-1 shrink-0 bg-zinc-100/80 dark:bg-zinc-950/80 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs tracking-wide uppercase">
             <Terminal className="w-3.5 h-3.5 shrink-0 opacity-80" />
             <span>{language}</span>
           </span>

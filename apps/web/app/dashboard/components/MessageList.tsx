@@ -150,7 +150,7 @@ export function MessageList({
         <div className="max-w-3xl mx-auto space-y-6 animate-pulse">
           <div className="flex flex-col items-end">
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="flex flex-col items-end gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-64">
+              <div className="flex flex-col items-end gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-2xl px-5 py-3.5 w-64">
                 <SkeletonBlock
                   width="100%"
                   height="14px"
@@ -185,7 +185,7 @@ export function MessageList({
 
           <div className="flex flex-col items-end">
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="flex flex-col items-end gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl rounded-br-none px-5 py-3.5 w-80">
+              <div className="flex flex-col items-end gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-2xl px-5 py-3.5 w-80">
                 <SkeletonBlock
                   width="100%"
                   height="14px"
@@ -222,21 +222,21 @@ export function MessageList({
           </div>
 
           <div className="w-full max-w-3xl">
-            <div className="w-full h-24 bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-850 rounded-2xl p-4 flex flex-col justify-between">
+            <div className="w-full h-24 bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-between">
               <SkeletonBlock
                 width="40%"
                 height="14px"
                 rounded="rounded-md"
                 className="bg-zinc-200 dark:bg-zinc-800"
               />
-              <div className="flex justify-between items-center pt-2 border-t border-zinc-200/50 dark:border-zinc-850/50">
+              <div className="flex justify-between items-center pt-2 border-t border-zinc-200/50 dark:border-white/10">
                 <SkeletonBlock
                   width="120px"
                   height="24px"
                   rounded="rounded-lg"
                   className="bg-zinc-200 dark:bg-zinc-800"
                 />
-                <div className="w-9 h-9 rounded-xl bg-zinc-200 dark:bg-zinc-850" />
+                <div className="w-9 h-9 rounded-xl bg-zinc-200 dark:bg-zinc-800" />
               </div>
             </div>
           </div>
@@ -267,7 +267,7 @@ export function MessageList({
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-8">
       {messages.map((msg, index) => {
         if (
           index === messages.length - 1 &&
@@ -284,12 +284,22 @@ export function MessageList({
               msg.role === "user" ? "items-end" : "items-start"
             }`}
           >
+            <span className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-zinc-400 dark:text-zinc-600 mb-2 px-1">
+              {msg.role === "assistant" && (
+                <span
+                  className="w-1 h-1 rounded-full bg-[#FF5A1F]"
+                  aria-hidden="true"
+                />
+              )}
+              {msg.role === "user" ? "You" : "Levera AI"}
+            </span>
+
             <div
-              className={`rounded-2xl px-5 py-3.5 text-sm ${
+              className={
                 msg.role === "user"
-                  ? "max-w-[85%] bg-zinc-900 dark:bg-zinc-900 border border-zinc-800 dark:border-zinc-850 text-white rounded-br-none"
-                  : "w-full max-w-[90%] bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-900 text-zinc-900 dark:text-zinc-100 rounded-bl-none prose prose-sm dark:prose-invert"
-              }`}
+                  ? "max-w-[80%] rounded-2xl px-4 py-3 text-[15px] leading-relaxed bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-zinc-100"
+                  : "w-full text-zinc-900 dark:text-zinc-100 prose prose-base dark:prose-invert max-w-none"
+              }
             >
               {msg.role === "assistant" ? (
                 <div className="space-y-4 w-full">
@@ -380,7 +390,7 @@ export function MessageList({
                                 <div className="h-3 w-32 bg-zinc-200 dark:bg-zinc-800 rounded" />
                               </div>
                               <div className="h-24 bg-zinc-100/60 dark:bg-zinc-900/40 rounded-xl flex items-center justify-center">
-                                <span className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase font-mono animate-pulse">
+                                <span className="text-[10px] text-zinc-500 tracking-wider uppercase animate-pulse">
                                   AI is formulating solutions approaches...
                                 </span>
                               </div>
@@ -410,7 +420,7 @@ export function MessageList({
                     className={`mt-2.5 text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
                       isSaved
                         ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 cursor-default font-medium"
-                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-850 cursor-pointer"
+                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer"
                     }`}
                   >
                     {isSaved ? (
@@ -425,32 +435,33 @@ export function MessageList({
                 );
               })()}
 
-            <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
-              {msg.role === "user" ? "You" : "Levera AI"}
-            </span>
           </div>
         );
       })}
 
       {isThinking && (
         <div className="flex flex-col items-start">
-          <div className="rounded-2xl rounded-bl-none px-5 py-3.5 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-900 flex items-center gap-2">
-            <div
-              className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce"
-              style={{ animationDelay: "0ms" }}
+          <span className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-zinc-400 dark:text-zinc-600 mb-2 px-1">
+            <span
+              className="w-1 h-1 rounded-full bg-[#FF5A1F]"
+              aria-hidden="true"
             />
-            <div
-              className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce"
-              style={{ animationDelay: "150ms" }}
-            />
-            <div
-              className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce"
-              style={{ animationDelay: "300ms" }}
-            />
-          </div>
-          <span className="text-[10px] text-zinc-600 mt-1 px-1.5 uppercase font-medium">
-            {thinkingWord}
+            Levera AI
           </span>
+          <div className="flex items-center gap-2.5 px-1">
+            <div className="flex items-center gap-1">
+              {[0, 150, 300].map((delay) => (
+                <div
+                  key={delay}
+                  className="w-1.5 h-1.5 bg-[#FF5A1F] rounded-full animate-bounce"
+                  style={{ animationDelay: `${delay}ms` }}
+                />
+              ))}
+            </div>
+            <span className="text-xs text-zinc-500 dark:text-zinc-500">
+              {thinkingWord}
+            </span>
+          </div>
         </div>
       )}
       <div ref={messagesEndRef} />

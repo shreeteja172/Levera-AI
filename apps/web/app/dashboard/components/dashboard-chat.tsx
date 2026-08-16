@@ -8,6 +8,7 @@ import { useSession } from "@/lib/auth-client";
 import { SUPPORTED_MODELS, type ModelOption } from "@/lib/ai/model-list";
 import { OnboardingLanguageModal } from "@/components/dashboard/OnboardingLanguageModal";
 import { extractProblemData } from "@/lib/chat-utils";
+import { cn } from "@/lib/utils";
 import { useThinkingWord } from "../hooks/useThinkingWord";
 
 import { PreBlock } from "./PreBlock";
@@ -518,19 +519,25 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     pseudocode: () => null,
   };
 
+  const showWelcome =
+    messages.length === 0 &&
+    !chatError &&
+    !chatLoading &&
+    mounted &&
+    !sessionPending;
+
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white relative">
       <ChatHeader activeChatId={activeChatId} onDeleteChat={deleteChat} />
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-32 space-y-6"
+        className={cn(
+          "flex-1 overflow-y-auto px-4 md:px-8 space-y-6",
+          showWelcome ? "py-0" : "pt-6 pb-32",
+        )}
       >
-        {messages.length === 0 &&
-        !chatError &&
-        !chatLoading &&
-        mounted &&
-        !sessionPending ? (
+        {showWelcome ? (
           <ChatWelcome
             greeting={greeting}
             displayName={displayName}
@@ -557,7 +564,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         )}
       </div>
 
-      {(!mounted || messages.length > 0 || chatLoading || sessionPending) && (
+      {!showWelcome && (
         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-white dark:from-zinc-950 via-white/70 dark:via-zinc-950/70 to-transparent z-20 pointer-events-none">
           <div className="max-w-3xl mx-auto pointer-events-auto">
             {renderChatInput("max-w-3xl")}

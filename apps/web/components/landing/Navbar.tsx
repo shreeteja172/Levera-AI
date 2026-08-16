@@ -33,6 +33,7 @@ function Logo({ onClick }: { onClick?: () => void }) {
       >
         <polyline points="16 18 22 12 16 6" />
         <polyline points="8 6 2 12 8 18" />
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
       </svg>
       <span className="font-instrument text-lg tracking-tight">Levera</span>
     </Link>

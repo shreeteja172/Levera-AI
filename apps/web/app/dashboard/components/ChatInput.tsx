@@ -14,6 +14,8 @@ import {
   ModelSelectorLogo,
 } from "@/components/ai-elements/model-selector";
 
+const MAX_TEXTAREA_HEIGHT = 160;
+
 interface ChatInputProps {
   className?: string;
   inputMessage: string;
@@ -53,17 +55,23 @@ export function ChatInput({
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const isBusy = !mounted || loading || chatLoading || sessionPending;
+  const canSend = !isBusy && !isLanguageUnset && inputMessage.trim().length > 0;
+
   useEffect(() => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
     textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    const fullHeight = textarea.scrollHeight;
+    textarea.style.height = `${Math.min(fullHeight, MAX_TEXTAREA_HEIGHT)}px`;
+    textarea.style.overflowY =
+      fullHeight > MAX_TEXTAREA_HEIGHT ? "auto" : "hidden";
   }, [inputMessage]);
 
   return (
     <div
-      className={`w-full ${className} mx-auto relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl p-2 focus-within:border-zinc-300 dark:focus-within:border-zinc-800 transition-all pointer-events-auto shadow-2xl`}
+      className={`w-full ${className} mx-auto relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-2xl p-2 focus-within:border-zinc-300 dark:focus-within:border-white/25 transition-colors pointer-events-auto shadow-lg shadow-black/5 dark:shadow-black/40`}
     >
       <textarea
         ref={textareaRef}
@@ -75,22 +83,16 @@ export function ChatInput({
             onSendMessage();
           }
         }}
-        disabled={
-          !mounted ||
-          loading ||
-          chatLoading ||
-          sessionPending ||
-          isLanguageUnset
-        }
+        disabled={isBusy || isLanguageUnset}
         placeholder={
           isLanguageUnset
             ? "Select a preferred programming language to start chatting..."
             : "Type a message or paste a DSA problem description..."
         }
         rows={1}
-        className="w-full max-h-32 resize-none outline-none border-none bg-transparent py-2.5 px-3 text-sm text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-500 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full resize-none outline-none border-none bg-transparent py-3 px-3 text-[15px] leading-relaxed text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-600 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
       />
-      <div className="flex items-center justify-between border-t border-zinc-200/70 dark:border-zinc-850/50 mt-1 pt-2 px-2">
+      <div className="flex items-center justify-between border-t border-zinc-200/70 dark:border-white/10 mt-1 pt-2 px-2">
         <div className="flex items-center gap-2">
           <ModelSelector
             open={isModelSelectorOpen}
@@ -101,10 +103,8 @@ export function ChatInput({
             <ModelSelectorTrigger
               render={
                 <button
-                  disabled={
-                    !mounted || chatLoading || loading || sessionPending
-                  }
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-700 bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white text-xs transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isBusy}
+                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/25 bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ModelSelectorLogo
                     provider={selectedModel.logoProvider}
@@ -144,24 +144,22 @@ export function ChatInput({
 
           {mounted && !isLanguageUnset && (
             <button
-              disabled={loading || chatLoading || sessionPending}
+              disabled={isBusy}
               onClick={() => onToggleHintMode(!hintMode)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${
                 hintMode
-                  ? "bg-orange-500/10 border-orange-500/30 text-orange-600 dark:text-orange-400 hover:bg-orange-500/15 hover:border-orange-500/40 shadow-sm shadow-orange-500/5 scale-102 hover:scale-105"
-                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-700 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:scale-[1.01]"
+                  ? "bg-[#FF5A1F]/10 border-[#FF5A1F]/30 text-[#FF5A1F] hover:bg-[#FF5A1F]/15 hover:border-[#FF5A1F]/50"
+                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/25 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
               }`}
               title="Progressive Hint Mode: Unlocks clues step-by-step instead of showing code solutions immediately."
             >
               <Lightbulb
                 size={13.5}
                 className={
-                  hintMode
-                    ? "fill-orange-500/20 text-orange-600 dark:text-orange-400 animate-pulse"
-                    : "text-zinc-500"
+                  hintMode ? "fill-[#FF5A1F]/20 text-[#FF5A1F]" : "text-zinc-500"
                 }
               />
-              <span className="hidden sm:inline font-semibold">
+              <span className="hidden sm:inline">
                 Hint Mode: {hintMode ? "ON" : "OFF"}
               </span>
             </button>
@@ -171,24 +169,34 @@ export function ChatInput({
         {isLanguageUnset ? (
           <button
             onClick={() => setOnboardingOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-orange-600/10"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF5A1F] hover:bg-[#ff6b33] text-white text-xs transition-colors cursor-pointer"
           >
             Select Language
           </button>
         ) : (
-          <button
-            onClick={onSendMessage}
-            disabled={
-              !mounted ||
-              loading ||
-              chatLoading ||
-              sessionPending ||
-              !inputMessage.trim()
-            }
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white hover:bg-orange-500 disabled:opacity-30 disabled:hover:bg-orange-600 transition-colors shadow-lg shadow-orange-600/10 cursor-pointer animate-in fade-in zoom-in duration-200"
-          >
-            <Send size={14} />
-          </button>
+          <div className="flex items-center gap-2.5">
+            <span
+              className={`hidden sm:block text-[11px] text-zinc-400 dark:text-zinc-600 transition-opacity duration-200 ${
+                canSend ? "opacity-100" : "opacity-0"
+              }`}
+              aria-hidden="true"
+            >
+              Enter to send
+            </span>
+            <button
+              onClick={() => onSendMessage()}
+              disabled={!canSend}
+              aria-label="Send message"
+              title={canSend ? "Send message" : "Type a message to send"}
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors duration-200 ${
+                canSend
+                  ? "bg-[#FF5A1F] text-white hover:bg-[#ff6b33] cursor-pointer"
+                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
+              }`}
+            >
+              <Send size={14} />
+            </button>
+          </div>
         )}
       </div>
     </div>

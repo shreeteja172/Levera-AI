@@ -39,19 +39,19 @@ export function ComplexityBadge({ time, space, language, variant }: ComplexityBa
   return (
     <div className="flex flex-wrap items-center gap-2 text-xs">
       {time && (
-        <span className={`flex items-center gap-1.5 px-2.5 py-1 border rounded-lg font-mono font-semibold tracking-wide ${colors.timeBg}`}>
+        <span className={`flex items-center gap-1.5 px-2.5 py-1 border rounded-lg tracking-wide ${colors.timeBg}`}>
           <Clock className="w-3.5 h-3.5 shrink-0 opacity-80" />
           <span>{time}</span>
         </span>
       )}
       {space && (
-        <span className={`flex items-center gap-1.5 px-2.5 py-1 border rounded-lg font-mono font-semibold tracking-wide ${colors.spaceBg}`}>
+        <span className={`flex items-center gap-1.5 px-2.5 py-1 border rounded-lg tracking-wide ${colors.spaceBg}`}>
           <Shield className="w-3.5 h-3.5 shrink-0 opacity-80" />
           <span>{space}</span>
         </span>
       )}
       {language && (
-        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-lg font-mono font-semibold tracking-wide uppercase">
+        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-lg tracking-wide uppercase">
           <Terminal className="w-3.5 h-3.5 shrink-0 opacity-80" />
           <span>{language}</span>
         </span>

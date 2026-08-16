@@ -172,7 +172,7 @@ export default function ProblemsPage() {
                       <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                         <Code2 size={13} className="text-zinc-500" />
                         <span>Language:</span>
-                        <span className="font-mono bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+                        <span className="bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
                           {sp.language?.toUpperCase()}
                         </span>
                       </div>
@@ -225,7 +225,7 @@ export default function ProblemsPage() {
                         )}
                       </div>
                       {sp.reviewCount > 0 && (
-                        <span className="text-[10px] text-zinc-500 font-mono">
+                        <span className="text-[10px] text-zinc-500">
                           • Reviewed {sp.reviewCount}{" "}
                           {sp.reviewCount === 1 ? "time" : "times"}
                         </span>
