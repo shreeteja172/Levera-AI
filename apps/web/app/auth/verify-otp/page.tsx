@@ -6,6 +6,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { authClient, sendOtp } from "@/lib/auth-client";
 import AuthIllustration from "../AuthIllustration";
+import AuthRedirectOverlay from "../AuthRedirectOverlay";
 
 function OTPVerificationForm() {
   const searchParams = useSearchParams();
@@ -16,6 +17,7 @@ function OTPVerificationForm() {
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const [resending, setResending] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   // Refs for focusing inputs
   const inputRefs: [
@@ -49,13 +51,14 @@ function OTPVerificationForm() {
 
       if (result.error) {
         toast.error(result.error.message || "Verification failed");
+        setLoading(false);
       } else {
         toast.success("Signed in successfully!");
+        setRedirecting(true);
         router.push("/dashboard");
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Verification failed");
-    } finally {
       setLoading(false);
     }
   }, [email, router]);
@@ -136,6 +139,10 @@ function OTPVerificationForm() {
       setResending(false);
     }
   };
+
+  if (redirecting) {
+    return <AuthRedirectOverlay label="Preparing your workspace" />;
+  }
 
   return (
     <div className="flex flex-col gap-5 my-auto py-4 desktop-short:gap-4">

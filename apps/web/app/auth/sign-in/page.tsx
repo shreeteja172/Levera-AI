@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { signInWithEmail, signInWithGoogle, sendOtp } from "@/lib/auth-client";
 import AuthIllustration from "../AuthIllustration";
+import AuthRedirectOverlay from "../AuthRedirectOverlay";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [loginMethod, setLoginMethod] = useState<"password" | "otp">("password");
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState<string | null>(null);
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
@@ -21,17 +23,22 @@ export default function SignInPage() {
       if (loginMethod === "password") {
         await signInWithEmail(email, password, "/dashboard");
         toast.success("Signed in successfully!");
+        setRedirecting("Preparing your workspace");
         router.push("/dashboard");
       } else {
         await sendOtp(email);
         toast.success("OTP sent to your email!");
+        setRedirecting("Sending your code");
         router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to sign in");
-    } finally {
       setLoading(false);
     }
+  }
+
+  if (redirecting) {
+    return <AuthRedirectOverlay label={redirecting} />;
   }
 
   return (
@@ -175,7 +182,10 @@ export default function SignInPage() {
 
               <button
                 type="button"
-                onClick={() => signInWithGoogle("/dashboard")}
+                onClick={() => {
+                  setRedirecting("Redirecting to Google");
+                  signInWithGoogle("/dashboard");
+                }}
                 className="w-full rounded-[10px] border border-[rgba(0,0,0,0.12)] bg-white text-[#1E293B] p-3 text-[0.92rem] font-normal cursor-pointer transition-all duration-200 ease-in-out flex justify-center items-center gap-2.5 hover:bg-[#FAF9F6] hover:border-[rgba(0,0,0,0.2)]"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { signUpWithEmail, signInWithGoogle, sendOtp } from "@/lib/auth-client";
 import AuthIllustration from "../AuthIllustration";
+import AuthRedirectOverlay from "../AuthRedirectOverlay";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState<string | null>(null);
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
@@ -28,12 +30,16 @@ export default function SignUpPage() {
       await signUpWithEmail(name, email, password);
       await sendOtp(email);
       toast.success("Account created! Verification code sent to your email.");
+      setRedirecting("Creating your account");
       router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to sign up");
-    } finally {
       setLoading(false);
     }
+  }
+
+  if (redirecting) {
+    return <AuthRedirectOverlay label={redirecting} />;
   }
 
   return (
@@ -172,7 +178,10 @@ export default function SignUpPage() {
 
               <button
                 type="button"
-                onClick={() => signInWithGoogle("/dashboard")}
+                onClick={() => {
+                  setRedirecting("Redirecting to Google");
+                  signInWithGoogle("/dashboard");
+                }}
                 className="w-full rounded-[10px] border border-[rgba(0,0,0,0.12)] bg-white text-[#1E293B] p-3 text-[0.92rem] font-normal cursor-pointer transition-all duration-200 ease-in-out flex justify-center items-center gap-2.5 hover:bg-[#FAF9F6] hover:border-[rgba(0,0,0,0.2)]"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
