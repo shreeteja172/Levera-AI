@@ -210,7 +210,7 @@ export default function SignUpPage() {
           </div>
         </section>
 
-        <AuthIllustration />
+        <AuthIllustration variant="binary-search" />
       </div>
     </main>
   );
