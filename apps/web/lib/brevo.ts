@@ -4,6 +4,83 @@ const brevo = new BrevoClient({
   apiKey: process.env.BREVO_API_KEY!,
 });
 
+export async function sendResetPasswordEmail(
+  to: string,
+  url: string
+): Promise<void> {
+  await brevo.transactionalEmails.sendTransacEmail({
+    sender: {
+      name: "Levera",
+      email: process.env.BREVO_SENDER_EMAIL!,
+    },
+    to: [{ email: to }],
+    subject: "Reset your Levera password",
+    htmlContent: `<div style="margin:0;padding:0;background:#09090b;font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;color:#e4e4e7;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;background:#09090b;">
+    <tr>
+      <td align="center">
+        <table width="520" cellpadding="0" cellspacing="0"
+          style="background:#0f0f12;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+
+          <tr>
+            <td style="padding:40px 32px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;letter-spacing:-0.5px;color:#ffffff;">
+                Levera
+              </h1>
+              <p style="margin:0;color:#a1a1aa;font-size:14px;font-weight:400;">
+                Master Data Structures. Build Better Algorithms.
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:32px 32px 40px;">
+              <h2 style="color:#ffffff;font-size:20px;font-weight:600;margin:0 0 12px;">
+                Reset your password
+              </h2>
+
+              <p style="color:#a1a1aa;line-height:24px;font-size:15px;margin:0 0 28px;">
+                We received a request to reset the password for your Levera
+                account. Click the button below to choose a new one.
+              </p>
+
+              <div style="text-align:center;margin:0 0 28px;">
+                <a href="${url}"
+                  style="display:inline-block;padding:14px 32px;background:#FF5A1F;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;">
+                  Choose a new password
+                </a>
+              </div>
+
+              <p style="color:#71717a;font-size:13px;line-height:20px;margin:0 0 20px;word-break:break-all;">
+                Or paste this link into your browser:<br />
+                <span style="color:#a1a1aa;">${url}</span>
+              </p>
+
+              <p style="color:#a1a1aa;font-size:14px;line-height:22px;margin:0;">
+                This link expires in
+                <strong style="color:#ffffff;font-weight:600;">1 hour</strong>.
+                If you didn't request a password reset, you can safely ignore
+                this email — your password will stay the same.
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:24px 32px;border-top:1px solid rgba(255,255,255,0.05);text-align:center;background:#0c0c0e;">
+              <p style="margin:0;color:#71717a;font-size:12px;">
+                © ${new Date().getFullYear()} Levera. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>`,
+  });
+}
+
 export async function sendOtpEmail(
   to: string,
   otp: string

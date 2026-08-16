@@ -59,6 +59,32 @@ export async function signUpWithEmail(
   return result.data;
 }
 
+export async function requestPasswordReset(email: string) {
+  const result = await authClient.requestPasswordReset({
+    email,
+    redirectTo: `${window.location.origin}/auth/reset-password`,
+  });
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  return result.data;
+}
+
+export async function resetPassword(newPassword: string, token: string) {
+  const result = await authClient.resetPassword({
+    newPassword,
+    token,
+  });
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  return result.data;
+}
+
 export async function sendOtp(email: string) {
   const result = await authClient.emailOtp.sendVerificationOtp({
     email,

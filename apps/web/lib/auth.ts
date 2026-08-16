@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { emailOTP } from "better-auth/plugins";
 import prisma from "./prisma";
-import { sendOtpEmail } from "./brevo";
+import { sendOtpEmail, sendResetPasswordEmail } from "./brevo";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
@@ -10,6 +10,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
+    resetPasswordTokenExpiresIn: 3600,
+    async sendResetPassword({ user, url }) {
+      await sendResetPasswordEmail(user.email, url);
+    },
   },
   account: {
     accountLinking: {
