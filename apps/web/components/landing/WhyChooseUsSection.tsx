@@ -3,79 +3,129 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
+const proofs = [
+  {
+    kicker: "Breadth",
+    title: "Every approach, not just the winner",
+    body: "You see the brute force next to the optimal, so the trade-off you're making is visible instead of assumed.",
+  },
+  {
+    kicker: "Transparency",
+    title: "The reasoning stays on the surface",
+    body: "Dry runs and complexity sit beside the code, not buried beneath it. Nothing is asserted without being shown.",
+  },
+  {
+    kicker: "Transfer",
+    title: "Patterns outlast problems",
+    body: "Each answer names the pattern it belongs to and links the problems that share it, so solving one earns you many.",
+  },
+];
+
 export default function WhyChooseUsSection() {
   return (
-    <section className="relative py-32 px-6 md:px-12 lg:px-24 bg-[#EAE7DF] dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200 overflow-hidden font-sans border-b border-black/10 dark:border-zinc-900">
+    <section className="relative py-28 md:py-36 px-6 md:px-14 lg:px-20 bg-[#EAE7DF] dark:bg-zinc-950 border-b border-black/10 dark:border-white/10">
+      <div className="max-w-5xl mx-auto">
+        <motion.span
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="block font-mono text-[10px] md:text-[11px] tracking-[0.35em] uppercase text-zinc-500 mb-12 md:mb-16"
+        >
+          Why Levera
+        </motion.span>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-16">
+        <motion.h2
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="font-instrument text-[clamp(2rem,5.2vw,3.9rem)] leading-[1.08] tracking-[-0.02em] text-zinc-900 dark:text-white max-w-[20ch]"
+        >
+          The answer is the easy part. Knowing{" "}
+          <span className="relative inline-block">
+            <span className="italic text-[#0ea5e9]">why it works</span>
+            <motion.span
+              className="absolute left-0 -bottom-0.5 h-px w-full origin-left bg-[#0ea5e9]/50"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </span>{" "}
+          is what you take into the room.
+        </motion.h2>
 
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex-1 w-full"
-          >
-            <h2 className="text-4xl md:text-6xl font-instrument tracking-tight mb-8 text-zinc-900 dark:text-white">
-              Why Choose <span className="bg-gradient-to-r from-[#FF5A1F] to-orange-400 bg-clip-text text-transparent">Levera?</span>
-            </h2>
-            <p className="text-zinc-600 dark:text-zinc-400 text-lg md:text-xl leading-relaxed mb-10 font-light">
-              We focus on building intuition, not just giving you the final answer.
-              Our interactive terminal environment and visual workspace make abstract
-              data structures tangible and easy to understand.
-            </p>
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 md:mt-12 md:ml-[28%] max-w-lg text-zinc-600 dark:text-zinc-400 text-base md:text-lg leading-relaxed"
+        >
+          Levera is built around the reasoning rather than the output. Every
+          response keeps the approach, the trade-off, and the pattern visible —
+          because that is the part that survives past the problem in front of
+          you.
+        </motion.p>
 
-            <ul className="space-y-5 mb-12">
-              {["Visual Dry Runs for every algorithm", "Instant Complexity Analysis", "Pattern Matching & Concept Linking"].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#10B981]/10 flex items-center justify-center border border-[#10B981]/20">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                  <span className="font-medium text-lg">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <Link
-              href="/auth/sign-up"
-              className="inline-flex items-center justify-center px-8 py-4 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white! dark:text-black! rounded-xl transition-all duration-300 hover:-translate-y-0.5"
+        <div className="mt-20 md:mt-28 grid md:grid-cols-3 gap-x-10 gap-y-12">
+          {proofs.map((p, i) => (
+            <motion.div
+              key={p.kicker}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{
+                duration: 0.6,
+                delay: i * 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="border-t border-zinc-900/15 dark:border-white/15 pt-6"
             >
-              Start Free Trial
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="flex-1 w-full max-w-[600px] mx-auto"
-          >
-
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-              <div className="flex gap-2 mb-6 border-b border-zinc-800/50 pb-4">
-                <div className="w-3.5 h-3.5 rounded-full bg-zinc-700/50 hover:bg-[#EF4444] transition-colors cursor-pointer" />
-                <div className="w-3.5 h-3.5 rounded-full bg-zinc-700/50 hover:bg-[#F59E0B] transition-colors cursor-pointer" />
-                <div className="w-3.5 h-3.5 rounded-full bg-zinc-700/50 hover:bg-[#10B981] transition-colors cursor-pointer" />
-              </div>
-              <div className="font-mono text-sm md:text-base text-zinc-300 space-y-3 leading-relaxed">
-                <p><span className="text-[#F43F5E]">function</span> <span className="text-[#0EA5E9]">binarySearch</span>(arr, target) {"{"}</p>
-                <p className="pl-6">let left = <span className="text-[#10B981]">0</span>;</p>
-                <p className="pl-6">let right = arr.length - <span className="text-[#10B981]">1</span>;</p>
-                <p className="pl-6 text-zinc-500">{"// AI Agent: \"Notice how we cut the search space in half...\""}</p>
-                <p className="pl-6"><span className="text-[#F43F5E]">while</span> (left &lt;= right) {"{"}</p>
-                <p className="pl-12">let mid = Math.<span className="text-[#0EA5E9]">floor</span>((left + right) / <span className="text-[#10B981]">2</span>);</p>
-                <p className="pl-12 text-white"><span className="inline-block w-2.5 h-5 bg-zinc-400 animate-pulse align-middle" /></p>
-                <p className="pl-6">{"}"}</p>
-                <p>{"}"}</p>
-              </div>
-            </div>
-          </motion.div>
-
+              <span className="block font-mono text-[10px] tracking-[0.3em] uppercase text-[#FF5A1F] mb-5">
+                {p.kicker}
+              </span>
+              <h3 className="font-instrument text-xl md:text-2xl leading-snug tracking-tight text-zinc-900 dark:text-white mb-4">
+                {p.title}
+              </h3>
+              <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
+                {p.body}
+              </p>
+            </motion.div>
+          ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-20 md:mt-28 flex flex-wrap items-center gap-7"
+        >
+          <Link
+            href="/auth/sign-up"
+            className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white! dark:text-black! text-sm transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            Start free
+            <svg
+              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.75}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </Link>
+          <span className="font-mono text-[11px] text-zinc-500">
+            No card required
+          </span>
+        </motion.div>
       </div>
     </section>
   );

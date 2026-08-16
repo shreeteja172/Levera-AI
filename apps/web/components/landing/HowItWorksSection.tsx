@@ -1,94 +1,107 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const steps = [
   {
-    title: "Ask a DSA Problem",
+    label: "You bring the problem",
+    title: "Ask in plain language",
     description:
-      "Paste a problem statement or describe the algorithmic challenge you're working on.",
+      "Paste a problem statement or just describe what you're stuck on. No format, no setup, no boilerplate.",
+    artifact: "› sorted array — return the indices that sum to target",
     color: "#FF5A1F",
   },
   {
-    title: "Explore Solutions",
+    label: "Levera opens it up",
+    title: "See every approach, ranked",
     description:
-      "Walk through brute force to optimal with detailed explanations, complexity analysis, and dry runs.",
+      "Brute force first, then what improves it, then the optimal — each with complexity, a dry run, and the reasoning that connects them.",
+    artifact: "brute force  →  binary search  →  two pointers  ·  O(n)",
     color: "#0ea5e9",
   },
   {
-    title: "Master the Pattern",
+    label: "You keep the pattern",
+    title: "Recognize it next time",
     description:
-      "Understand the underlying pattern, get related problems, and apply it confidently in interviews.",
-    color: "#10B981",
+      "The solution is the smaller half. What you leave with is the pattern underneath it and the problems it unlocks.",
+    artifact: "pattern: two pointers  ·  12 related problems queued",
+    color: "currentColor",
   },
 ];
 
 export default function HowItWorksSection() {
+  const listRef = useRef<HTMLOListElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: listRef,
+    offset: ["start 75%", "end 65%"],
+  });
+  const railScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
   return (
     <section
       id="how-it-works"
-      className="py-32 px-6 md:px-12 lg:px-24 bg-[#F5F3EE] dark:bg-zinc-900 font-sans relative overflow-hidden border-y border-black/10 dark:border-zinc-800"
+      className="py-28 md:py-36 px-6 md:px-14 lg:px-20 bg-[#F5F3EE] dark:bg-zinc-900 border-y border-black/10 dark:border-white/10"
     >
-      <div className="max-w-5xl mx-auto relative z-10">
-        <div className="text-center mb-24">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl md:text-6xl font-instrument text-zinc-900 dark:text-white tracking-tight mb-6"
-          >
-            How It Works
-          </motion.h2>
-          <div className="w-24 h-1.5 bg-gradient-to-r from-[#FF5A1F] to-orange-400 mx-auto rounded-full" />
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-baseline gap-6 mb-16 md:mb-24">
+          <h2 className="font-instrument text-[clamp(1.6rem,3vw,2.4rem)] tracking-tight text-zinc-900 dark:text-white shrink-0">
+            How it works
+          </h2>
+          <div className="h-px flex-1 bg-zinc-900/12 dark:bg-white/12" />
+          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.35em] uppercase text-zinc-500 shrink-0">
+            Three steps
+          </span>
         </div>
 
-        <div className="relative">
-          <div className="absolute left-8 md:left-1/2 top-10 bottom-10 w-0.5 bg-black/10 dark:bg-zinc-800 md:-ml-0.5 -z-10" />
+        <ol ref={listRef} className="relative flex flex-col gap-20 md:gap-28">
+          <div
+            className="absolute left-[5px] top-2 bottom-2 w-px bg-zinc-900/12 dark:bg-white/12"
+            aria-hidden="true"
+          />
+          <motion.div
+            className="absolute left-[5px] top-2 bottom-2 w-px origin-top bg-gradient-to-b from-[#FF5A1F] via-[#0ea5e9] to-zinc-900 dark:to-white"
+            style={{ scaleY: railScale }}
+            aria-hidden="true"
+          />
 
-          {steps.map((step, i) => {
-            const isEven = i % 2 === 0;
-            return (
+          {steps.map((step, i) => (
+            <li key={step.title} className="relative pl-12 md:pl-20">
+              <motion.span
+                className="absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full border-2 bg-[#F5F3EE] dark:bg-zinc-900 text-zinc-900 dark:text-white"
+                style={{ borderColor: step.color }}
+                initial={{ scale: 0.5, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true, margin: "-20%" }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                aria-hidden="true"
+              />
+
               <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: i * 0.2 }}
-                className={`flex flex-col md:flex-row items-start md:items-center justify-between mb-24 last:mb-0 ${
-                  isEven ? "md:flex-row" : "md:flex-row-reverse"
-                } group`}
+                viewport={{ once: true, margin: "-15%" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               >
-                <div
-                  className={`md:w-[45%] pl-24 md:pl-0 ${isEven ? "md:text-right md:pr-16" : "md:text-left md:pl-16"} w-full relative`}
-                >
-                  <div
-                    className="md:hidden shrink-0 absolute left-4 top-0 w-12 h-12 rounded-full bg-white dark:bg-zinc-950 border-2 flex items-center justify-center font-bold text-lg shadow-lg transition-transform duration-300 group-hover:scale-110"
-                    style={{ borderColor: step.color, color: step.color }}
-                  >
-                    {i + 1}
-                  </div>
+                <span className="block font-mono text-[10px] tracking-[0.3em] uppercase text-zinc-500 mb-4">
+                  {String(i + 1).padStart(2, "0")} — {step.label}
+                </span>
 
-                  <h3 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 group-hover:text-black dark:group-hover:text-white transition-colors">
-                    {step.title}
-                  </h3>
-                  <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed font-light">
-                    {step.description}
-                  </p>
+                <h3 className="font-instrument text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.1] tracking-tight text-zinc-900 dark:text-white mb-5">
+                  {step.title}
+                </h3>
+
+                <p className="text-zinc-600 dark:text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl mb-8">
+                  {step.description}
+                </p>
+
+                <div className="font-mono text-[11px] md:text-xs text-zinc-500 dark:text-zinc-500 border-l border-zinc-900/15 dark:border-white/15 pl-4 py-1.5 overflow-x-auto">
+                  <span className="whitespace-nowrap">{step.artifact}</span>
                 </div>
-
-                <div
-                  className="hidden md:flex shrink-0 absolute left-1/2 -ml-8 w-16 h-16 rounded-full bg-white dark:bg-zinc-950 border-4 border-solid items-center justify-center font-bold text-xl z-10 transition-transform duration-300 group-hover:scale-110"
-                  style={{ borderColor: step.color, color: step.color }}
-                >
-                  {i + 1}
-                </div>
-
-                <div className="hidden md:block md:w-[45%]" />
               </motion.div>
-            );
-          })}
-        </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

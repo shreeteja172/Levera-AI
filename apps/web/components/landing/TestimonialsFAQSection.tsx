@@ -1,97 +1,155 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
   {
-    question: "Is Levera suitable for absolute beginners?",
+    question: "Is this useful if I'm just starting out?",
     answer:
-      "Yes, Levera breaks down problems into manageable hints and visualizes every step, making it perfect for beginners learning DSA patterns.",
+      "Yes. Hint mode starts with a nudge rather than a solution, and every dry run is shown step by step, so you can work up to the answer instead of reading it.",
   },
   {
-    question: "Do you support languages other than JavaScript/Python?",
+    question: "Won't this just make me dependent on it?",
     answer:
-      "Currently, our explanations are language-agnostic using clean pseudo-code, but we provide concrete solutions in Python, JavaScript, Java, and C++.",
+      "It's built to prevent that. You choose how much to reveal, interview mode asks you to justify your reasoning, and every answer names the pattern so the next problem gets easier without help.",
   },
   {
-    question: "How does the AI Interviewer work?",
+    question: "Which languages do you support?",
     answer:
-      "It simulates a real interview environment by asking follow-up questions, edge cases, and asking you to optimize your solution step-by-step.",
+      "Explanations are language-agnostic and use clean pseudo-code. Concrete implementations are available in Python, JavaScript, Java, and C++.",
+  },
+  {
+    question: "How does the AI interviewer work?",
+    answer:
+      "It behaves like a real interviewer — asking follow-ups, probing edge cases, pushing for a better complexity, and evaluating how you explain your approach rather than just the final code.",
   },
 ];
 
 export default function TestimonialsFAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <section
       id="faq"
-      className="py-32 px-6 md:px-12 lg:px-24 bg-[#EAE7DF] dark:bg-zinc-950 font-sans relative overflow-hidden"
+      className="py-28 md:py-36 px-6 md:px-14 lg:px-20 bg-[#EAE7DF] dark:bg-zinc-950"
     >
-      <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-instrument text-zinc-900 dark:text-white tracking-tight mb-6">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 font-light">
-            Everything you need to know about Levera.
-          </p>
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-baseline gap-6 mb-14 md:mb-20">
+          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.35em] uppercase text-zinc-500 shrink-0">
+            Questions
+          </span>
+          <div className="h-px flex-1 bg-zinc-900/12 dark:bg-white/12" />
         </div>
 
-        <div className="space-y-6">
+        <ul className="border-t border-zinc-900/12 dark:border-white/12">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div
-                key={index}
-                className={`bg-white dark:bg-zinc-900/40 border ${isOpen ? "border-black/20 dark:border-zinc-700" : "border-black/10 dark:border-zinc-800/50"} rounded-2xl overflow-hidden transition-all duration-300 hover:border-black/20 dark:hover:border-zinc-700 group`}
+              <li
+                key={faq.question}
+                className="border-b border-zinc-900/12 dark:border-white/12"
               >
-                <button
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none"
-                >
-                  <span
-                    className={`font-semibold text-lg md:text-xl transition-colors ${isOpen ? "text-black! dark:text-white!" : "text-zinc-700! dark:text-zinc-300! group-hover:text-zinc-900! dark:group-hover:text-zinc-100!"}`}
+                <h3>
+                  <button
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-panel-${index}`}
+                    id={`faq-trigger-${index}`}
+                    className="group w-full py-7 flex items-start justify-between gap-8 text-left outline-none"
                   >
-                    {faq.question}
-                  </span>
-                  <span
-                    className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? "bg-[#FF5A1F] border-[#FF5A1F] text-white! rotate-45" : "border-black/20 dark:border-zinc-700 text-zinc-500! dark:text-zinc-400! group-hover:border-black/30 dark:group-hover:border-zinc-500 group-hover:text-zinc-700! dark:group-hover:text-zinc-300!"}`}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                    <span
+                      className={`font-instrument text-lg md:text-2xl leading-snug tracking-tight transition-colors duration-300 ${
+                        isOpen
+                          ? "text-zinc-900 dark:text-white"
+                          : "text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white"
+                      }`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
+                      {faq.question}
+                    </span>
+
+                    <span
+                      className="relative shrink-0 w-4 h-4 mt-2"
+                      aria-hidden="true"
+                    >
+                      <span
+                        className={`absolute top-1/2 left-0 w-4 h-px -translate-y-1/2 transition-colors duration-300 ${
+                          isOpen
+                            ? "bg-[#FF5A1F]"
+                            : "bg-zinc-500 group-hover:bg-zinc-900 dark:group-hover:bg-white"
+                        }`}
                       />
-                    </svg>
-                  </span>
-                </button>
-                <AnimatePresence>
+                      <span
+                        className={`absolute left-1/2 top-0 h-4 w-px -translate-x-1/2 origin-center transition-all duration-300 ${
+                          isOpen
+                            ? "scale-y-0 bg-[#FF5A1F]"
+                            : "scale-y-100 bg-zinc-500 group-hover:bg-zinc-900 dark:group-hover:bg-white"
+                        }`}
+                      />
+                    </span>
+                  </button>
+                </h3>
+
+                <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
+                      id={`faq-panel-${index}`}
+                      role="region"
+                      aria-labelledby={`faq-trigger-${index}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
                     >
-                      <div className="px-8 pb-8 text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed font-light">
+                      <p className="pb-8 pr-12 max-w-xl text-zinc-600 dark:text-zinc-400 text-[0.95rem] leading-relaxed">
                         {faq.answer}
-                      </div>
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-24 md:mt-32 flex flex-col md:flex-row md:items-end md:justify-between gap-8"
+        >
+          <p className="font-instrument text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.1] tracking-tight text-zinc-900 dark:text-white max-w-[16ch]">
+            Still deciding? Bring one problem.
+          </p>
+
+          <div className="flex items-center gap-7 shrink-0">
+            <Link
+              href="/auth/sign-up"
+              className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white! dark:text-black! text-sm transition-transform duration-300 hover:-translate-y-0.5"
+            >
+              Start free
+              <svg
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.75}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </Link>
+            <span className="font-mono text-[11px] text-zinc-500">
+              No card required
+            </span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
