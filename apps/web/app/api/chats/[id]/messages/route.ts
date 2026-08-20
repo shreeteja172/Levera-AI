@@ -6,10 +6,14 @@ import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { streamText } from "ai";
 import { withRetry } from "@/lib/retry";
-import { getModel } from "@/lib/ai/models";
+import { getModel, isPremiumModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
 import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
-import { chatRateLimit } from "@/lib/rateLimit";
+import {
+  chatRateLimit,
+  chatDailyLimit,
+  premiumModelDailyLimit,
+} from "@/lib/rateLimit";
 
 export async function POST(
   req: Request,
@@ -31,6 +35,14 @@ export async function POST(
       );
     }
 
+    const dailyQuota = await chatDailyLimit.limit(session.user.id);
+    if (!dailyQuota.success) {
+      return NextResponse.json(
+        { error: "Daily message limit reached. Try again tomorrow." },
+        { status: 429 },
+      );
+    }
+
     const chat = await prisma.chatSession.findFirst({
       where: {
         id: sessionId,
@@ -44,9 +56,12 @@ export async function POST(
 
     const body = await req.json();
     const createMessageSchema = z.object({
-      content: z.string().min(1, "Content is required"),
-      provider: z.string().default("groq"),
-      model: z.string().default("openai/gpt-oss-120b"),
+      content: z
+        .string()
+        .min(1, "Content is required")
+        .max(12000, "Message is too long"),
+      provider: z.string().max(40).default("groq"),
+      model: z.string().max(120).default("openai/gpt-oss-120b"),
       hintMode: z.boolean().default(false),
     });
 
@@ -59,6 +74,19 @@ export async function POST(
     }
 
     const { content, provider, model, hintMode } = parsed.data;
+
+    if (isPremiumModel(provider, model)) {
+      const premiumQuota = await premiumModelDailyLimit.limit(session.user.id);
+      if (!premiumQuota.success) {
+        return NextResponse.json(
+          {
+            error:
+              "Daily limit reached for this model. Switch to a GPT OSS or Qwen model, or try again tomorrow.",
+          },
+          { status: 429 },
+        );
+      }
+    }
 
     await prisma.chatSession.update({
       where: {

@@ -24,6 +24,18 @@ export const chatRateLimit = new Ratelimit({
   prefix: "ratelimit:chat",
 });
 
+export const chatDailyLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.fixedWindow(80, "1 d"),
+  prefix: "ratelimit:chat:day",
+});
+
+export const premiumModelDailyLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.fixedWindow(25, "1 d"),
+  prefix: "ratelimit:premium:day",
+});
+
 export const isRateLimitConfigured = Boolean(
   process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
 );

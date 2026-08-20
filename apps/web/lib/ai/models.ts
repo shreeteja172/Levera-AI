@@ -21,6 +21,15 @@ const openrouter = createOpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
+const PAID_PROVIDERS = new Set(["openai", "openrouter", "zhipu"]);
+
+export function isPremiumModel(provider: string, model: string): boolean {
+  const supported = SUPPORTED_MODELS.some(
+    (m) => m.provider === provider && m.id === model,
+  );
+  return supported && PAID_PROVIDERS.has(provider);
+}
+
 export function getModel(provider: string, model: string): LanguageModel {
   const isSupported = SUPPORTED_MODELS.some(
     (m) => m.provider === provider && m.id === model,

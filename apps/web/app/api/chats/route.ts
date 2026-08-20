@@ -6,10 +6,14 @@ import { getServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { streamText } from "ai";
 import { withRetry } from "@/lib/retry";
-import { getModel } from "@/lib/ai/models";
+import { getModel, isPremiumModel } from "@/lib/ai/models";
 import { LEVERA_SYSTEM_PROMPT } from "@/lib/ai/prompt";
 import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
-import { chatRateLimit } from "@/lib/rateLimit";
+import {
+  chatRateLimit,
+  chatDailyLimit,
+  premiumModelDailyLimit,
+} from "@/lib/rateLimit";
 
 export async function GET(req: Request) {
   try {
@@ -84,12 +88,20 @@ export async function POST(req: Request) {
       );
     }
 
+    const dailyQuota = await chatDailyLimit.limit(session.user.id);
+    if (!dailyQuota.success) {
+      return NextResponse.json(
+        { error: "Daily message limit reached. Try again tomorrow." },
+        { status: 429 },
+      );
+    }
+
     const body = await req.json();
     const createChatSchema = z.object({
-      title: z.string().min(1, "Title is required"),
-      message: z.string().optional(),
-      provider: z.string().default("groq"),
-      model: z.string().default("openai/gpt-oss-120b"),
+      title: z.string().min(1, "Title is required").max(200),
+      message: z.string().max(12000, "Message is too long").optional(),
+      provider: z.string().max(40).default("groq"),
+      model: z.string().max(120).default("openai/gpt-oss-120b"),
       hintMode: z.boolean().default(false),
     });
 
@@ -102,6 +114,20 @@ export async function POST(req: Request) {
     }
 
     const { title, message, provider, model, hintMode } = parsed.data;
+
+    if (isPremiumModel(provider, model)) {
+      const premiumQuota = await premiumModelDailyLimit.limit(session.user.id);
+      if (!premiumQuota.success) {
+        return NextResponse.json(
+          {
+            error:
+              "Daily limit reached for this model. Switch to a GPT OSS or Qwen model, or try again tomorrow.",
+          },
+          { status: 429 },
+        );
+      }
+    }
+
     const aiModel = getModel(provider, model);
 
     const newSession = await prisma.chatSession.create({
