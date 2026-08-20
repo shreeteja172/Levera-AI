@@ -153,14 +153,14 @@ export default function ProblemsPage() {
             ))}
           </div>
         ) : filteredProblems.length > 0 ? (
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 items-start">
             {filteredProblems.map((sp) => (
               <Link
                 key={sp.id}
                 href={`/problems/${sp.id}`}
                 className="group block"
               >
-                <div className="h-full bg-zinc-50/60 dark:bg-zinc-900/20 hover:bg-zinc-100 dark:hover:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-800/80 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 shadow-lg hover:shadow-black/20 hover:-translate-y-[2px]">
+                <div className="bg-zinc-50/60 dark:bg-zinc-900/20 hover:bg-zinc-100 dark:hover:bg-zinc-900/40 border border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/20 rounded-2xl p-5 flex flex-col transition-colors duration-200">
                   <div className="space-y-3.5">
                     <div className="flex items-start justify-between gap-4">
                       <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors line-clamp-1">
@@ -171,7 +171,6 @@ export default function ProblemsPage() {
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                         <Code2 size={13} className="text-zinc-500" />
-                        <span>Language:</span>
                         <span className="bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
                           {sp.language?.toUpperCase()}
                         </span>
@@ -205,21 +204,21 @@ export default function ProblemsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-zinc-200/70 dark:border-zinc-900/50">
+                  <div className="flex items-center justify-between gap-3 mt-5 pt-3.5 border-t border-zinc-200/70 dark:border-white/10">
                     <div className="flex items-center gap-3">
                       <div className="flex gap-2">
                         {!!sp.brute && (
-                          <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 border border-red-500/10">
+                          <span className="text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-md bg-[#FF5A1F]/10 text-[#FF5A1F] border border-[#FF5A1F]/20">
                             Brute
                           </span>
                         )}
                         {!!sp.better && (
-                          <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/10">
+                          <span className="text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-md bg-zinc-500/10 text-zinc-500 dark:text-zinc-400 border border-zinc-500/20">
                             Better
                           </span>
                         )}
                         {!!sp.optimal && (
-                          <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/10">
+                          <span className="text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-md bg-[#0ea5e9]/10 text-[#0ea5e9] border border-[#0ea5e9]/20">
                             Optimal
                           </span>
                         )}
@@ -262,7 +261,7 @@ export default function ProblemsPage() {
             {!searchQuery && (
               <Link
                 href="/dashboard"
-                className="mt-6 inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white! font-medium text-sm px-4.5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-orange-500/20"
+                className="mt-6 inline-flex items-center gap-2 bg-[#FF5A1F] hover:bg-[#ff6b33] text-white! text-sm px-5 py-2.5 rounded-xl transition-colors"
               >
                 <MessageSquare size={15} />
                 Ask Levera AI

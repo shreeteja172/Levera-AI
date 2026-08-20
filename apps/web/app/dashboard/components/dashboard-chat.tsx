@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSession } from "@/lib/auth-client";
@@ -155,6 +155,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const abortControllerRef = useRef<AbortController | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
+  const [missingChat, setMissingChat] = useState(false);
 
   const scrollToBottom = useCallback((force = false) => {
     const container = scrollContainerRef.current;
@@ -174,6 +175,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     async (id: string | null) => {
       latestChatIdRef.current = id;
       setChatError(null);
+      setMissingChat(false);
       if (!id) {
         setMessages([]);
         setActiveChatId(null);
@@ -199,7 +201,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           setChatTitle(res.data.title || null);
           setTimeout(() => scrollToBottom(true), 50);
         } else {
-          router.push("/dashboard");
+          setMissingChat(true);
         }
       } catch (e) {
         const elapsedTime = Date.now() - startTime;
@@ -220,7 +222,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         }
       }
     },
-    [router, scrollToBottom],
+    [scrollToBottom],
   );
 
   useEffect(() => {
@@ -529,6 +531,10 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     pattern: () => null,
     pseudocode: () => null,
   };
+
+  if (missingChat) {
+    notFound();
+  }
 
   const showWelcome =
     messages.length === 0 &&

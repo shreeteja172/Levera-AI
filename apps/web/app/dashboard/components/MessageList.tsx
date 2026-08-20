@@ -263,7 +263,23 @@ export function MessageList({
   }
 
   if (chatError) {
-    return null;
+    return (
+      <div className="max-w-3xl mx-auto flex flex-col items-start pt-10">
+        <h2 className="font-instrument text-2xl tracking-tight text-zinc-900 dark:text-white mb-3">
+          We couldn&apos;t load this conversation.
+        </h2>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-6 max-w-md">
+          {chatError} Your messages are still saved — try reloading, or start a
+          new chat below.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black text-sm transition-transform duration-300 hover:-translate-y-0.5 cursor-pointer"
+        >
+          Try again
+        </button>
+      </div>
+    );
   }
 
   return (

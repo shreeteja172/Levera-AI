@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { SolutionDisplay } from "@/components/problem/SolutionDisplay";
@@ -34,6 +34,8 @@ export default function ProblemPage() {
 
   const [problem, setProblem] = useState<SavedProblem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [missing, setMissing] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => {
     async function fetchProblem() {
@@ -41,8 +43,17 @@ export default function ProblemPage() {
         const { data } = await axios.get(`/api/saved-problems/${id}`);
         setProblem(data);
       } catch (error) {
-        console.error(error);
-        toast.error("Failed to load problem details");
+        const status = axios.isAxiosError(error)
+          ? error.response?.status
+          : undefined;
+
+        if (status === 404) {
+          setMissing(true);
+        } else {
+          console.error(error);
+          setLoadFailed(true);
+          toast.error("Failed to load problem details");
+        }
       } finally {
         setLoading(false);
       }
@@ -89,16 +100,41 @@ export default function ProblemPage() {
     );
   }
 
+  if (missing) {
+    notFound();
+  }
+
   if (!problem) {
     return (
-      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center flex-col gap-4">
-        <p className="text-zinc-500 dark:text-zinc-400">Problem not found.</p>
-        <button
-          onClick={() => router.push("/problems")}
-          className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-850 px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl transition-all cursor-pointer"
-        >
-          <ArrowLeft size={16} /> Back to Problems
-        </button>
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center px-6">
+        <div className="w-full max-w-md flex flex-col items-start">
+          <h1 className="font-instrument text-2xl md:text-3xl tracking-tight text-zinc-900 dark:text-white mb-3">
+            {loadFailed
+              ? "We couldn't load this problem."
+              : "Nothing to show here."}
+          </h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-8">
+            {loadFailed
+              ? "The request didn't go through. Check your connection and try again — your saved problem is still safe."
+              : "This problem couldn't be opened right now."}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            {loadFailed && (
+              <button
+                onClick={() => window.location.reload()}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black text-sm transition-transform duration-300 hover:-translate-y-0.5 cursor-pointer"
+              >
+                Try again
+              </button>
+            )}
+            <button
+              onClick={() => router.push("/problems")}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/25 text-zinc-600 dark:text-zinc-300 text-sm transition-colors cursor-pointer"
+            >
+              <ArrowLeft size={16} /> Back to Problems
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

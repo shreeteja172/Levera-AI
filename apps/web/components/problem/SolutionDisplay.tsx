@@ -371,34 +371,27 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
             </button>
           </div>
 
-          <div className="text-center space-y-3 py-4">
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-orange-400 via-red-500 to-amber-500 bg-clip-text text-transparent tracking-tight font-exo2">
+          <div className="space-y-4 pt-2 pb-4">
+            <h1 className="font-instrument text-[clamp(1.9rem,4vw,3rem)] leading-[1.1] tracking-tight text-zinc-900 dark:text-white max-w-3xl">
               {problem.problem.title}
             </h1>
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <div className="inline-flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-100/60 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-900 px-3 py-1 rounded-full font-mono">
-                <span>Language:</span>
-                <span className="text-zinc-700 dark:text-zinc-300 uppercase font-bold">
-                  {problem.language}
-                </span>
-              </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center text-xs uppercase tracking-wide text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 px-2.5 py-1 rounded-md">
+                {problem.language}
+              </span>
               {reviewCount > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-100/60 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-900 px-3 py-1 rounded-full font-mono">
-                  <span>Reviewed:</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-                    {reviewCount} {reviewCount === 1 ? "time" : "times"}
-                  </span>
-                </div>
+                <span className="inline-flex items-center text-xs text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-white/10 px-2.5 py-1 rounded-md">
+                  Reviewed {reviewCount}{" "}
+                  {reviewCount === 1 ? "time" : "times"}
+                </span>
               )}
               {!isDue(nextReviewAt) && (
-                <div className="inline-flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-100/60 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-900 px-3 py-1 rounded-full font-mono">
-                  <span>Next Review:</span>
-                  <span className="text-zinc-700 dark:text-zinc-300 font-bold">
-                    {getReviewDayDifference(nextReviewAt) === 1
-                      ? "Tomorrow"
-                      : `In ${getReviewDayDifference(nextReviewAt)} days`}
-                  </span>
-                </div>
+                <span className="inline-flex items-center text-xs text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-white/10 px-2.5 py-1 rounded-md">
+                  Next review{" "}
+                  {getReviewDayDifference(nextReviewAt) === 1
+                    ? "tomorrow"
+                    : `in ${getReviewDayDifference(nextReviewAt)} days`}
+                </span>
               )}
             </div>
           </div>
@@ -426,7 +419,7 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
               {showUndo ? (
                 <button
                   onClick={handleUndo}
-                  className="flex items-center gap-1.5 px-4.5 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-850 border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-800 dark:text-zinc-200 transition-all cursor-pointer shadow-md"
+                  className="flex items-center gap-1.5 px-4.5 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-800 dark:text-zinc-200 transition-all cursor-pointer shadow-md"
                 >
                   Undo
                 </button>
@@ -567,7 +560,7 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
                       {isLocked && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/50 dark:bg-zinc-950/40 border border-zinc-200/60 dark:border-zinc-900/50 rounded-2xl p-6 text-center space-y-4 backdrop-blur-xs z-10">
                           {activeUnlockRequest === sol.type ? (
-                            <div className="bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-850 rounded-xl p-4 w-full max-w-sm text-center space-y-3 shadow-xl animate-in zoom-in-95 duration-200">
+                            <div className="bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/10 rounded-xl p-4 w-full max-w-sm text-center space-y-3 shadow-xl animate-in zoom-in-95 duration-200">
                               <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 mx-auto">
                                 <Lock className="w-4 h-4" />
                               </div>
@@ -591,7 +584,7 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
                                 </button>
                                 <button
                                   onClick={() => setActiveUnlockRequest(null)}
-                                  className="px-4 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 hover:border-zinc-300 dark:hover:border-zinc-850 text-zinc-500 dark:text-zinc-450 hover:text-zinc-800 dark:hover:text-zinc-200 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                                  className="px-4 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/25 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
                                 >
                                   Not yet
                                 </button>
@@ -599,7 +592,7 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
                             </div>
                           ) : (
                             <div className="space-y-3 max-w-xs">
-                              <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 flex items-center justify-center text-zinc-500 shadow-lg mx-auto">
+                              <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 flex items-center justify-center text-zinc-500 shadow-lg mx-auto">
                                 <Lock className="w-4 h-4 text-orange-500" />
                               </div>
                               <div className="space-y-1">
@@ -620,7 +613,7 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
                               {canUnlock && (
                                 <button
                                   onClick={() => setActiveUnlockRequest(sol.type)}
-                                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-orange-650/10 hover:bg-orange-650/20 text-orange-500 border border-orange-500/20 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20 text-orange-500 border border-orange-500/20 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
                                 >
                                   Unlock approach
                                 </button>
