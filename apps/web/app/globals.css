@@ -48,6 +48,7 @@
   --font-sans: var(--font-tiempos), Georgia, Cambria, "Times New Roman", Times, serif, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-instrument: var(--font-tiempos), Georgia, serif, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
+  --font-small: "Sitka Small", "Sitka Text", Sitka, Charter, "Iowan Old Style", var(--font-tiempos), Georgia, serif;
 }
 
 a {
@@ -139,6 +140,23 @@ a {
   body, button, input, select, textarea, label, strong, b, h1, h2, h3, h4, h5, h6, p, span, a, li, td, th {
     font-family: var(--font-sans) !important;
     font-weight: normal !important;
+  }
+  :is(
+    .text-xs,
+    .text-sm,
+    [class*="text-[9px]"],
+    [class*="text-[10px]"],
+    [class*="text-[11px]"],
+    [class*="text-[12px]"],
+    [class*="text-[13px]"],
+    [class*="text-[0.72rem]"],
+    [class*="text-[0.75rem]"],
+    [class*="text-[0.78rem]"],
+    [class*="text-[0.8rem]"],
+    [class*="text-[0.85rem]"]
+  ):not(code, pre, kbd, code *, pre *, kbd *, .font-mono, .font-mono *) {
+    font-family: var(--font-small) !important;
+    font-feature-settings: "kern" 1, "liga" 1;
   }
   code, pre, kbd, samp, .font-mono, code *, pre * {
     font-family: var(--font-geist-mono), ui-monospace, monospace !important;

@@ -33,13 +33,6 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [chatTitle, setChatTitle] = useState<string | null>(null);
   const [savedProblemSlugs, setSavedProblemSlugs] = useState<string[]>([]);
-  const [reviewStats, setReviewStats] = useState<{
-    due: number;
-    completed: number;
-    nextDueProblemId: string | null;
-    streak: number;
-    totalReviewed: number;
-  } | null>(null);
 
   const fetchSavedProblems = useCallback(async () => {
     try {
@@ -55,19 +48,9 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     }
   }, []);
 
-  const fetchReviewStats = useCallback(async () => {
-    try {
-      const res = await axios.get("/api/reviews/today");
-      setReviewStats(res.data);
-    } catch (e) {
-      console.error("Failed to fetch review stats:", e);
-    }
-  }, []);
-
   useEffect(() => {
     fetchSavedProblems();
-    fetchReviewStats();
-  }, [fetchSavedProblems, fetchReviewStats]);
+  }, [fetchSavedProblems]);
 
   const [selectedModel, setSelectedModel] = useState<ModelOption>(
     SUPPORTED_MODELS[0]!,
@@ -575,7 +558,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white relative">
-      <ChatHeader activeChatId={activeChatId} onDeleteChat={deleteChat} />
+      <ChatHeader
+        activeChatId={activeChatId}
+        chatTitle={chatTitle}
+        onDeleteChat={deleteChat}
+      />
 
       <div
         ref={scrollContainerRef}

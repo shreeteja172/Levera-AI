@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { Sparkles, Check } from "lucide-react";
 
 interface HintsBlockProps {
   hints: {

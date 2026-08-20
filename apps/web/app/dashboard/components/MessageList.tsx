@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import { Check, Lock } from "lucide-react";
+import { Check } from "lucide-react";
 import { SkeletonBlock } from "@/components/ui/skeleton-block";
 import { useSession } from "@/lib/auth-client";
 import {

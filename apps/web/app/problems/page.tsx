@@ -11,7 +11,7 @@ import {
   Code2,
   ChevronRight,
 } from "lucide-react";
-import { isDue, isTomorrow, getReviewDayDifference } from "@/lib/review";
+import { isDue, getReviewDayDifference } from "@/lib/review";
 
 interface SavedProblemItem {
   id: string;
