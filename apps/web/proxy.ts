@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { authRateLimit, generalRateLimit } from "@/lib/rateLimit";
+import {
+  authRateLimit,
+  generalRateLimit,
+  checkRateLimit,
+} from "@/lib/rateLimit";
 
 const SENSITIVE_AUTH_API_PREFIXES = [
   "/api/auth/sign-in",
@@ -25,7 +29,7 @@ export async function proxy(request: NextRequest) {
     SENSITIVE_AUTH_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
   if (isSensitiveAuthApiCall) {
-    const { success } = await authRateLimit.limit(ip);
+    const { success } = await checkRateLimit(authRateLimit, ip);
     if (!success) {
       return NextResponse.json(
         { error: "Too many attempts. Try again shortly." },
@@ -33,7 +37,7 @@ export async function proxy(request: NextRequest) {
       );
     }
   } else if (!pathname.startsWith("/api/")) {
-    const { success } = await generalRateLimit.limit(ip);
+    const { success } = await checkRateLimit(generalRateLimit, ip);
     if (!success) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

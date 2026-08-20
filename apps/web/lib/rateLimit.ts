@@ -20,6 +20,26 @@ export const generalRateLimit = new Ratelimit({
 
 export const chatRateLimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(10, "60 s"), 
+  limiter: Ratelimit.slidingWindow(10, "60 s"),
   prefix: "ratelimit:chat",
 });
+
+export const isRateLimitConfigured = Boolean(
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
+);
+
+export async function checkRateLimit(
+  limiter: Ratelimit,
+  identifier: string,
+): Promise<{ success: boolean }> {
+  if (!isRateLimitConfigured) {
+    return { success: true };
+  }
+  try {
+    const { success } = await limiter.limit(identifier);
+    return { success };
+  } catch (error) {
+    console.error("[rateLimit] check failed, allowing request:", error);
+    return { success: true };
+  }
+}
