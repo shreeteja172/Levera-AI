@@ -116,13 +116,24 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) {
-      setGreeting("Good morning");
-    } else if (hour < 18) {
-      setGreeting("Good afternoon");
+    let pool: string[];
+
+    if (hour >= 5 && hour < 12) {
+      pool = ["Good morning", "Morning", "Bright and early", "Up and at it"];
+    } else if (hour < 17) {
+      pool = ["Good afternoon", "Afternoon", "Back at it", "Hey there"];
+    } else if (hour < 22) {
+      pool = ["Good evening", "Evening", "Winding down", "Hey there"];
     } else {
-      setGreeting("Good evening");
+      pool = [
+        "Still up",
+        "Burning the midnight oil",
+        "Late one tonight",
+        "One more problem",
+      ];
     }
+
+    setGreeting(pool[Math.floor(Math.random() * pool.length)] ?? "Hello");
   }, []);
 
   const firstName = session?.user?.name ? session.user.name.split(" ")[0] : "";

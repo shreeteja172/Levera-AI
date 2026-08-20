@@ -1,5 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
+
+const HOOKS = [
+  "What are we optimizing today?",
+  "Bring me the problem that's been bullying you.",
+  "Let's turn a brute force into something elegant.",
+  "Which problem is refusing to cooperate?",
+  "Let's make a few nested loops disappear.",
+  "Paste a problem — I'll bring the intuition.",
+  "So, what's the O(n²) we're fixing today?",
+  "Let's find the pattern hiding underneath.",
+  "Stuck is just the step before obvious.",
+  "Every hard problem was unreadable once.",
+];
 
 const SUGGESTIONS = [
   { kicker: "Concept", prompt: "Explain the intuition behind Binary Search" },
@@ -24,14 +37,23 @@ export function ChatWelcome({
   renderChatInput,
   onSelectSuggestion,
 }: ChatWelcomeProps) {
+  const [hook, setHook] = useState(HOOKS[0]);
+
+  useEffect(() => {
+    setHook(HOOKS[Math.floor(Math.random() * HOOKS.length)]);
+  }, []);
+
   return (
     <div className="max-w-3xl mx-auto min-h-full flex flex-col justify-center items-center py-8 animate-in fade-in duration-300">
       <div className="w-full flex flex-col items-center text-center gap-3 mb-10">
         <h1 className="font-instrument text-4xl md:text-5xl tracking-tight text-zinc-900 dark:text-zinc-100">
           {greeting}, {displayName}.
         </h1>
-        <p className="text-[15px] text-zinc-500 dark:text-zinc-400 max-w-md">
-          Ask about a concept, paste a problem, or start from one of these.
+        <p
+          key={hook}
+          className="text-[15px] text-zinc-500 dark:text-zinc-400 max-w-md animate-in fade-in duration-500"
+        >
+          {hook}
         </p>
       </div>
 
