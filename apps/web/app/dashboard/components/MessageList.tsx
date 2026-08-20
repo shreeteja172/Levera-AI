@@ -13,6 +13,27 @@ import {
 import { SolutionsBlock } from "./SolutionsBlock";
 import { HintsBlock } from "@/components/problem/HintsBlock";
 
+function LeveraMark() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0 text-[#FF5A1F]"
+      aria-hidden="true"
+    >
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" />
+    </svg>
+  );
+}
+
 interface Message {
   id?: string;
   role: "user" | "assistant";
@@ -205,57 +226,75 @@ export function MessageList({
       );
     } else {
       return (
-        <div className="max-w-2xl mx-auto h-full flex flex-col justify-center items-center text-center space-y-6 py-12 animate-pulse">
-          <div className="space-y-3 flex flex-col items-center">
+        <div className="max-w-3xl mx-auto min-h-full flex flex-col justify-center items-center py-8 animate-pulse">
+          <div className="w-full flex flex-col items-center gap-3 mb-10">
             <SkeletonBlock
-              width="320px"
-              height="40px"
+              width="min(340px, 70%)"
+              height="44px"
               rounded="rounded-lg"
               className="bg-zinc-200 dark:bg-zinc-800"
             />
             <SkeletonBlock
-              width="440px"
+              width="min(300px, 60%)"
               height="16px"
               rounded="rounded-lg"
               className="bg-zinc-200/60 dark:bg-zinc-800/60"
             />
           </div>
 
-          <div className="w-full max-w-3xl">
-            <div className="w-full h-24 bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-between">
+          <div className="w-full h-[104px] bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-between">
+            <SkeletonBlock
+              width="40%"
+              height="14px"
+              rounded="rounded-md"
+              className="bg-zinc-200 dark:bg-zinc-800"
+            />
+            <div className="flex justify-between items-center pt-2 border-t border-zinc-200/50 dark:border-white/10">
               <SkeletonBlock
-                width="40%"
-                height="14px"
-                rounded="rounded-md"
+                width="120px"
+                height="24px"
+                rounded="rounded-lg"
                 className="bg-zinc-200 dark:bg-zinc-800"
               />
-              <div className="flex justify-between items-center pt-2 border-t border-zinc-200/50 dark:border-white/10">
-                <SkeletonBlock
-                  width="120px"
-                  height="24px"
-                  rounded="rounded-lg"
-                  className="bg-zinc-200 dark:bg-zinc-800"
-                />
-                <div className="w-9 h-9 rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-              </div>
+              <div className="w-9 h-9 rounded-xl bg-zinc-200 dark:bg-zinc-800" />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl pt-2">
-            {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-900 bg-zinc-100/30 dark:bg-zinc-900/10 h-12"
-              >
-                <SkeletonBlock
-                  width="75%"
-                  height="12px"
-                  rounded="rounded-md"
-                  className="bg-zinc-200/60 dark:bg-zinc-800/60"
-                />
-                <div className="w-3.5 h-3.5 rounded bg-zinc-200 dark:bg-zinc-800 shrink-0" />
-              </div>
-            ))}
+          <div className="w-full mt-10">
+            <div className="flex items-center gap-4 mb-3.5">
+              <SkeletonBlock
+                width="72px"
+                height="10px"
+                rounded="rounded"
+                className="bg-zinc-200/60 dark:bg-zinc-800/60"
+              />
+              <div className="h-px flex-1 bg-zinc-200 dark:bg-white/10" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col gap-2.5 px-4 py-3.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50/60 dark:bg-white/[0.02]"
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <SkeletonBlock
+                      width="64px"
+                      height="10px"
+                      rounded="rounded"
+                      className="bg-zinc-200/60 dark:bg-zinc-800/60"
+                    />
+                    <div className="w-3.5 h-3.5 rounded bg-zinc-200 dark:bg-zinc-800 shrink-0" />
+                  </div>
+                  <SkeletonBlock
+                    width={i % 2 === 0 ? "85%" : "70%"}
+                    height="13px"
+                    rounded="rounded-md"
+                    className="bg-zinc-200/60 dark:bg-zinc-800/60"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       );
@@ -301,12 +340,7 @@ export function MessageList({
             }`}
           >
             <span className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-zinc-400 dark:text-zinc-600 mb-2 px-1">
-              {msg.role === "assistant" && (
-                <span
-                  className="w-1 h-1 rounded-full bg-[#FF5A1F]"
-                  aria-hidden="true"
-                />
-              )}
+              {msg.role === "assistant" && <LeveraMark />}
               {msg.role === "user" ? "You" : "Levera AI"}
             </span>
 
@@ -458,10 +492,7 @@ export function MessageList({
       {isThinking && (
         <div className="flex flex-col items-start">
           <span className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-zinc-400 dark:text-zinc-600 mb-2 px-1">
-            <span
-              className="w-1 h-1 rounded-full bg-[#FF5A1F]"
-              aria-hidden="true"
-            />
+            <LeveraMark />
             Levera AI
           </span>
           <div className="flex items-center gap-2.5 px-1">

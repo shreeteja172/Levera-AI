@@ -11,29 +11,30 @@ export function useThinkingWord(loading: boolean) {
 
     const words = [
       "thinking",
-      "cogitating",
-      "sleuthing",
-      "mulling",
-      "weighing",
-      "honing",
-      "fathoming",
-      "sifting",
-      "crystalising",
-      "musing",
-      "pondering",
-      "contemplating",
-      "figuring",
-      "reckoning",
+      "traversing",
       "untangling",
-      "triangluating",
-      "picturing",
+      "backtracking",
+      "narrowing it down",
+      "pruning branches",
+      "recursing",
+      "weighing trade-offs",
+      "converging",
+      "memoizing",
+      "partitioning",
+      "chasing pointers",
+      "pondering",
+      "triangulating",
+      "unwinding the stack",
+      "reckoning",
+      "hunting the pattern",
+      "optimizing",
     ];
 
     let currentIndex = 0;
     const interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % words.length;
       setThinkingWord(words[currentIndex]!);
-    }, 1500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [loading]);

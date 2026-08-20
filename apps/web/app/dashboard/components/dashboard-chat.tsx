@@ -152,6 +152,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const latestChatIdRef = useRef<string | null>(null);
+  const chatTitleRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    chatTitleRef.current = chatTitle;
+  }, [chatTitle]);
   const abortControllerRef = useRef<AbortController | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
@@ -399,6 +404,26 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
         scrollToBottom(false);
       }
+
+      if (currentId) {
+        const detected = extractProblemData(streamedText).title;
+        if (
+          detected &&
+          detected !== "Unknown Problem" &&
+          detected !== chatTitleRef.current
+        ) {
+          const nextTitle = detected.slice(0, 80);
+          setChatTitle(nextTitle);
+          try {
+            await axios.patch(`/api/chats/${currentId}`, {
+              title: nextTitle,
+            });
+            window.dispatchEvent(new CustomEvent("levera_chats_updated"));
+          } catch (e) {
+            console.error("Failed to rename chat:", e);
+          }
+        }
+      }
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         return;
@@ -543,6 +568,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     mounted &&
     !sessionPending;
 
+  const welcomeSkeleton =
+    !chatId && (!mounted || sessionPending || chatLoading);
+
+  const centeredLayout = showWelcome || welcomeSkeleton;
+
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white relative">
       <ChatHeader activeChatId={activeChatId} onDeleteChat={deleteChat} />
@@ -551,7 +581,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         ref={scrollContainerRef}
         className={cn(
           "flex-1 overflow-y-auto px-4 md:px-8 space-y-6",
-          showWelcome ? "py-0" : "pt-6 pb-32",
+          centeredLayout ? "py-0" : "pt-6 pb-32",
         )}
       >
         {showWelcome ? (
@@ -581,7 +611,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         )}
       </div>
 
-      {!showWelcome && (
+      {!centeredLayout && (
         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-white dark:from-zinc-950 via-white/70 dark:via-zinc-950/70 to-transparent z-20 pointer-events-none">
           <div className="max-w-3xl mx-auto pointer-events-auto">
             {renderChatInput("max-w-3xl")}

@@ -262,7 +262,7 @@ export default function RecentChatsPage() {
             {!searchQuery && (
               <Link
                 href="/dashboard"
-                className="mt-6 bg-orange-600 hover:bg-orange-500 text-white! font-medium text-xs px-5 py-2.5 rounded-lg transition-colors"
+                className="mt-6 bg-[#FF5A1F] hover:bg-[#ff6b33] text-white! text-xs px-5 py-2.5 rounded-lg transition-colors"
               >
                 Start Chatting
               </Link>
@@ -270,61 +270,70 @@ export default function RecentChatsPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredChats.map((chat) => (
-                <div
-                  key={chat.id}
-                  className="group relative flex flex-col justify-between p-5 rounded-2xl border border-zinc-200 dark:border-zinc-900 bg-zinc-50/60 dark:bg-zinc-900/20 hover:bg-zinc-100 dark:hover:bg-zinc-900/40 hover:border-zinc-300 dark:hover:border-zinc-800 transition-all duration-200"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-lg bg-orange-600/10 text-orange-600 dark:text-orange-500 shrink-0 border border-orange-500/10">
-                          <MessageSquare size={14} />
-                        </div>
-                        <h3 className="font-medium text-sm text-zinc-800 dark:text-zinc-200 line-clamp-1 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
-                          {chat.title}
-                        </h3>
-                      </div>
-                      <span className="text-[10px] bg-zinc-100 dark:bg-zinc-900 text-zinc-500 border border-zinc-200 dark:border-zinc-800/80 px-2 py-0.5 rounded">
-                        {chat.messages.length} msgs
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+              {filteredChats.map((chat) => {
+                const lastReply = [...chat.messages]
+                  .reverse()
+                  .find((m) => m.role === "assistant" && m.content.trim());
+                const preview = (
+                  lastReply?.content ??
+                  chat.messages[chat.messages.length - 1]?.content ??
+                  ""
+                )
+                  .replace(/<[^>]+>/g, " ")
+                  .replace(/[#*`_>]/g, "")
+                  .replace(/\s+/g, " ")
+                  .trim();
+
+                return (
+                  <div
+                    key={chat.id}
+                    className="group relative flex flex-col p-5 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50/60 dark:bg-zinc-900/20 hover:bg-zinc-100 dark:hover:bg-zinc-900/40 hover:border-zinc-300 dark:hover:border-white/20 transition-colors duration-200"
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className="text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1">
+                        {chat.title}
+                      </h3>
+                      <span className="shrink-0 text-[10px] text-zinc-500 border border-zinc-200 dark:border-white/10 px-2 py-0.5 rounded">
+                        {chat.messages.length}
                       </span>
                     </div>
 
-                    <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed h-8">
-                      {chat.messages[0]?.content || "Empty conversation."}
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
+                      {preview || "No replies yet."}
                     </p>
-                  </div>
 
-                  <div className="flex items-center justify-between mt-5 pt-3 border-t border-zinc-200/60 dark:border-zinc-900/60">
-                    <span className="flex items-center gap-1 text-[10px] text-zinc-500 font-medium">
-                      <Calendar size={11} />
-                      {new Date(chat.createdAt).toLocaleDateString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
+                    <div className="flex items-center justify-between gap-3 mt-5 pt-3 border-t border-zinc-200/60 dark:border-white/10">
+                      <span className="flex items-center gap-1.5 text-[11px] text-zinc-400 dark:text-zinc-500">
+                        <Calendar size={11} />
+                        {new Date(chat.createdAt).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
 
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleDelete(chat.id)}
-                        className="p-2 rounded-lg text-zinc-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-500/10 border border-zinc-200 dark:border-zinc-900 hover:border-red-500/25 transition-all"
-                        title="Delete chat"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                      <Link
-                        href={`/dashboard/chat/${chat.id}`}
-                        className="flex items-center gap-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-white! px-3 py-2 rounded-lg border border-zinc-700/30 transition-all font-medium"
-                      >
-                        <span>Open</span>
-                        <ExternalLink size={11} />
-                      </Link>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleDelete(chat.id)}
+                          aria-label={`Delete ${chat.title}`}
+                          className="h-8 w-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                          title="Delete chat"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                        <Link
+                          href={`/dashboard/chat/${chat.id}`}
+                          className="h-8 flex items-center gap-1.5 text-xs px-3 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white! dark:text-black! transition-transform duration-200 hover:-translate-y-0.5"
+                        >
+                          Open
+                          <ExternalLink size={11} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {hasMore && !searchQuery && (

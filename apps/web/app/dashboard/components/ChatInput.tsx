@@ -71,7 +71,7 @@ export function ChatInput({
 
   return (
     <div
-      className={`w-full ${className} mx-auto relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-2xl p-2 focus-within:border-zinc-300 dark:focus-within:border-white/25 transition-colors pointer-events-auto shadow-lg shadow-black/5 dark:shadow-black/40`}
+      className={`w-full ${className} mx-auto relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-2xl p-2.5 pointer-events-auto shadow-sm dark:shadow-black/20 transition-[box-shadow,border-color] duration-200 hover:border-zinc-300 dark:hover:border-white/20 focus-within:border-[#FF5A1F]/45 dark:focus-within:border-[#FF5A1F]/45 focus-within:ring-4 focus-within:ring-[#FF5A1F]/10 focus-within:shadow-md`}
     >
       <textarea
         ref={textareaRef}
@@ -90,9 +90,9 @@ export function ChatInput({
             : "Type a message or paste a DSA problem description..."
         }
         rows={1}
-        className="w-full resize-none outline-none border-none bg-transparent py-3 px-3 text-[15px] leading-relaxed text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-600 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full resize-none outline-none border-none bg-transparent pt-2.5 pb-1.5 px-2.5 text-[15px] leading-relaxed text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-600 focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
       />
-      <div className="flex items-center justify-between border-t border-zinc-200/70 dark:border-white/10 mt-1 pt-2 px-2">
+      <div className="flex items-center justify-between gap-2 mt-1 px-0.5">
         <div className="flex items-center gap-2">
           <ModelSelector
             open={isModelSelectorOpen}
@@ -104,7 +104,7 @@ export function ChatInput({
               render={
                 <button
                   disabled={isBusy}
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/25 bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex h-8 items-center gap-2 px-2.5 rounded-lg bg-zinc-100/70 dark:bg-white/[0.04] hover:bg-zinc-200/70 dark:hover:bg-white/[0.08] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ModelSelectorLogo
                     provider={selectedModel.logoProvider}
@@ -146,21 +146,26 @@ export function ChatInput({
             <button
               disabled={isBusy}
               onClick={() => onToggleHintMode(!hintMode)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${
+              aria-pressed={hintMode}
+              className={`flex h-8 items-center gap-1.5 px-2.5 rounded-lg text-xs transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${
                 hintMode
-                  ? "bg-[#FF5A1F]/10 border-[#FF5A1F]/30 text-[#FF5A1F] hover:bg-[#FF5A1F]/15 hover:border-[#FF5A1F]/50"
-                  : "bg-white dark:bg-zinc-950 border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/25 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+                  ? "bg-[#FF5A1F]/12 text-[#FF5A1F] hover:bg-[#FF5A1F]/20"
+                  : "bg-zinc-100/70 dark:bg-white/[0.04] hover:bg-zinc-200/70 dark:hover:bg-white/[0.08] text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
               }`}
-              title="Progressive Hint Mode: Unlocks clues step-by-step instead of showing code solutions immediately."
+              title={
+                hintMode
+                  ? "Hints on — clues are revealed step by step instead of full solutions"
+                  : "Turn on hints to get step-by-step clues instead of full solutions"
+              }
             >
               <Lightbulb
                 size={13.5}
                 className={
-                  hintMode ? "fill-[#FF5A1F]/20 text-[#FF5A1F]" : "text-zinc-500"
+                  hintMode ? "fill-[#FF5A1F]/25 text-[#FF5A1F]" : "text-zinc-500"
                 }
               />
               <span className="hidden sm:inline">
-                Hint Mode: {hintMode ? "ON" : "OFF"}
+                {hintMode ? "Hints on" : "Hints"}
               </span>
             </button>
           )}
@@ -169,14 +174,14 @@ export function ChatInput({
         {isLanguageUnset ? (
           <button
             onClick={() => setOnboardingOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF5A1F] hover:bg-[#ff6b33] text-white text-xs transition-colors cursor-pointer"
+            className="flex h-8 items-center gap-1.5 px-3 rounded-lg bg-[#FF5A1F] hover:bg-[#ff6b33] text-white text-xs transition-colors cursor-pointer"
           >
             Select Language
           </button>
         ) : (
           <div className="flex items-center gap-2.5">
             <span
-              className={`hidden sm:block text-[11px] text-zinc-400 dark:text-zinc-600 transition-opacity duration-200 ${
+              className={`hidden md:block text-[11px] leading-none text-zinc-400 dark:text-zinc-600 transition-opacity duration-200 ${
                 canSend ? "opacity-100" : "opacity-0"
               }`}
               aria-hidden="true"
@@ -188,10 +193,10 @@ export function ChatInput({
               disabled={!canSend}
               aria-label="Send message"
               title={canSend ? "Send message" : "Type a message to send"}
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors duration-200 ${
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
                 canSend
-                  ? "bg-[#FF5A1F] text-white hover:bg-[#ff6b33] cursor-pointer"
-                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
+                  ? "bg-[#FF5A1F] text-white hover:bg-[#ff6b33] active:scale-95 cursor-pointer"
+                  : "bg-zinc-100 dark:bg-white/[0.06] text-zinc-300 dark:text-zinc-600 cursor-not-allowed"
               }`}
             >
               <Send size={14} />
