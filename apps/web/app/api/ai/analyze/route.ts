@@ -5,6 +5,7 @@ import Groq from "groq-sdk";
 import { validateBearerToken } from "@/lib/extension-auth";
 import prisma from "@/lib/prisma";
 import { PROGRAMMING_LANGUAGES } from "@/lib/constants/programming-languages";
+import { analyzeRateLimit, checkRateLimit } from "@/lib/rateLimit";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -41,6 +42,20 @@ export async function POST(req: NextRequest) {
     const problem = parsed.data;
 
     const authResult = await validateBearerToken(req);
+
+    const rateLimitKey =
+      authResult?.user?.id ??
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      "anonymous";
+
+    const { success } = await checkRateLimit(analyzeRateLimit, rateLimitKey);
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again shortly." },
+        { status: 429, headers: { "Access-Control-Allow-Origin": "*" } },
+      );
+    }
+
     if (authResult && problem.slug) {
       const { user } = authResult;
       try {

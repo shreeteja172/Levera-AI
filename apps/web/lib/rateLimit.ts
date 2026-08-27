@@ -36,6 +36,12 @@ export const premiumModelDailyLimit = new Ratelimit({
   prefix: "ratelimit:premium:day",
 });
 
+export const analyzeRateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(15, "60 s"),
+  prefix: "ratelimit:analyze",
+});
+
 export const isRateLimitConfigured = Boolean(
   process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
 );

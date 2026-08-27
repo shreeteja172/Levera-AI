@@ -13,6 +13,7 @@ import {
   chatRateLimit,
   chatDailyLimit,
   premiumModelDailyLimit,
+  checkRateLimit,
 } from "@/lib/rateLimit";
 
 export async function GET(req: Request) {
@@ -80,7 +81,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { success } = await chatRateLimit.limit(session.user.id);
+    const { success } = await checkRateLimit(chatRateLimit, session.user.id);
     if (!success) {
       return NextResponse.json(
         { error: "Rate limit exceeded. Please try again later." },
@@ -88,7 +89,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const dailyQuota = await chatDailyLimit.limit(session.user.id);
+    const dailyQuota = await checkRateLimit(chatDailyLimit, session.user.id);
     if (!dailyQuota.success) {
       return NextResponse.json(
         { error: "Daily message limit reached. Try again tomorrow." },
@@ -116,7 +117,10 @@ export async function POST(req: Request) {
     const { title, message, provider, model, hintMode } = parsed.data;
 
     if (isPremiumModel(provider, model)) {
-      const premiumQuota = await premiumModelDailyLimit.limit(session.user.id);
+      const premiumQuota = await checkRateLimit(
+        premiumModelDailyLimit,
+        session.user.id,
+      );
       if (!premiumQuota.success) {
         return NextResponse.json(
           {
