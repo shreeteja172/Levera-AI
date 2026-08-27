@@ -13,18 +13,24 @@ import {
 import { SolutionsBlock } from "./SolutionsBlock";
 import { HintsBlock } from "@/components/problem/HintsBlock";
 
-function LeveraMark() {
+function LeveraMark({
+  size = 13,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) {
   return (
     <svg
-      width="13"
-      height="13"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="shrink-0 text-[#FF5A1F]"
+      className={`shrink-0 text-[#FF5A1F] ${className}`}
       aria-hidden="true"
     >
       <polyline points="16 18 22 12 16 6" />
@@ -484,7 +490,6 @@ export function MessageList({
                   </button>
                 );
               })()}
-
           </div>
         );
       })}
@@ -495,16 +500,12 @@ export function MessageList({
             <LeveraMark />
             Levera AI
           </span>
-          <div className="flex items-center gap-2.5 px-1">
-            <div className="flex items-center gap-1">
-              {[0, 150, 300].map((delay) => (
-                <div
-                  key={delay}
-                  className="w-1.5 h-1.5 bg-[#FF5A1F] rounded-full animate-bounce"
-                  style={{ animationDelay: `${delay}ms` }}
-                />
-              ))}
-            </div>
+          <div
+            className="flex items-center gap-2 px-1"
+            role="status"
+            aria-live="polite"
+          >
+            <LeveraMark size={15} className="animate-levera-pulse" />
             <span className="text-xs text-zinc-500 dark:text-zinc-500">
               {thinkingWord}
             </span>

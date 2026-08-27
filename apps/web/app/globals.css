@@ -208,3 +208,27 @@ a {
     overflow-wrap: break-word;
   }
 }
+
+@keyframes levera-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+}
+
+.animate-levera-pulse {
+  animation: levera-pulse 1.3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-levera-pulse {
+    animation: none;
+    opacity: 0.65;
+  }
+}
