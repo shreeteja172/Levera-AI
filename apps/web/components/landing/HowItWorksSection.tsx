@@ -44,12 +44,12 @@ export default function HowItWorksSection() {
       className="py-28 md:py-36 px-6 md:px-14 lg:px-20 bg-[#F5F3EE] dark:bg-zinc-900 border-y border-black/10 dark:border-white/10"
     >
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-baseline gap-6 mb-16 md:mb-24">
+        <div className="flex items-baseline gap-3 sm:gap-6 mb-16 md:mb-24">
           <h2 className="font-instrument text-[clamp(1.6rem,3vw,2.4rem)] tracking-tight text-zinc-900 dark:text-white shrink-0">
             How it works
           </h2>
           <div className="h-px flex-1 bg-zinc-900/12 dark:bg-white/12" />
-          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.35em] uppercase text-zinc-500 shrink-0">
+          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.18em] sm:tracking-[0.35em] uppercase text-zinc-500 shrink-0">
             Three steps
           </span>
         </div>

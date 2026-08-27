@@ -515,8 +515,13 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         </div>
       );
     },
+    table: ({ children }: React.ComponentPropsWithoutRef<"table">) => (
+      <div className="my-4 w-full overflow-x-auto">
+        <table className="w-full text-sm">{children}</table>
+      </div>
+    ),
     h1: ({ children }: React.ComponentPropsWithoutRef<"h1">) => (
-      <h1 className="mb-4 mt-6 text-xl font-bold text-zinc-900 dark:text-white border-b border-zinc-200 dark:border-zinc-900 pb-1">
+      <h1 className="mb-4 mt-6 text-lg sm:text-xl font-bold text-zinc-900 dark:text-white border-b border-zinc-200 dark:border-zinc-900 pb-1">
         {children}
       </h1>
     ),
@@ -557,7 +562,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const centeredLayout = showWelcome || welcomeSkeleton;
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white relative">
+    <div className="flex flex-col h-dvh bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white relative">
       <ChatHeader
         activeChatId={activeChatId}
         chatTitle={chatTitle}
@@ -599,7 +604,7 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
       </div>
 
       {!centeredLayout && (
-        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-white dark:from-zinc-950 via-white/70 dark:via-zinc-950/70 to-transparent z-20 pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 pt-4 sm:p-4 md:p-6 bg-gradient-to-t from-zinc-50 dark:from-zinc-950 via-zinc-50/70 dark:via-zinc-950/70 to-transparent z-20 pointer-events-none">
           <div className="max-w-3xl mx-auto pointer-events-auto">
             {renderChatInput("max-w-3xl")}
           </div>

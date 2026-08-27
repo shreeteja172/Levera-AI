@@ -5,7 +5,7 @@ import { MessageSquare, History } from "lucide-react";
 
 export default function ChatNotFound() {
   return (
-    <main className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center px-6 py-24">
+    <main className="min-h-dvh bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center px-6 py-24">
       <div className="w-full max-w-lg flex flex-col items-start">
         <div className="flex items-center gap-2 mb-8 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-xs text-zinc-500">
           <MessageSquare size={13} className="shrink-0 text-zinc-400" />

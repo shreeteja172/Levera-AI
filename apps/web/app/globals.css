@@ -170,6 +170,16 @@ a {
 }
 
 /* Sleek custom scrollbar styling */
+:root {
+  --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.32);
+}
+
+.dark {
+  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.25);
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -180,15 +190,21 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--scrollbar-thumb);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--scrollbar-thumb-hover);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6, p, li, span, td, th {
+    overflow-wrap: break-word;
+  }
 }

@@ -33,7 +33,7 @@ export default async function ExtensionPage({
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-dvh items-center justify-center">
       <div className="rounded-lg border p-6">
         <h1 className="text-2xl font-bold">Levera Extension</h1>
 

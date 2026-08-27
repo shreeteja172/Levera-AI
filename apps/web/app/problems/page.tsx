@@ -66,30 +66,31 @@ export default function ProblemsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col">
-      <header className="h-16 border-b border-zinc-200 dark:border-zinc-900 flex items-center justify-between px-6 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
-        <div className="flex items-center gap-3">
+    <div className="min-h-dvh bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col">
+      <header className="h-16 border-b border-zinc-200 dark:border-zinc-900 flex items-center justify-between gap-2 px-3 sm:px-6 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-zinc-500! dark:text-zinc-400! hover:text-zinc-900! dark:hover:text-white! px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-800 text-xs font-semibold tracking-wide transition-all cursor-pointer"
+            aria-label="Go to Chatbot"
+            className="flex shrink-0 items-center gap-2 text-zinc-500! dark:text-zinc-400! hover:text-zinc-900! dark:hover:text-white! px-2 sm:px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-800 text-xs font-semibold tracking-wide transition-all cursor-pointer"
           >
             <MessageSquare size={13} className="text-orange-500" />
-            <span>Go to Chatbot</span>
+            <span className="hidden sm:inline">Go to Chatbot</span>
           </Link>
-          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800" />
-          <div className="flex items-center gap-2">
-            <BookOpen size={18} className="text-orange-500" />
-            <span className="font-semibold text-sm tracking-wide">
+          <div className="hidden sm:block h-4 w-px bg-zinc-200 dark:bg-zinc-800 shrink-0" />
+          <div className="flex items-center gap-2 min-w-0">
+            <BookOpen size={18} className="text-orange-500 shrink-0" />
+            <span className="font-semibold text-sm tracking-wide truncate">
               Saved Problems
             </span>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-5xl w-full mx-auto p-6 md:p-8 space-y-8 animate-in fade-in duration-300">
+      <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 animate-in fade-in duration-300">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold font-sans tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-bold font-sans tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
               Saved Problems
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
@@ -204,8 +205,8 @@ export default function ProblemsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 mt-5 pt-3.5 border-t border-zinc-200/70 dark:border-white/10">
-                    <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-5 pt-3.5 border-t border-zinc-200/70 dark:border-white/10">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0">
                       <div className="flex gap-2">
                         {!!sp.brute && (
                           <span className="text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-md bg-[#FF5A1F]/10 text-[#FF5A1F] border border-[#FF5A1F]/20">

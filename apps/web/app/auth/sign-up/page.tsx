@@ -43,7 +43,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <main className="flex justify-center items-center bg-[#EAE7DF] p-6 min-h-screen box-border font-sans max-[480px]:p-3 relative">
+    <main className="flex justify-center items-center bg-[#EAE7DF] p-6 min-h-dvh box-border font-sans max-[480px]:p-3 relative">
       <Link
         href="/"
         className="absolute top-6 left-6 z-50 flex items-center h-11 w-11 hover:w-[120px] rounded-full bg-white/90 hover:bg-white text-[#1A1A1A] border border-[rgba(0,0,0,0.08)] shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group overflow-hidden max-[1024px]:top-4 max-[1024px]:left-4 cursor-pointer"

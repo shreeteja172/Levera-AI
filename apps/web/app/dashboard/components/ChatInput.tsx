@@ -71,7 +71,7 @@ export function ChatInput({
 
   return (
     <div
-      className={`w-full ${className} mx-auto relative flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-2xl p-2.5 pointer-events-auto shadow-sm dark:shadow-black/20 transition-[box-shadow,border-color] duration-200 hover:border-zinc-300 dark:hover:border-white/20 focus-within:border-[#FF5A1F]/45 dark:focus-within:border-[#FF5A1F]/45 focus-within:ring-4 focus-within:ring-[#FF5A1F]/10 focus-within:shadow-md`}
+      className={`w-full ${className} mx-auto relative flex flex-col bg-white dark:bg-[#050506] border border-zinc-200 dark:border-white/10 rounded-2xl p-2 sm:p-2.5 pointer-events-auto shadow-sm dark:shadow-black/40 transition-[box-shadow,border-color] duration-200 hover:border-zinc-300 dark:hover:border-white/20 focus-within:border-[#FF5A1F]/45 dark:focus-within:border-[#FF5A1F]/45 focus-within:ring-4 focus-within:ring-[#FF5A1F]/10 focus-within:shadow-md`}
     >
       <textarea
         ref={textareaRef}
@@ -115,7 +115,7 @@ export function ChatInput({
                 </button>
               }
             />
-            <ModelSelectorContent className="w-[300px]">
+            <ModelSelectorContent className="w-[min(300px,calc(100vw-2rem))]">
               <ModelSelectorInput placeholder="Search models..." />
               <ModelSelectorList>
                 <ModelSelectorEmpty>No model found.</ModelSelectorEmpty>

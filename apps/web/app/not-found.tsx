@@ -128,7 +128,7 @@ export default function NotFound() {
   const { data: session, isPending } = useSession();
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-950 text-zinc-200 font-instrument px-6 py-24">
+    <main className="relative min-h-dvh flex items-center justify-center overflow-hidden bg-zinc-950 text-zinc-200 font-instrument px-6 py-24">
       <div className="relative z-10 w-full max-w-4xl flex flex-col md:flex-row items-center gap-12 md:gap-16">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

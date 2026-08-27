@@ -252,8 +252,8 @@ export default function FeaturesSection() {
       className="relative py-28 md:py-36 px-6 md:px-14 lg:px-20 bg-[#EAE7DF] dark:bg-zinc-950"
     >
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-baseline gap-6 mb-16 md:mb-24">
-          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.35em] uppercase text-zinc-500 shrink-0">
+        <div className="flex items-baseline gap-3 sm:gap-6 mb-16 md:mb-24">
+          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.18em] sm:tracking-[0.35em] uppercase text-zinc-500 shrink-0">
             01 — 06
           </span>
           <div className="h-px flex-1 bg-zinc-900/12 dark:bg-white/12" />

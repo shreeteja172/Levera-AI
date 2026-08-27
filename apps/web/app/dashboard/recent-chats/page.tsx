@@ -118,29 +118,30 @@ export default function RecentChatsPage() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
-      <header className="flex h-14 items-center justify-between border-b border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950 px-6 shrink-0">
-        <div className="flex items-center gap-3">
-          <SidebarTrigger className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
-          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800" />
-          <span className="text-sm font-medium tracking-wide text-zinc-700 dark:text-zinc-300">
+    <div className="flex flex-col min-h-dvh bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
+      <header className="flex h-14 items-center justify-between gap-2 border-b border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950 px-3 sm:px-6 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <SidebarTrigger className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white shrink-0" />
+          <div className="hidden sm:block h-4 w-px bg-zinc-200 dark:bg-zinc-800 shrink-0" />
+          <span className="text-sm font-medium tracking-wide text-zinc-700 dark:text-zinc-300 truncate">
             Recent Chats History
           </span>
         </div>
         {chats.length > 0 && (
           <button
             onClick={handleClearAll}
-            className="flex items-center gap-1.5 text-xs text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/25 transition-all"
+            aria-label="Clear history"
+            className="flex shrink-0 items-center gap-1.5 text-xs text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-500/10 px-2 sm:px-3 py-1.5 rounded-lg border border-red-500/25 transition-all"
           >
             <Trash size={13} />
-            <span>Clear History</span>
+            <span className="hidden sm:inline">Clear History</span>
           </button>
         )}
       </header>
 
-      <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-8 space-y-6">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         <div>
-          <h1 className="text-3xl font-medium tracking-tight text-zinc-900 dark:text-white mb-2">
+          <h1 className="text-2xl sm:text-3xl font-medium tracking-tight text-zinc-900 dark:text-white mb-2">
             Conversation History
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">

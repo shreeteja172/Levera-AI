@@ -18,10 +18,10 @@ export function ChatHeader({
     : "New Conversation";
 
   return (
-    <header className="flex h-14 items-center justify-between gap-3 border-b border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-950 px-6 shrink-0 z-20">
-      <div className="flex items-center gap-3 min-w-0">
+    <header className="flex h-14 items-center justify-between gap-2 sm:gap-3 border-b border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-950 px-3 sm:px-6 shrink-0 z-20">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <SidebarTrigger className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white shrink-0" />
-        <div className="h-4 w-px bg-zinc-200 dark:bg-white/10 shrink-0" />
+        <div className="hidden sm:block h-4 w-px bg-zinc-200 dark:bg-white/10 shrink-0" />
         <span
           className="text-sm tracking-wide text-zinc-700 dark:text-zinc-300 truncate"
           title={label}

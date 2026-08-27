@@ -346,28 +346,32 @@ export function SolutionDisplay({ problem, onDelete }: SolutionDisplayProps) {
   ].filter((s) => s.parsed.exists);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col font-sans">
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 md:p-8 space-y-10 overflow-x-hidden">
+    <div className="min-h-dvh bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col font-sans">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-8 md:space-y-10 overflow-x-hidden">
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <button
               onClick={() => router.push("/problems")}
-              className="flex items-center gap-2 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors group cursor-pointer text-sm font-medium"
+              className="flex min-w-0 items-center gap-2 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors group cursor-pointer text-sm font-medium"
             >
               <ArrowLeft
                 size={16}
-                className="group-hover:-translate-x-0.5 transition-transform"
+                className="shrink-0 group-hover:-translate-x-0.5 transition-transform"
               />
-              Back to Saved Problems
+              <span className="truncate">
+                <span className="sm:hidden">Back</span>
+                <span className="hidden sm:inline">Back to Saved Problems</span>
+              </span>
             </button>
 
             <button
               onClick={onDelete}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 dark:border-red-950 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/40 hover:border-red-300 dark:hover:border-red-900 text-xs font-semibold tracking-wide transition-all cursor-pointer"
+              aria-label="Delete saved problem"
+              className="flex shrink-0 items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg border border-red-200 dark:border-red-950 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/40 hover:border-red-300 dark:hover:border-red-900 text-xs font-semibold tracking-wide transition-all cursor-pointer"
               title="Delete saved problem"
             >
               <Trash2 size={13} />
-              <span>Delete This Problem</span>
+              <span className="hidden sm:inline">Delete This Problem</span>
             </button>
           </div>
 

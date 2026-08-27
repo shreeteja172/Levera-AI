@@ -83,11 +83,11 @@ export default function ProblemPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col">
-        <div className="h-16 border-b border-zinc-200 dark:border-zinc-900 flex items-center px-6 bg-white/50 dark:bg-zinc-950/50">
+      <div className="min-h-dvh bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col">
+        <div className="h-16 border-b border-zinc-200 dark:border-zinc-900 flex items-center px-4 sm:px-6 bg-white/50 dark:bg-zinc-950/50">
           <div className="h-6 w-32 bg-zinc-200 dark:bg-zinc-900 rounded animate-pulse" />
         </div>
-        <div className="flex-1 max-w-4xl w-full mx-auto p-6 md:p-8 space-y-8 animate-pulse">
+        <div className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-8 animate-pulse">
           <div className="h-4 w-16 bg-zinc-200 dark:bg-zinc-900 rounded" />
           <div className="space-y-3">
             <div className="h-10 w-2/3 bg-zinc-200 dark:bg-zinc-900 rounded-lg" />
@@ -106,7 +106,7 @@ export default function ProblemPage() {
 
   if (!problem) {
     return (
-      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center px-6">
+      <div className="min-h-dvh bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex items-center justify-center px-6">
         <div className="w-full max-w-md flex flex-col items-start">
           <h1 className="font-instrument text-2xl md:text-3xl tracking-tight text-zinc-900 dark:text-white mb-3">
             {loadFailed
