@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
+import Script from "next/script";
 import localFont from "next/font/local";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -28,6 +29,10 @@ export const metadata: Metadata = {
   description:
     "From Brute Force to Optimal, Instantly. Learn Data Structures & Algorithms with AI that teaches you how to think.",
 };
+
+const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+const umamiSrc =
+  process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL ?? "https://cloud.umami.is/script.js";
 
 export default function RootLayout({
   children,
@@ -76,6 +81,14 @@ export default function RootLayout({
             },
           }}
         />
+        {umamiWebsiteId ? (
+          <Script
+            id="umami"
+            strategy="afterInteractive"
+            src={umamiSrc}
+            data-website-id={umamiWebsiteId}
+          />
+        ) : null}
       </body>
     </html>
   );

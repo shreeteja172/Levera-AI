@@ -241,6 +241,8 @@ All variables live in `apps/web/.env.local` for development. `apps/web/.env.exam
 | `OPENROUTER_API_KEY` | OpenRouter models (OpenAI-compatible endpoint). |
 | `ZHIPU_API_KEY` | Zhipu / GLM models (OpenAI-compatible endpoint). |
 | `AI_GATEWAY_API_KEY` | Only if routing through the Vercel AI Gateway. Read implicitly by the AI SDK; not referenced in application code. |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami analytics. Unset means the script is not rendered, so local and fork traffic stays out of your stats. Public by design; it ships in the page HTML. |
+| `NEXT_PUBLIC_UMAMI_SCRIPT_URL` | Only if self-hosting Umami. Defaults to `https://cloud.umami.is/script.js`. |
 
 > **Note:** `.env.local` and `.env.production` are gitignored. On Vercel, set every variable in the project dashboard — nothing carries over from the repo.
 
