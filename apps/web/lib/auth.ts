@@ -9,7 +9,7 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   emailAndPassword: {
     enabled: true,
-    autoSignIn: true,
+    autoSignIn: false,
     resetPasswordTokenExpiresIn: 3600,
     async sendResetPassword({ user, url }) {
       await sendResetPasswordEmail(user.email, url);
