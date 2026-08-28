@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("dark font-sans", exo2.variable, tiemposText.variable)}
+      className={cn("font-sans", exo2.variable, tiemposText.variable)}
       suppressHydrationWarning
     >
       <body

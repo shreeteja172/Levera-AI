@@ -12,12 +12,12 @@ const ThemeContext = createContext<{
   theme: Theme;
   toggleTheme: () => void;
 }>({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -46,7 +46,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         dangerouslySetInnerHTML={{
           __html: `try{var t=localStorage.getItem(${JSON.stringify(
             STORAGE_KEY,
-          )});if(t==="light"){document.documentElement.classList.remove("dark");}}catch(e){}`,
+          )});if(t==="dark"){document.documentElement.classList.add("dark");}}catch(e){}`,
         }}
       />
       {children}
