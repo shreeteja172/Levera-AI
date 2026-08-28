@@ -134,6 +134,8 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const shouldAutoScrollRef = useRef(true);
+  const scrollRafRef = useRef<number | null>(null);
   const latestChatIdRef = useRef<string | null>(null);
   const chatTitleRef = useRef<string | null>(null);
 
@@ -146,17 +148,60 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
   const [missingChat, setMissingChat] = useState(false);
 
   const scrollToBottom = useCallback((force = false) => {
+    if (force) shouldAutoScrollRef.current = true;
+    else if (!shouldAutoScrollRef.current) return;
+
+    if (scrollRafRef.current !== null) cancelAnimationFrame(scrollRafRef.current);
+    scrollRafRef.current = requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      if (force) {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      } else {
+        container.scrollTop = container.scrollHeight;
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const threshold = 150;
-    const isNearBottom =
-      container.scrollHeight - container.scrollTop - container.clientHeight <=
-      threshold;
+    const THRESHOLD = 150;
 
-    if (force || isNearBottom) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
+    const handleScroll = () => {
+      const distanceFromBottom =
+        container.scrollHeight - container.scrollTop - container.clientHeight;
+      shouldAutoScrollRef.current = distanceFromBottom <= THRESHOLD;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY < 0) shouldAutoScrollRef.current = false;
+    };
+
+    let touchStartY = 0;
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0]?.clientY ?? 0;
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      const y = e.touches[0]?.clientY ?? 0;
+      if (y > touchStartY) shouldAutoScrollRef.current = false;
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener("wheel", handleWheel, { passive: true });
+    container.addEventListener("touchstart", handleTouchStart, { passive: true });
+    container.addEventListener("touchmove", handleTouchMove, { passive: true });
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener("wheel", handleWheel);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      if (scrollRafRef.current !== null) cancelAnimationFrame(scrollRafRef.current);
+    };
   }, []);
 
   const fetchChatSession = useCallback(
@@ -384,8 +429,6 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
           }
           return updated;
         });
-
-        scrollToBottom(false);
       }
 
       if (currentId) {
