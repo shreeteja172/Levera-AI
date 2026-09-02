@@ -229,7 +229,7 @@ Do not skip any tags. Ensure the <hints> block is placed before the <solutions> 
         return result.toTextStreamResponse({
           headers: {
             "x-chat-id": newSession.id,
-            "x-chat-title": newSession.title || title,
+            "x-chat-title": encodeURIComponent(newSession.title || title),
           },
         });
       } catch (err) {

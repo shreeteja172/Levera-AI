@@ -339,8 +339,11 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
     try {
       let response: Response;
       if (!currentId) {
+        const normalizedTitle = prompt.replace(/\s+/g, " ").trim();
         const title =
-          prompt.length > 35 ? prompt.substring(0, 35) + "..." : prompt;
+          normalizedTitle.length > 35
+            ? normalizedTitle.substring(0, 35) + "..."
+            : normalizedTitle;
         response = await fetch("/api/chats", {
           method: "POST",
           headers: {
@@ -368,7 +371,15 @@ export function DashboardChat({ chatId }: { chatId: string | null }) {
         }
 
         const newChatId = response.headers.get("x-chat-id");
-        const chatTitleVal = response.headers.get("x-chat-title");
+        const rawChatTitle = response.headers.get("x-chat-title");
+        let chatTitleVal: string | null = null;
+        if (rawChatTitle) {
+          try {
+            chatTitleVal = decodeURIComponent(rawChatTitle);
+          } catch {
+            chatTitleVal = rawChatTitle;
+          }
+        }
         if (newChatId) {
           currentId = newChatId;
           setActiveChatId(currentId);
