@@ -20,7 +20,7 @@ export default function Home() {
           <p className="text-xs text-zinc-600 dark:text-zinc-400 font-sans">
             Built with 🧡 by{" "}
             <a
-              href="https://shreeteja.vercel.app"
+              href="https://shreeteja.me"
               target="_blank"
               rel="noopener noreferrer"
               className="text-zinc-800! dark:text-zinc-200! hover:text-[#FF5A1F]! transition-colors duration-200"
